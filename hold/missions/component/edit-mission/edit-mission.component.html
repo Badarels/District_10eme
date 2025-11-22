@@ -1,0 +1,196 @@
+<main class="main">
+  <div class="pagetitle">
+    <h1>Modifier Mission</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a [routerLink]="'/'">Accueil</a></li>
+        <li class="breadcrumb-item"><a [routerLink]="'/missions'">Missions</a></li>
+        <li class="breadcrumb-item active">Édition</li>
+      </ol>
+    </nav>
+  </div>
+
+  <section class="section profile">
+    <div class="row">
+      <div class="col-xl-8">
+        <div class="card">
+          <form [formGroup]="missionForm" (ngSubmit)="modifierMission()">
+            <div class="card-body pt-3">
+
+              <ul class="nav nav-tabs nav-tabs-bordered">
+                <li class="nav-item">
+                  <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#mission-info">Informations</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-bs-toggle="tab" data-bs-target="#mission-horaires">Horaires</a>
+                </li>
+              </ul>
+
+              <div class="tab-content pt-2">
+                <!-- Infos mission -->
+                <div class="tab-pane fade show active pt-3" id="mission-info">
+
+                  <div class="mb-3">
+                    <label for="detailMission" class="form-label fw-bold">Détail Mission <span class="text-danger">*</span></label>
+                    <textarea id="detailMission" formControlName="detailMission" 
+                              class="form-control" rows="3"
+                              [ngClass]="{'is-invalid': missionForm.get('detailMission')?.invalid && missionForm.get('detailMission')?.touched}"
+                              required></textarea>
+                    <div *ngIf="missionForm.get('detailMission')?.invalid && missionForm.get('detailMission')?.touched" 
+                         class="invalid-feedback">
+                      Le détail de la mission est obligatoire
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="statutAnnonce" class="form-label fw-bold">Statut <span class="text-danger">*</span></label>
+                    <select id="statutAnnonce" class="form-select" 
+                            formControlName="statutAnnonce"
+                            [ngClass]="{'is-invalid': missionForm.get('statutAnnonce')?.invalid && missionForm.get('statutAnnonce')?.touched}"
+                            required>
+                      <option value="" disabled selected>Sélectionnez un statut</option>
+                      <option *ngFor="let statut of statutsDisponibles" [value]="statut.value">
+                        {{ statut.label }}
+                      </option>
+                    </select>
+                    <div *ngIf="missionForm.get('statutAnnonce')?.invalid && missionForm.get('statutAnnonce')?.touched" 
+                         class="invalid-feedback">
+                      Veuillez sélectionner un statut
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="salaireMission" class="form-label fw-bold">Salaire <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <input type="number" id="salaireMission" 
+                             formControlName="salaireMission" 
+                             class="form-control" 
+                             placeholder="0.00"
+                             min="0"
+                             step="0.01"
+                             [ngClass]="{'is-invalid': missionForm.get('salaireMission')?.invalid && missionForm.get('salaireMission')?.touched}"
+                             required>
+                      <span class="input-group-text">€</span>
+                      <div *ngIf="missionForm.get('salaireMission')?.invalid && missionForm.get('salaireMission')?.touched" 
+                           class="invalid-feedback">
+                        Le salaire doit être un nombre positif
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Horaires -->
+                <div class="tab-pane fade pt-3" id="mission-horaires">
+                  <div class="mb-3">
+                    <label for="typeHoraireMission" class="form-label fw-bold">Type Horaire <span class="text-danger">*</span></label>
+                    <select id="typeHoraireMission" 
+                            class="form-select" 
+                            formControlName="typeHoraireMission"
+                            [ngClass]="{'is-invalid': missionForm.get('typeHoraireMission')?.invalid && missionForm.get('typeHoraireMission')?.touched}"
+                            required>
+                      <option value="" disabled selected>Sélectionnez un type d'horaire</option>
+                      <option *ngFor="let type of typesHoraires" [value]="type.value">
+                        {{ type.label }}
+                      </option>
+                    </select>
+                    <div *ngIf="missionForm.get('typeHoraireMission')?.invalid && missionForm.get('typeHoraireMission')?.touched" 
+                         class="invalid-feedback">
+                      Veuillez sélectionner un type d'horaire
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="dateMissions" class="form-label fw-bold">Date de début <span class="text-danger">*</span></label>
+                      <input type="date" 
+                             id="dateMissions" 
+                             formControlName="dateMissions" 
+                             class="form-control"
+                             [ngClass]="{'is-invalid': missionForm.get('dateMissions')?.invalid && missionForm.get('dateMissions')?.touched}"
+                             [min]="today"
+                             required>
+                      <div *ngIf="missionForm.get('dateMissions')?.invalid && missionForm.get('dateMissions')?.touched" 
+                           class="invalid-feedback">
+                        La date de début est requise et doit être aujourd'hui ou ultérieure
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="dateFinMissions" class="form-label fw-bold">Date de fin <span class="text-danger">*</span></label>
+                      <input type="date" 
+                             id="dateFinMissions" 
+                             formControlName="dateFinMissions" 
+                             class="form-control"
+                             [ngClass]="{'is-invalid': (missionForm.get('dateFinMissions')?.invalid || missionForm.hasError('dateFinInvalide')) && missionForm.get('dateFinMissions')?.touched}"
+                             [min]="missionForm.get('dateMissions')?.value || today"
+                             required>
+                      <div *ngIf="missionForm.get('dateFinMissions')?.invalid && missionForm.get('dateFinMissions')?.touched" 
+                           class="invalid-feedback">
+                        La date de fin est requise
+                      </div>
+                      <div *ngIf="missionForm.hasError('dateFinInvalide') && !missionForm.get('dateFinMissions')?.invalid" 
+                           class="invalid-feedback">
+                        La date de fin doit être postérieure à la date de début
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="startTime" class="form-label fw-bold">Heure de début <span class="text-danger">*</span></label>
+                      <input type="time" 
+                             id="startTime" 
+                             formControlName="startTime" 
+                             class="form-control"
+                             [ngClass]="{'is-invalid': missionForm.get('startTime')?.invalid && missionForm.get('startTime')?.touched}"
+                             required>
+                      <div *ngIf="missionForm.get('startTime')?.invalid && missionForm.get('startTime')?.touched" 
+                           class="invalid-feedback">
+                        L'heure de début est requise
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="endTime" class="form-label fw-bold">Heure de fin <span class="text-danger">*</span></label>
+                      <input type="time" 
+                             id="endTime" 
+                             formControlName="endTime" 
+                             class="form-control"
+                             [ngClass]="{'is-invalid': (missionForm.get('endTime')?.invalid || missionForm.hasError('heureFinInvalide')) && missionForm.get('endTime')?.touched}"
+                             [min]="missionForm.get('startTime')?.value"
+                             required>
+                      <div *ngIf="missionForm.get('endTime')?.invalid && missionForm.get('endTime')?.touched" 
+                           class="invalid-feedback">
+                        L'heure de fin est requise
+                      </div>
+                      <div *ngIf="missionForm.hasError('heureFinInvalide') && !missionForm.get('endTime')?.invalid" 
+                           class="invalid-feedback">
+                        L'heure de fin doit être postérieure à l'heure de début
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center mt-4">
+                <button type="submit" 
+                        class="btn btn-primary"
+                        [disabled]="missionForm.invalid || isSubmitting">
+                  <span *ngIf="!isSubmitting">Enregistrer</span>
+                  <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span *ngIf="isSubmitting" class="ms-2">Enregistrement en cours...</span>
+                </button>
+                <button type="button" 
+                        class="btn btn-outline-secondary ms-2"
+                        [routerLink]="'/missions'"
+                        [disabled]="isSubmitting">
+                  Annuler
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

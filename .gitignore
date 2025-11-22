@@ -1,0 +1,16 @@
+# Ignorer les dépendances (Indispensable)
+node_modules/
+**/node_modules/
+
+# Ignorer les builds de production
+dist/
+**/dist/
+build/
+
+# Fichiers systèmes et éditeurs
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log

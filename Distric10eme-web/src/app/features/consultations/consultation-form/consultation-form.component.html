@@ -1,0 +1,235 @@
+<div class="consultation-container">
+  <h2 class="mb-4">{{ editMode ? 'Modifier' : 'Nouvelle' }} Consultation</h2>
+  
+  <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()" class="consultation-form">
+    <mat-tab-group>
+      <!-- Section Informations Générales -->
+      <mat-tab label="Informations Générales">
+        <div class="tab-content p-3">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Patient *</mat-label>
+                <input type="text" matInput formControlName="patient" [matAutocomplete]="autoPatient">
+                <mat-autocomplete #autoPatient="matAutocomplete" [displayWith]="displayPatient">
+                  <mat-option *ngFor="let patient of filteredPatients | async" [value]="patient">
+                    {{ patient.nom }} {{ patient.prenom }} - Dossier #{{ patient.numeroDossier }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="consultationForm.get('patient')?.hasError('required') && consultationForm.get('patient')?.touched">
+                  Le patient est obligatoire
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Médecin *</mat-label>
+                <input type="text" matInput formControlName="medecin" [matAutocomplete]="autoMedecin">
+                <mat-autocomplete #autoMedecin="matAutocomplete" [displayWith]="displayMedecin">
+                  <mat-option *ngFor="let medecin of filteredMedecins | async" [value]="medecin">
+                    Dr {{ medecin.nom }} {{ medecin.prenom }} - {{ medecin.specialiteNom || 'Médecine Générale' }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="consultationForm.get('medecin')?.hasError('required') && consultationForm.get('medecin')?.touched">
+                  Le médecin est obligatoire
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date et heure *</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="dateHeure">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="consultationForm.get('dateHeure')?.hasError('required') && consultationForm.get('dateHeure')?.touched">
+                  La date et l'heure sont obligatoires
+                </mat-error>
+                <mat-error *ngIf="consultationForm.get('dateHeure')?.hasError('pastDate')">
+                  La date doit être dans le futur
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Type de consultation</mat-label>
+                <mat-select formControlName="typeConsultation">
+                  <mat-option *ngFor="let type of typesConsultation" [value]="type.value">
+                    {{ type.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      
+      <!-- Section Anamnèse / Symptômes -->
+      <mat-tab label="Anamnèse">
+        <div class="tab-content p-3">
+          <div class="mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Symptômes / Motif de consultation *</mat-label>
+              <textarea matInput formControlName="symptomes" rows="4" placeholder="Décrivez les symptômes du patient..."></textarea>
+              <mat-error *ngIf="consultationForm.get('symptomes')?.hasError('required') && consultationForm.get('symptomes')?.touched">
+                Les symptômes sont obligatoires
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-tab>
+      
+      <!-- Section Examen Clinique -->
+      <mat-tab label="Examen Clinique">
+        <div class="tab-content p-3">
+          <div formGroupName="examenClinique">
+            <div class="row">
+              <div class="col-md-3 mb-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Température (°C)</mat-label>
+                  <input type="number" matInput formControlName="temperature" step="0.1">
+                </mat-form-field>
+              </div>
+              
+              <div class="col-md-3 mb-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Tension artérielle</mat-label>
+                  <input type="text" matInput formControlName="tension" placeholder="Ex: 12/7">
+                </mat-form-field>
+              </div>
+              
+              <div class="col-md-3 mb-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Pouls (bpm)</mat-label>
+                  <input type="number" matInput formControlName="pouls">
+                </mat-form-field>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Observations</mat-label>
+                <textarea matInput formControlName="observations" rows="3" placeholder="Observations complémentaires..."></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      
+      <!-- Section Diagnostic et Traitement -->
+      <mat-tab label="Diagnostic & Traitement">
+        <div class="tab-content p-3">
+          <div class="mb-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Diagnostic *</mat-label>
+              <textarea matInput formControlName="diagnostic" rows="3" placeholder="Diagnostic médical..."></textarea>
+              <mat-error *ngIf="consultationForm.get('diagnostic')?.hasError('required') && consultationForm.get('diagnostic')?.touched">
+                Le diagnostic est obligatoire
+              </mat-error>
+            </mat-form-field>
+          </div>
+          
+          <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5>Ordonnance</h5>
+              <button type="button" mat-stroked-button color="primary" (click)="addPrescriptionItem()">
+                <mat-icon>add</mat-icon> Ajouter un médicament
+              </button>
+            </div>
+            
+            <div formArrayName="prescription" class="prescription-items">
+              <div *ngFor="let item of prescriptionItems.controls; let i = index" [formGroupName]="i" class="prescription-item mb-3 p-3 border rounded">
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>Médicament *</mat-label>
+                      <input matInput formControlName="medicament" placeholder="Nom du médicament">
+                      <mat-error *ngIf="item.get('medicament')?.hasError('required') && item.get('medicament')?.touched">
+                        Champ requis
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  
+                  <div class="col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>Posologie *</mat-label>
+                      <input matInput formControlName="posologie" placeholder="Ex: 1 comprimé, 3 fois par jour">
+                      <mat-error *ngIf="item.get('posologie')?.hasError('required') && item.get('posologie')?.touched">
+                        Champ requis
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  
+                  <div class="col-md-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>Durée *</mat-label>
+                      <input matInput formControlName="duree" placeholder="Ex: 7 jours">
+                      <mat-error *ngIf="item.get('duree')?.hasError('required') && item.get('duree')?.touched">
+                        Champ requis
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  
+                  <div class="col-md-1 d-flex align-items-center">
+                    <button type="button" mat-icon-button color="warn" (click)="removePrescriptionItem(i)" [disabled]="prescriptionItems.length <= 1">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-10">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>Instructions supplémentaires</mat-label>
+                      <input matInput formControlName="instructions" placeholder="Instructions particulières...">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      
+      <!-- Section Pièces Jointes -->
+      <mat-tab label="Pièces Jointes">
+        <div class="tab-content p-3">
+          <div class="mb-3">
+            <div class="file-upload-container">
+              <input type="file" id="file-upload" multiple (change)="onFileSelected($event)" style="display: none;">
+              <label for="file-upload" class="file-upload-label">
+                <mat-icon>attach_file</mat-icon> Télécharger des fichiers
+              </label>
+              <div class="file-hint">Formats acceptés : .pdf, .jpg, .jpeg, .png (max 5MB par fichier)</div>
+            </div>
+            
+            <div class="file-list mt-3" *ngIf="files.length > 0">
+              <div class="file-item" *ngFor="let file of files; let i = index">
+                <mat-icon class="file-icon">insert_drive_file</mat-icon>
+                <span class="file-name">{{ file.name }}</span>
+                <span class="file-size">({{ file.size / 1024 | number:'1.0-0' }} KB)</span>
+                <button type="button" mat-icon-button color="warn" (click)="removeFile(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    
+    <div class="form-actions mt-4">
+      <button type="button" mat-button routerLink="/consultations" class="me-2">
+        Annuler
+      </button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+    </div>
+  </form>
+</div>

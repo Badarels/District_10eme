@@ -1,0 +1,6 @@
+<app-topbar></app-topbar>
+<app-header (toggleSidebarEvent)="toggleSidebar()"></app-header>
+ 
+ <main id="main" class="main" [class.full-width]="sidebarHidden">
+  <router-outlet></router-outlet>
+</main>

@@ -1,0 +1,84 @@
+/* Header Styles */
+.header {
+  height: var(--header-height);
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0; /* plein écran, évite l'espace vide à gauche */
+  z-index: 1001;
+  transition: all 0.3s;
+}
+
+/* Logo Styles */
+.logo {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 15px;
+}
+
+.logo img {
+  max-height: 58px; /* augmente un peu plus la taille du logo */
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Navigation Styles */
+.header-nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.header-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Menu Items */
+.nav-item {
+  margin: 0 5px;
+}
+
+.nav-link {
+  color: #444;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.nav-link:hover {
+  background-color: #f8f9fa;
+}
+
+/* Supprimer les carets Bootstrap ajoutés par .dropdown-toggle sur les icônes */
+.header .dropdown-toggle::after { display: none !important; }
+
+/* Chevron animation on dropdown open */
+.nav-profile .bi-chevron-down {
+  transition: transform .2s ease;
+}
+.nav-item.dropdown.show .nav-profile .bi-chevron-down {
+  transform: rotate(180deg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .header {
+    left: 0;
+  }
+  
+  .logo {
+    padding: 0 10px;
+  }
+  
+  .logo img {
+    max-height: 46px; /* mobile/tablette */
+  }
+}

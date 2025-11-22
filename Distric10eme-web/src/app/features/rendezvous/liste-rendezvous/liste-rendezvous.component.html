@@ -1,0 +1,91 @@
+<div class="pagetitle">
+  <h1>Liste des rendez-vous</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+      <li class="breadcrumb-item active">Rendez-vous</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="content-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="d-flex align-items-center mb-3 gap-2">
+            <button class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" (click)="addRendezVous()">
+              <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Nouveau rendez-vous</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title">Rendez-vous</h2>
+              <div class="col-md-4 col-lg-4 ms-auto justify-content-md-end">
+                <form class="form-inline mb-3 ms-auto">
+                  <div class="form-group mx-md-2 mb-2">
+                    <div class="input-group">
+                      <input
+                        class="form-control with-blue-border"
+                        type="search"
+                        [(ngModel)]="searchTerm"
+                        (ngModelChange)="applyFilter()"
+                        placeholder="Rechercher (patient, médecin, motif, statut...)"
+                        aria-label="Search"
+                        name="searchTerm"
+                      />
+                      <span class="input-group-text">
+                        <i class="fas fa-search fa-recherche"></i>
+                      </span>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border" role="status"></div>
+              </div>
+
+              <div *ngIf="!loading && filteredRendezVous.length === 0" class="text-center py-5 text-muted">
+                Aucun rendez-vous trouvé.
+              </div>
+
+              <div *ngIf="!loading && filteredRendezVous.length > 0" class="table-responsive">
+                <table class="table table-striped align-middle datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Heure</th>
+                      <th scope="col">Patient</th>
+                      <th scope="col">Médecin</th>
+                      <th scope="col">Motif</th>
+                      <th scope="col">Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let rdv of filteredRendezVous">
+                      <td>{{ rdv.dateHeure | date:'dd/MM/yyyy' }}</td>
+                      <td>{{ rdv.dateHeure | date:'HH:mm' }}</td>
+                      <td>{{ rdv.patientId }}</td>
+                      <td>{{ rdv.medecinId }}</td>
+                      <td>{{ rdv.motif || '—' }}</td>
+                      <td>
+                        <span class="badge" [ngClass]="getBadgeClass(rdv.statut)">
+                          {{ rdv.statut || 'En attente' }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

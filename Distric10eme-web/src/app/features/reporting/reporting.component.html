@@ -1,0 +1,94 @@
+<div class="pagetitle">
+  <h1>Rapports et statistiques</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+      <li class="breadcrumb-item active">Reporting</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section dashboard">
+  <div class="row">
+    <div class="col-xxl-3 col-md-6" *ngFor="let stat of stats">
+      <div class="card info-card">
+        <div class="card-body">
+          <h5 class="card-title">{{ stat.title }}</h5>
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi" [ngClass]="stat.icon"></i>
+            </div>
+            <div class="ps-3">
+              <h6>{{ stat.value | number }}</h6>
+              <span
+                class="small"
+                [ngClass]="{
+                  'text-success fw-bold': stat.trendType === 'up',
+                  'text-danger fw-bold': stat.trendType === 'down'
+                }"
+                >{{ stat.trend }}</span
+              >
+              <span class="text-muted small ps-1">vs période précédente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Vue d’ensemble trimestrielle</h5>
+          <div class="table-responsive">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th scope="col">Module</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Progression</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let module of modules">
+                  <td>{{ module.name }}</td>
+                  <td>{{ module.total | number }}</td>
+                  <td>
+                    <span class="badge bg-success" *ngIf="module.progression?.includes('+')">
+                      {{ module.progression }}
+                    </span>
+                    <span class="badge bg-danger" *ngIf="module.progression?.includes('-')">
+                      {{ module.progression }}
+                    </span>
+                    <span class="badge bg-secondary" *ngIf="!module.progression?.includes('+') && !module.progression?.includes('-')">
+                      {{ module.progression }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Activité récente</h5>
+          <div class="activity">
+            <div class="activity-item d-flex" *ngFor="let item of timeline">
+              <div class="activite-label">{{ item.label }}</div>
+              <i class="bi bi-circle-fill activity-badge text-primary align-self-start"></i>
+              <div class="activity-content">
+                {{ item.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

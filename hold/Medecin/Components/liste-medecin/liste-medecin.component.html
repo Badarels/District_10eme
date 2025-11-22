@@ -1,0 +1,139 @@
+<div class="pagetitle">
+      <h1>Liste des Medecins</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a [routerLink]="'/Accueil/accueil'">ACCUEIL</a></li>
+          <li class="breadcrumb-item">Liste</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+<section class="section">
+<!--**********************************
+    Nav header end
+***********************************-->
+
+<!--**********************************
+    Content body start
+***********************************-->
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">            
+				<div class="row">
+          <div class="col-lg-12">
+            <div class="d-flex align-items-center mb-3 user-list-toggles w-100 gap-2">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-light" [class.active]="activeTab==='list'" (click)="setTab('list')">Vue Liste</button>
+                <button type="button" class="btn btn-light" [class.active]="activeTab==='grid'" (click)="setTab('grid')">Vue Grille</button>
+              </div>
+              <a class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" [routerLink]="'/medecin/ajout'">
+                <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Ajouter</span>
+              </a>
+            </div>
+          </div>
+
+          
+              <div id="list-view" class="col-lg-12" *ngIf="activeTab==='list'">
+                <div class="card">
+                  <div class="card-body">
+                    <h2 class="card-title">Médecins</h2>
+                    <div class="col-md-4 col-lg-4 ms-auto justify-content-md-end">
+                      <form class="form-inline mb-3 ml-auto">
+                        <div class="form-group mx-md-2 mb-2">
+                          <div class="input-group">
+                            <input class="form-control with-blue-border fas fa-search medecin-search-input" type="search" placeholder="Rechercher" [(ngModel)]="filterText" aria-label="Search" name="filterText">
+                            <span class="input-group-text"><i class="fas fa-search fa-recherche"></i></span>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="table-responsive user_card user-list">
+                      <table class="table table-striped align-middle datatable">
+                        <thead>
+                          <tr>
+                            <th scope="col" style="width: 900px;">Nom</th>
+                            <th scope="col" style="width: 200px;">Prenom</th>
+                            <th scope="col" style="width: 600px;">Adresse</th>
+                            <th scope="col" style="width: 200px;">Sexe</th>
+                            <th scope="col" style="width: 800px;">Date de Naissance</th>
+                            <th scope="col" style="width: 200px;">Email</th>
+                            <th scope="col" style="width: 200px;">Telephone</th>
+                            <th scope="col" style="width: 200px;">Specialité</th>
+                            <th scope="col" style="width: 200px;">N° Rpps</th>
+                            <th scope="col" style="width: 200px;">N° Securite Sociale</th>
+                            <th scope="col" style="width: 200px;">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let medecin of Medecin | search: filterText">
+                            <td>Dr. {{medecin?.nomMedecin}}</td>
+                            <td>{{medecin?.prenomMedecin}}</td>
+                            <td>{{medecin?.adresse?.ville}}</td>
+                            <td>{{medecin?.sexeMedecin}}</td>
+                            <td>{{ medecin?.dateDeNaissanceMedecin | date:'dd-MM-yyyy' }}</td>
+                            <td>{{medecin?.emailMedecin}}</td>
+                            <td>
+                              <div style="display: flex;">
+                                <div>{{medecin?.telephoneMedecin_1}}</div>
+                                <div *ngIf="medecin?.telephoneMedecin_2"> | </div>
+                                <div *ngIf="medecin?.telephoneMedecin_2">{{medecin?.telephoneMedecin_2}}</div>
+                              </div>
+                            </td>
+                            <td>
+                              <div style="display: flex;">
+                                <ng-container *ngFor="let specialite of medecin.specialites; let last = last">
+                                  <div>{{specialite.nomSpecialite}}</div>
+                                  <div *ngIf="!last" class="separator">|</div>
+                                </ng-container>
+                              </div>
+                            </td>
+                            <td>{{medecin?.numeroRpps}}</td>
+                            <td>{{medecin?.numeroSecuriteSocialeMedecin}}</td>
+                            <td>
+                              <div ngbDropdown class="d-inline-block">
+                                <button class="btn btn-light buttonMenu d-inline-flex align-items-start" id="dropdownMenuButton" ngbDropdownToggle>
+                                  <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <div ngbDropdownMenu [ngClass]="{'show': isDropdownOpen}" aria-labelledby="dropdownMenuButton">
+                                  <button class="dropdown-item" [routerLink]="['/medecin/profil', medecin?.id]">Aperçu</button>
+                                  <button class="dropdown-item" (click)="modifier()">Modifier</button>
+                                  <button class="dropdown-item" (click)="supprimer()">Supprimer</button>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="grid-view" class="col-lg-12" *ngIf="activeTab==='grid'">
+                <div class="row user-grid g-3">
+                  <div class="col-12 text-center text-muted" *ngIf="(Medecin | search: filterText).length === 0">
+                    Aucun médecin trouvé.
+                  </div>
+                  <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12" *ngFor="let medecin of Medecin | search: filterText">
+                    <div class="card card-profile user-grid-card">
+                      <div class="card-body pt-3">
+                        <div class="text-center">
+                          <div class="profile-photo mb-2">
+                            <img src="assets/img/profile-img.jpg" width="64" height="64" class="img-fluid rounded-circle" alt="">
+                          </div>
+                          <div class="fw-semibold small">Dr. {{medecin?.nomMedecin}} {{medecin?.prenomMedecin}}</div>
+                          <div class="text-muted extra-small">{{medecin?.adresse?.ville}}</div>
+                          <div class="mt-2 small">
+                            <div><i class="bi bi-telephone me-1"></i>{{medecin?.telephoneMedecin_1}}</div>
+                            <div class="text-truncate"><i class="bi bi-geo-alt me-1"></i>{{medecin?.adresse?.ville}}</div>
+                          </div>
+                          <a class="btn btn-outline-primary btn-sm mt-3 px-3" [routerLink]="['/medecin/profil', medecin?.id]">Aperçu</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div> 
+</section>

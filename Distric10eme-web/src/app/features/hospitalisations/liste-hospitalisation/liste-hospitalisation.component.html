@@ -1,0 +1,92 @@
+<div class="pagetitle">
+  <h1>Liste des hospitalisations</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+      <li class="breadcrumb-item active">Hospitalisations</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="content-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="d-flex align-items-center mb-3 gap-2">
+            <button class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" (click)="addHospitalisation()">
+              <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Nouvelle hospitalisation</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title">Hospitalisations</h2>
+              <div class="row g-2 align-items-end mb-3">
+                <div class="col-md-4 col-lg-4">
+                  <label class="form-label">Recherche rapide</label>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control with-blue-border"
+                      placeholder="Patient, médecin, lit, statut..."
+                      [(ngModel)]="searchTerm"
+                      (ngModelChange)="applyFilter()"
+                    />
+                    <span class="input-group-text">
+                      <i class="fas fa-search fa-recherche"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border" role="status"></div>
+              </div>
+
+              <div *ngIf="!loading && filteredHospitalisations.length === 0" class="text-center py-5 text-muted">
+                Aucune hospitalisation trouvée.
+              </div>
+
+              <div *ngIf="!loading && filteredHospitalisations.length > 0" class="table-responsive">
+                <table class="table table-striped align-middle datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">Admission</th>
+                      <th scope="col">Sortie</th>
+                      <th scope="col">Patient</th>
+                      <th scope="col">Médecin</th>
+                      <th scope="col">Lit</th>
+                      <th scope="col">Statut</th>
+                      <th scope="col">Motif</th>
+                      <th scope="col">Observations</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let hosp of filteredHospitalisations">
+                      <td>{{ hosp.dateAdmission | date:'dd/MM/yyyy' }}</td>
+                      <td>{{ hosp.dateSortie | date:'dd/MM/yyyy' }}</td>
+                      <td>{{ hosp.patientId }}</td>
+                      <td>{{ hosp.medecinId }}</td>
+                      <td>{{ hosp.litId }}</td>
+                      <td>
+                        <span class="badge" [ngClass]="getStatutBadge(hosp)">
+                          {{ getStatutLabel(hosp) }}
+                        </span>
+                      </td>
+                      <td>{{ hosp.motifAdmission || '—' }}</td>
+                      <td>{{ hosp.observations || '—' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

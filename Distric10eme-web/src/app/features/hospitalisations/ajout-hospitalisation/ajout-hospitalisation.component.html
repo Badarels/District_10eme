@@ -1,0 +1,67 @@
+<div class="pagetitle">
+  <h1>Nouvelle hospitalisation</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+      <li class="breadcrumb-item"><a [routerLink]="'/hospitalisations'">Hospitalisations</a></li>
+      <li class="breadcrumb-item active">Création</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="content-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title">Détails de l'hospitalisation</h2>
+              <form [formGroup]="hospitalisationForm" (ngSubmit)="onSubmit()">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Patient <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" formControlName="patientId" placeholder="Identifiant patient" />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Médecin <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" formControlName="medecinId" placeholder="Identifiant médecin" />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Lit <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" formControlName="litId" placeholder="Identifiant lit" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Date d'admission <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" formControlName="dateAdmission" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Date de sortie</label>
+                    <input type="date" class="form-control" formControlName="dateSortie" />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Motif d'admission</label>
+                    <textarea class="form-control" rows="3" formControlName="motifAdmission"></textarea>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Observations</label>
+                    <textarea class="form-control" rows="3" formControlName="observations"></textarea>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                  <button type="button" class="btn btn-outline-secondary" (click)="onCancel()" [disabled]="loading">Annuler</button>
+                  <button type="submit" class="btn btn-primary" [disabled]="loading || hospitalisationForm.invalid">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                    Enregistrer
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

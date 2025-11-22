@@ -1,0 +1,191 @@
+<header id="header" class="header fixed-top d-flex align-items-center justify-content-between bg-white shadow-sm px-3">
+  <div class="d-flex align-items-center">
+    <a routerLink="/Accueil" class="logo d-flex align-items-center text-decoration-none">
+      <div class="logo-icon">
+        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Bâton central -->
+          <path d="M50 20L50 80" stroke="url(#caduceusGradient)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          
+          <!-- Serpent de gauche -->
+          <path d="M50 30C40 20 30 25 30 40C30 55 50 65 50 70C50 75 45 75 40 70" stroke="url(#snakeGradient1)" stroke-width="6" stroke-linecap="round" fill="none"/>
+          
+          <!-- Serpent de droite -->
+          <path d="M50 30C60 20 70 25 70 40C70 55 50 65 50 70C50 75 55 75 60 70" stroke="url(#snakeGradient2)" stroke-width="6" stroke-linecap="round" fill="none"/>
+          
+          <!-- Ailes -->
+          <path d="M30 25L50 15L70 25" stroke="#1e3c72" stroke-width="3" fill="none" stroke-linecap="round"/>
+          
+          <defs>
+            <linearGradient id="caduceusGradient" x1="50" y1="20" x2="50" y2="80" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#1e3c72"/>
+              <stop offset="1" stop-color="#2a5298"/>
+            </linearGradient>
+            <linearGradient id="snakeGradient1" x1="30" y1="30" x2="50" y2="70" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#1e8a3b"/>
+              <stop offset="1" stop-color="#4caf50"/>
+            </linearGradient>
+            <linearGradient id="snakeGradient2" x1="70" y1="30" x2="50" y2="70" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#1e8a3b"/>
+              <stop offset="1" stop-color="#4caf50"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-main">DISTRICT10EME</span>
+        <span class="logo-sub">SANTÉ & BIEN-ÊTRE</span>
+      </div>
+    </a>
+    <button type="button" class="btn btn-link p-0 ms-3 toggle-sidebar-btn" aria-label="Basculer le menu" (click)="toggleSidebar()">
+      <i class="bi bi-list fs-4"></i>
+    </button>
+  </div>
+
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center list-unstyled mb-0">
+      <!-- Notifications -->
+      <li class="nav-item dropdown me-3" ngbDropdown>
+        <a class="nav-link nav-icon" href="#" ngbDropdownToggle (click)="$event.preventDefault()">
+          <i class="bi bi-bell"></i>
+          <span class="badge bg-primary badge-number">4</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" ngbDropdownMenu>
+          <li class="dropdown-header">
+            You have 4 new notifications
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+              <h4>Lorem Ipsum</h4>
+              <p>Quae dolorem earum veritatis oditseno</p>
+              <p>30 min. ago</p>
+            </div>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+              <h4>Atque rerum nesciunt</h4>
+              <p>Quae dolorem earum veritatis oditseno</p>
+              <p>1 hr. ago</p>
+            </div>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+              <h4>Sit rerum fuga</h4>
+              <p>Quae dolorem earum veritatis oditseno</p>
+              <p>2 hrs. ago</p>
+            </div>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li class="notification-item">
+            <i class="bi bi-info-circle text-primary"></i>
+            <div>
+              <h4>Dicta reprehenderit</h4>
+              <p>Quae dolorem earum veritatis oditseno</p>
+              <p>4 hrs. ago</p>
+            </div>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li class="dropdown-footer"><a href="#">Show all notifications</a></li>
+        </ul>
+      </li>
+
+      <!-- Messages -->
+      <li class="nav-item dropdown me-3" ngbDropdown>
+        <a class="nav-link nav-icon" href="#" ngbDropdownToggle (click)="$event.preventDefault()">
+          <i class="bi bi-chat-left-text"></i>
+          <span class="badge bg-success badge-number">3</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages" ngbDropdownMenu>
+          <li class="dropdown-header">
+            You have 3 new messages
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li class="message-item">
+            <a href="#">
+              <img src="assets/img/messages-1.jpg" alt="" class="rounded-circle">
+              <div>
+                <h4>Maria Hudson</h4>
+                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                <p>4 hrs. ago</p>
+              </div>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li class="message-item">
+            <a href="#">
+              <img src="assets/img/messages-2.jpg" alt="" class="rounded-circle">
+              <div>
+                <h4>Anna Nelson</h4>
+                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                <p>6 hrs. ago</p>
+              </div>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li class="message-item">
+            <a href="#">
+              <img src="assets/img/messages-3.jpg" alt="" class="rounded-circle">
+              <div>
+                <h4>David Muldon</h4>
+                <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                <p>8 hrs. ago</p>
+              </div>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li class="dropdown-footer"><a href="#">Show all messages</a></li>
+        </ul>
+      </li>
+
+      <!-- Profile -->
+      <li class="nav-item dropdown pe-3" ngbDropdown>
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" ngbDropdownToggle (click)="$event.preventDefault()">
+          <img src="assets/img/profile-img.jpg" alt="" class="rounded-circle">
+          <span class="d-none d-md-block ps-2">A.B.Sock</span>
+          <i class="bi bi-chevron-down ms-1 text-muted small"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile" ngbDropdownMenu>
+          <li class="dropdown-header">
+            <h6>Alioune Badara Sock</h6>
+            <span>Développeur Web</span>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" routerLink="/users-profile">
+              <i class="bi bi-person"></i>
+              <span>Mon Profil</span>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" routerLink="/users-profile">
+              <i class="bi bi-gear"></i>
+              <span>Paramètre du compte</span>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" routerLink="/pages-faq">
+              <i class="bi bi-question-circle"></i>
+              <span>Besoin d'aide ?</span>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Se déconnecter</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>

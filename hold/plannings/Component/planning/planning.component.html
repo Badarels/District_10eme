@@ -1,0 +1,96 @@
+
+  <div class="pagetitle">
+    <h1>PLANNING</h1>
+    <div class="col-lg-12">
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a  [routerLink]="'/Accueil/accueil'">ACCUEIL</a></li>
+        <li class="breadcrumb-item">Liste</li>
+      </ol>
+    </nav>    
+    </div>
+  </div><!-- End Page Title -->
+  <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">PLANNING DES MISSIONS</h2>              
+                <!-- Formulaire de recherche à droite avec une taille md-5 -->
+                <div class="col-md-4 col-lg-4 offset-md-8 justify-content-md-end">
+                  <form class="form-inline mb-3 ml-auto">
+                    <div class="form-group mx-md-2 mb-2">
+                      <div class="input-group">
+                        <input class="form-control with-blue-border fas fa-search" type="search" [(ngModel)]="filteText" placeholder="Rechercher" aria-label="Search" name="filteText">
+                        <div class="input-group-append">
+                          <span class="input-group-text"><i class="fas fa-search fa-recherche"></i></span>
+                        </div>
+                      </div>  
+                    </div>
+                  </form>
+                </div> 
+                <div class="table-responsive">
+                <!-- Tableau avec des lignes rayées -->
+                <table class="table datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col" style="width: 900px;">Structure</th>
+                      <th scope="col" style="width: 200px;">Specilaite</th>
+                      <th scope="col" style="width: 200px;">Date</th>
+                      <th scope="col" style="width: 200px;">Types</th>
+                      <th scope="col" style="width: 500px;">Horaires</th>
+                      <th scope="col" style="width: 200px;">Statut</th>
+                      <th scope="col" style="width: 200px;">Candidat</th>
+                      <th scope="col" style="width: 200px;">Salaire</th>
+                      <th scope="col" style="width: 800px;">Commentaire</th>              
+                      <th scope="col" style="width: 200px;">Action</th>
+                    </tr>
+                  </thead> 
+                  <tbody>
+                  <tr *ngFor="let miss of missions">
+                      <!-- Contenu de la ligne -->
+                      <td>{{miss?.centreHospitalier?.nom_ch}}</td>
+                      <td>{{miss?.specialite?.nomSpecialite}}</td>
+                      <td [ngStyle]="getDateCellStyle(miss?.dateFinMissions)">
+                        {{miss?.dateFinMissions| date:'dd/MM/yyyy'}}
+                      </td>
+                      <td>{{miss?.typeHoraireMission}}</td>
+                      <td>
+                        {{ transformTimeToDateTime(miss?.startTime)?.toString() | date:'HH:mm' }} -
+                        {{ transformTimeToDateTime(miss?.endTime)?.toString() | date:'HH:mm' }}
+                      </td>
+                      <td [ngStyle]="getStatutAnnonceStyle(miss?.statutAnnonce)">
+                        {{ miss?.statutAnnonce }}
+                      </td>
+                      <td>{{miss?.medecin?.prenomMedecin}} {{miss?.medecin?.nomMedecin}}
+
+                      </td>
+                      <td>{{miss?.salaireMission}}</td>
+                      <td>{{miss?.detailMission}}</td>
+                      <td>
+                        <div ngbDropdown class="d-inline-block">
+                          <button class="btn btn-light buttonMenu d-inline-flex align-items-start" id="dropdownMenuButton" ngbDropdownToggle>
+                            <i class="bi bi-three-dots-vertical"></i>
+                          </button>
+                          <div ngbDropdownMenu [ngClass]="{'show': isDropdownOpen}" aria-labelledby="dropdownMenuButton">
+                            <!-- Utilisez [routerLink] pour "Modifier" et (click) pour "Supprimer" -->
+                            <button class="dropdown-item" >Aperçue</button>
+                            <button class="dropdown-item" >Modifier</button>
+                            <button class="dropdown-item" (click)="supprimerMissions($event, miss?.id)">Supprimer</button>
+                          </div>
+                        </div>
+                      </td>
+                  </tr>
+                  </tbody>
+                </table>
+                <!-- Fin du tableau avec des lignes rayées -->
+              </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </section>
+
+
+
+

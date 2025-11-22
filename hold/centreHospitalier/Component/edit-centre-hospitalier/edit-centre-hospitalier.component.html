@@ -1,0 +1,146 @@
+
+
+
+    <div class="pagetitle">
+      <h1>Edit CH</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a [routerLink]="'/Accueil/accueil'">Accueil</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="'/listeCentreHospitalier/list-CentreHospitalier'">CH</a></li>
+          <li class="breadcrumb-item active">Profile</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile" *ngIf="centrehospitalier">
+      <div class="row">
+        <div class="col-xl-8">
+           <div class="card">
+                <form [formGroup]="chForm" (ngSubmit)="onEditCh()">
+                    <div class="card-body pt-3">
+                    <!-- Bordered Tabs -->
+                    <ul class="nav nav-tabs nav-tabs-bordered">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit CH</button>
+                        </li>
+                        <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-overview">Edit Coordonnées CH</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content pt-2">
+                        <div class="tab-pane fade show active profile-edit pt-3" id="profile-edit">
+                            <div class="row mb-3">
+                                <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Nom de la Structure</label>
+                                <div class="col-md-8 col-lg-9">
+                                <input name="nom_ch" type="text" class="form-control" id="nom_ch" formControlName="nom_ch">
+                                </div>
+                            </div>
+        
+                            <div class="row mb-3">
+                                <label for="company" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                <div class="col-md-8 col-lg-9">
+                                <input name="email_ch" type="email" class="form-control" id="email_ch" formControlName="email_ch">
+                                </div>
+                            </div>
+        
+                            <div class="row mb-3">
+                                <label for="Job" class="col-md-4 col-lg-3 col-form-label" >Siret</label>
+                                <div class="col-md-8 col-lg-9">
+                                <input name="siret" type="text" class="form-control" id="siret" formControlName="siret">
+                                </div>
+                            </div>
+        
+                            <div class="row mb-3">
+                                <label for="Country" class="col-md-4 col-lg-3 col-form-label">Telephone</label>
+                                <div class="col-md-8 col-lg-9">
+                                <input name="telephone" type="text" class="form-control" id="telephone" formControlName="telephone">
+                                </div>
+                            </div>
+                        </div>
+      
+                        <div class="tab-pane fade profile-overview" id="profile-overview">
+                          <h5 class="card-title">Adresse CH</h5>
+                          <div class="row mb-3">
+                            <label for="region" class="col-md-4 col-lg-3 col-form-label">Region</label>
+                            <div class="col-md-8 col-lg-9">
+                              <input name="region" type="text" class="form-control" id="region" formControlName="region">
+                            </div>
+                          </div>
+                        
+                          <!-- Autres champs du formulaire -->
+                              <div class="row mb-3">
+                                  <label for="company" class="col-md-4 col-lg-3 col-form-label">Departement</label>
+                                  <div class="col-md-8 col-lg-9">
+                                  <input name="departement" type="email" class="form-control" id="departement" formControlName="departement">
+                                  </div>
+                              </div>
+          
+                              <div class="row mb-3">
+                                  <label for="Job" class="col-md-4 col-lg-3 col-form-label" >Ville</label>
+                                  <div class="col-md-8 col-lg-9">
+                                  <input name="ville" type="text" class="form-control" id="ville" formControlName="ville">
+                                  </div>
+                              </div>
+          
+                              <div class="row mb-3">
+                                  <label for="Country" class="col-md-4 col-lg-3 col-form-label">Nom Rue</label>
+                                  <div class="col-md-8 col-lg-9">
+                                  <input name="nomRue" type="text" class="form-control" id="nomRue" formControlName="nomRue">
+                                  </div>
+                              </div>
+
+                              <div class="row mb-3">
+                                <label for="Country" class="col-md-4 col-lg-3 col-form-label">Numero Rue</label>
+                                <div class="col-md-8 col-lg-9">
+                                <input name="numero_Rue" type="text" class="form-control" id="numero_Rue" formControlName="numero_Rue">
+                                </div>
+                              </div>
+
+                              <div class="row mb-3">
+                                <label for="Country" class="col-md-4 col-lg-3 col-form-label">Code postal</label>
+                                <div class="col-md-8 col-lg-9">
+                                <input name="codePostal" type="text" class="form-control" id="codePostal" formControlName="codePostal">
+                                </div>
+                              </div>
+
+                              <div class="row mb-3">
+                                <label for="Country" class="col-md-4 col-lg-3 col-form-label">Complement</label>
+                                <div class="col-md-8 col-lg-9">
+                                <input name="complement" type="text" class="form-control" id="complement" formControlName="complement">
+                                </div>
+                              </div>
+                      </div>
+                    </div><!-- End Bordered Tabs -->
+                 </div>
+                        <div class="card-footer text-muted">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                        </div>
+                </form>  
+            </div>
+        </div>
+        <div class="col-xl-4">
+
+            <div class="card">
+              <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+  
+                <!--<img src="" alt="Profile" class="rounded-circle">-->
+                <h2>{{centrehospitalier.nom_ch}}</h2>
+                <span>{{centrehospitalier.email_ch}}<span></span></span>
+                <h3>
+                  </h3>
+                <div class="social-links mt-2">
+                  <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                  <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                  <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                  <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+  
+          </div>
+      </div>
+    </section>
+

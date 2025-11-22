@@ -1,0 +1,171 @@
+/* Container principal */
+.consultation-form-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* En-tête */
+h2 {
+  color: #3f51b5;
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Étapes du formulaire */
+.step-content {
+  padding: 20px 0;
+  min-height: 300px;
+}
+
+/* En-tête des sections */
+h4 {
+  color: #3f51b5;
+  margin: 20px 0 15px;
+  font-weight: 500;
+}
+
+/* Champs du formulaire */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Boutons de navigation */
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+/* Boutons d'action */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+/* Éléments de prescription */
+.prescription-item {
+  background-color: #f9f9f9;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.prescription-item:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Zone de dépôt de fichiers */
+.file-upload-container {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.file-upload-container:hover {
+  border-color: #3f51b5;
+  background-color: #f5f5f5;
+}
+
+/* Liste des fichiers */
+.file-item {
+  border-bottom: 1px solid #eee;
+  height: auto !important;
+  padding: 12px 0;
+}
+
+.file-item:last-child {
+  border-bottom: none;
+}
+
+/* Indicateur de chargement */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  border-radius: 8px;
+}
+
+/* Messages d'erreur */
+.error-message {
+  color: #f44336;
+  font-size: 0.75rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+/* Style pour les onglets */
+.mat-step-header .mat-step-icon {
+  background-color: #e0e0e0;
+  color: #757575;
+}
+
+.mat-step-header .mat-step-icon-selected,
+.mat-step-header .mat-step-icon-state-done {
+  background-color: #3f51b5;
+  color: white;
+}
+
+/* Style pour les champs obligatoires */
+.required-field::after {
+  content: ' *';
+  color: #f44336;
+}
+
+/* Adaptation pour les petits écrans */
+@media (max-width: 768px) {
+  .consultation-form-container {
+    padding: 16px;
+  }
+  
+  .step-content {
+    min-height: auto;
+  }
+  
+  .row {
+    margin: 0 -8px;
+  }
+  
+  .col-md-6, .col-md-4, .col-md-3, .col-md-5 {
+    padding: 0 8px;
+  }
+}
+
+/* Animation de chargement */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(63, 81, 181, 0.3);
+  border-radius: 50%;
+  border-top-color: #3f51b5;
+  animation: spin 1s ease-in-out infinite;
+  margin-left: 10px;
+  vertical-align: middle;
+}

@@ -1,0 +1,139 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "Businesscenterservice-web": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": {
+              "base": "dist/businesscenterservice-web"
+            },
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.app.json",
+            "polyfills": ["zone.js"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/tinymce",
+                "output": "tinymce/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/chart.js/dist",
+                "output": "assets/vendor/chart.js"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/apexcharts/dist",
+                "output": "assets/vendor/apexcharts"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/echarts/dist",
+                "output": "assets/vendor/echarts"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/datatables.net",
+                "output": "assets/vendor/datatables"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/datatables.net-dt",
+                "output": "assets/vendor/datatables-dt"
+              }
+            ],
+            "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/assets/css/style.css",
+              "src/styles.css",
+              "./node_modules/ngx-toastr/toastr.css",
+              "./node_modules/bootstrap-icons/font/bootstrap-icons.css"
+            ],
+            "scripts": [
+              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "src/assets/js/main.js",
+              "src/assets/vendor/apexcharts/apexcharts.min.js"
+            ],
+            "browser": "src/main.ts"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "4mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "Businesscenterservice-web:build:production"
+            },
+            "development": {
+              "buildTarget": "Businesscenterservice-web:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "Businesscenterservice-web:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/styles.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "d9e31521-53af-477a-a1ba-cae81af18e52"
+  }
+}

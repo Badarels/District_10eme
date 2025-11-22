@@ -1,0 +1,319 @@
+
+    <div class="pagetitle">
+      <h1>Ajout Medecin</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a [routerLink]="'/Accueil/accueil'">Accueil</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="'/listeMedecin/list-medecin'">Formulaire</a></li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile">
+      <div class="row">
+        <div class="col-xl-12">
+        <div class="card">
+          <form [formGroup]="medecinForm" (submit)="ajoutMedecin()">
+            <div class="card-body pt-3">
+              <!-- Bordered Tabs -->
+              <ul class="nav nav-tabs nav-tabs-bordered">
+                <li class="nav-item">
+                  <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview"><strong>ETAT CIVIL</strong></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings"><strong>Coordonnées</strong></a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password"><strong>Profession</strong></a>
+                </li>
+              </ul>
+              
+              <div class="tab-content pt-2">
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                  <h5 class="card-title">Details Medecin</h5>
+                  <div class="row rowprofil">
+                    <div class="col-lg-3 col-md-4 label labelprofil">Nom </div>
+                    <div class="col-md-5 col-lg-5">
+                        <input    type="text" class="form-control border-subtle-blue" id="nomMedecin" formControlName="nomMedecin">
+                    </div>
+                  </div>
+
+                  <div class="row rowprofil">
+                    <div class="col-lg-3 col-md-4 label labelprofil">Prenom </div>
+                    <div class="col-md-5 col-lg-5">
+                        <input type="text" class="form-control border-subtle-blue" id="prenomMedecin" formControlName="prenomMedecin">
+                    </div>
+                  </div>
+
+                  <div class="row rowprofil">
+                    <div class="col-lg-3 col-md-1 label labelprofil">Email</div>
+                      <div class="col-md-5 col-lg-5">
+                        <input type="email" class="form-control border-subtle-blue" id="emailMedecin" formControlName="emailMedecin">
+                      </div>
+                  </div>
+                  
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-1 label labelprofil">Lieu de Naissance</div>
+                        <div class="col-md-5 col-lg-5">
+                            <input   type="text" class="form-control border-subtle-blue" id="lieuNaissanceMedecin"  formControlName="lieuNaissanceMedecin">
+                        </div>
+                    </div>
+
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">Date de Naissance</div>
+                      <div class="col-md-5 col-lg-5">
+                        <input type="date" id="dateNaissanceMedecin" formControlName="dateNaissanceMedecin" class="form-control input-small border-subtle-blue">                 
+                       </div>
+                    </div>
+
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">N° Telephone 1</div>
+                      <div class="col-md-5 col-lg-5">
+                          <input  type="text" class="form-control" id="telephoneMedecin_1" formControlName="telephoneMedecin_1">
+                      </div>
+                    </div>
+                    
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">N° Telephone 2</div>
+                      <div class="col-md-5 col-lg-5">
+                          <input    type="text" class="form-control" id="telephoneMedecin_2" formControlName="telephoneMedecin_2">
+                      </div>
+                    </div>
+
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">Sexe</div>
+                      <div class="col-md-5 col-lg-5">
+                        <fieldset class="row mb-3" >
+                              <div class="col-sm-11">
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio"  name="sexeMedecin" formControlName="sexeMedecin" id="gridRadios1" value="Masculin" checked="">
+                                <label class="form-check-label" style="font-size:small" for="gridRadios1">
+                                  MASCULIN
+                               </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sexeMedecin" formControlName="sexeMedecin" id="gridRadios2" value="Feminin">
+                                <label class="form-check-label" style="font-size:small" for="gridRadios2">
+                                  FEMININ
+                                </label>
+                              </div>
+                            </div>
+                        </fieldset>
+                     </div>
+                    </div>
+
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">Numéro Sécurité Sociale</div>
+                      <div class="col-md-5 col-lg-5">
+                        <input type="text" class="form-control border-subtle-blue" id="numeroSecuriteSocialeMedecin" formControlName="numeroSecuriteSocialeMedecin">
+                    </div>
+                    </div>
+
+                </div>
+
+                <div class="tab-pane fade pt-3" id="profile-settings">
+                   <!-- Nouveau bouton pour basculer le formulaire d'adresse 
+                   <h5 class="card-title">Details Adresse</h5>-->
+                        
+                  <div class="row rowprofil justify-content-center">
+                    <div class="col-lg-6 d-flex align-items-center">
+                      <button type="button" class="btn btn-light border-subtle-blue" style="margin: 20px;" (click)="basculerFormulaireAdresse()">Nouveau Adresse</button>
+
+                      <div #dropdown class="dropdown" (click)="toggleDropdown()">
+                        <button type="button" class="btn btn-light dropdown-toggle border-subtle-blue" data-bs-toggle="dropdown" aria-expanded="false"  [disabled]="afficherFormulaireAdresse">
+                          <span *ngIf="!selectedAddress">Choisir une adresse...</span>
+                          <span *ngIf="selectedAddress">
+                            {{ selectedAddress.ville + ' ' + selectedAddress.departement + ' ' + selectedAddress.nomRue + ' ' + selectedAddress.numeroRue }}
+                            <button type="button" class="btn btn-close btn-lg" aria-label="Close" (click)="deselectAddress()"></button>
+                          </span>
+                        </button>
+                        <ul class="dropdown-menu" [class.show]="showDropdown">
+                          <li style="margin: 10px;">
+                            <div class="col-md-8 col-lg-8">
+                              <div class="input-group" style="width: 350px;">
+                                <input type="search" class="form-control fas fa-search with-blue-border" placeholder="Rechercher" [(ngModel)]="filtreText" name="filtreText" style="width: 300px;" (click)="$event.stopPropagation()">
+                                <div class="input-group-append" style="height: 30px;">
+                                  <span class="input-group-text"><i class="fas fa-search fa-recherche"></i></span>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                          <li *ngFor="let adresse of adresses | searchAdresse: filtreText">
+                            <a class="dropdown-item" (click)="selectAddress(adresse)">
+                              {{ adresse.ville }} {{ adresse.departement }} {{ adresse.nomRue }} {{ adresse.numeroRue }}
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+              
+                  <div *ngIf="afficherFormulaireAdresse">
+                    
+                    <!-- formulaire de saise d'une nouvelle adresse! -->
+                    
+                      <h5 class="card-title">Saisie Nouvelle adresse</h5>
+                      <div class="row rowprofil">
+                        <div class="col-lg-3 col-md-4 label labelprofil">Nom Rue </div>
+                        <div class="col-md-5 col-lg-5">
+                          <input type="text" class="form-control" id="nomRue" formControlName="nomRue">
+                      </div>
+                      </div>
+
+                        <div class="row rowprofil">
+                          <div class="col-lg-3 col-md-4 label labelprofil">Numero Rue</div>
+                          <div class="col-md-5 col-lg-5">
+                              <input type="text" class="form-control" id="numeroRue" formControlName="numeroRue">
+                          </div>
+                        </div>
+                        
+                        <div class="row rowprofil">
+                          <div class="col-lg-3 col-md-4 label labelprofil">Departement</div>
+                          <div class="col-md-5 col-lg-5">
+                              <input    type="text" class="form-control" id="departement" formControlName="departement">
+                          </div>
+                        </div>
+
+                        <div class="row rowprofil">
+                          <div class="col-lg-3 col-md-4 label labelprofil">Ville</div>
+                          <div class="col-md-5 col-lg-5">
+                              <input    type="text" class="form-control" id="ville" formControlName="ville">
+                          </div>
+                        </div>
+
+                        <div class="row rowprofil">
+                          <div class="col-lg-3 col-md-4 label labelprofil">Region</div>
+                          <div class="col-md-5 col-lg-5">
+                              <input    type="text" class="form-control" id="region" formControlName="region">
+                        </div>
+                      </div>
+                        
+                        <div class="row rowprofil">
+                          <div class="col-lg-3 col-md-4 label labelprofil">Code postal</div>
+                          <div class="col-md-5 col-lg-5">
+                              <input  type="text" class="form-control" id="codePostal" formControlName="codePostal">
+                          </div>
+                        </div>
+                        
+                        <div class="row rowprofil">
+                          <div class="col-lg-3 col-md-4 label labelprofil">Complement</div>
+                          <div class="col-md-5 col-lg-5">
+                              <input type="text" class="form-control" id="complement" formControlName="complement">
+                          </div>
+                        </div>
+                    <!-- End settings Form -->
+                  </div>
+
+                </div>
+                <div class="tab-pane fade pt-3" id="profile-change-password">
+                 
+                  <h5 class="card-title">Details Profession</h5>
+
+                  <div class="row rowprofil">
+                    <div class="col-lg-3 col-md-4 label labelprofil">Spécialités</div>
+                
+                    <!-- liste deroulant des specialistes-->
+                  <div class="btn-group dropend col-md-6">
+                    <button type="button" class="btn btn-light dropdown-toggle border-subtle-blue" data-bs-toggle="dropdown" aria-expanded="false">
+                      {{ specialitesSelectionnees.length > 0 ? 'Spécialités sélectionnées' : 'Choisir des spécialités...' }}
+                    </button>
+                    <ul class="dropdown-menu">  
+                      <li style="margin: 10px;">
+                        <input type="text" class="form-control" placeholder="Rechercher" name="rechercherAdresse">
+                      </li>
+                      <li *ngFor="let specialite of Specialite" value="{{specialite.id}}">
+                        <a class="dropdown-item">
+                          <input class="form-check-input me-1" type="checkbox" 
+                                id="{{ specialite.id }}"
+                                [checked]="specialitesSelectionnees.includes(specialite)"
+                                (change)="toggleSpecialiteSelection(specialite)">
+                          {{specialite.nomSpecialite}}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  </div>
+                  
+                  <div class="row rowprofil">
+                    <div class="col-lg-3 col-md-4 label labelprofil">Qualifaications</div>
+                      <div class="col-md-6">
+                        <select id="inputState" class="form-select" formControlName="qualifications">
+                          <option selected disabled>Qualifaications</option>
+                          <ng-container>
+                            <option>NIVEAU 3</option>
+                            <option>SMUR</option>
+                            <option>SAU</option>
+                          </ng-container>
+                        </select>
+                      </div>  
+                  </div>
+
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">Statut</div>
+                      <div class="col-md-6">
+                        <select id="inputState"  class="form-select" formControlName="statutMedecin">
+                          <option selected>Statut</option>
+                          <option [value]="">Praticien Hospitalier</option>
+                          <option [value]="">Remplaçant</option>
+                          <option [value]="">Temps Plein</option>
+                          <option [value]="">Temps Partiel</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">Inscription à L'ordre</div>
+                      <div class="col-md-5 col-lg-5">
+                        <fieldset class="row mb-3" >
+                            <div class="col-sm-11">
+                              <div class="form-check">
+                                <input class="form-check-input"
+                                 type="radio" name="inscription_A_lordre" formControlName="inscription_A_lordre" id="gridRadios1" value="Oui" checked="">
+                                <label class="form-check-label" style="font-size:small" for="gridRadios1">
+                                  OUI
+                               </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="inscription_A_lordre" formControlName="inscription_A_lordre" id="gridRadios2" value="Non ">
+                                <label class="form-check-label" style="font-size:small" for="gridRadios2">
+                                  NON
+                                </label>
+                              </div>
+                            </div>
+                        </fieldset>
+                     </div>
+                  </div>
+
+                      <div class="row rowprofil">
+                        <div class="col-lg-3 col-md-4 label labelprofil">Numéro RPPS</div>
+                        <div class="col-md-5 col-lg-5">
+                          <input type="text" class="form-control" id="numeroRpps" formControlName="numeroRpps">
+                      </div>
+                     </div>
+                    
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">Date d'écheance</div>
+                      <div class="col-md-5 col-lg-5">
+                        <input  type="date" id="dateEcheance" formControlName="dateEcheance" class="form-control input-small">       
+                      </div>
+                      </div>
+                    </div>
+                  <!-- End Change Password Form -->
+              </div><!-- End Bordered Tabs -->              
+            </div>
+          
+            <div class="card-footer text-muted">
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                  </div>
+              </div>
+          </form>
+        </div>
+          
+        </div>
+        </div>
+      </section>
+
+  
+

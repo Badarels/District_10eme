@@ -1,0 +1,131 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2>Modifier Personnel Médical</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div *ngIf="loading && !personnelForm.get('nom')?.value" class="text-center py-5">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+
+      <form [formGroup]="personnelForm" (ngSubmit)="onSubmit()" *ngIf="!loading || personnelForm.get('nom')?.value">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Type de Personnel <span class="text-danger">*</span></label>
+            <select
+              class="form-select"
+              formControlName="typePersonnel"
+              [class.is-invalid]="personnelForm.get('typePersonnel')?.invalid && personnelForm.get('typePersonnel')?.touched"
+            >
+              <option value="">Sélectionner</option>
+              <option *ngFor="let type of typePersonnelOptions" [value]="type">
+                {{ type }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3" *ngIf="showSpecialite">
+            <label class="form-label">Spécialité</label>
+            <select class="form-select" formControlName="specialiteId">
+              <option value="">Sélectionner une spécialité</option>
+              <option *ngFor="let spec of specialites" [value]="spec.id">
+                {{ spec.nom }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Numéro d'Ordre</label>
+            <input type="text" class="form-control" formControlName="numeroOrdre" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Numéro de Licence</label>
+            <input type="text" class="form-control" formControlName="numeroLicence" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nom <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="nom" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Prénom <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="prenom" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Sexe <span class="text-danger">*</span></label>
+            <select class="form-select" formControlName="sexe">
+              <option value="">Sélectionner</option>
+              <option value="M">Masculin</option>
+              <option value="F">Féminin</option>
+            </select>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Date de Naissance <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" formControlName="dateNaissance" />
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Date d'Embauche</label>
+            <input type="date" class="form-control" formControlName="dateEmbauche" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Email <span class="text-danger">*</span></label>
+            <input type="email" class="form-control" formControlName="email" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Téléphone</label>
+            <input type="tel" class="form-control" formControlName="telephone" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 mb-3">
+            <label class="form-label">Adresse</label>
+            <textarea class="form-control" rows="3" formControlName="adresse"></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" formControlName="actif" id="actif">
+              <label class="form-check-label" for="actif">
+                Actif
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading || personnelForm.invalid">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

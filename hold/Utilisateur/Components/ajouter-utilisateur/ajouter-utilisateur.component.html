@@ -1,0 +1,134 @@
+
+  <div class="pagetitle">
+    <h1>Ajout D'utilisateur</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a [routerLink]="'/listeUtilisateur/list-utilisateur'">Liste utilisateurs</a></li>
+        <li class="breadcrumb-item">Formulaire</li>
+      
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+  <section class="section">
+    <div class="row">
+     
+<div class="col-lg-10 offset-1">
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"  style="font-size: medium; font-weight: bold;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> formulaire d'ajout utilisateur</font></font></h5>
+
+      <!-- General Form Elements -->
+      <form [formGroup]="userForm" (submit)="onSaveUtilisateurs()">
+        <div class="row mb-3 offset-md-3">
+          <label class="form-label" for="form3Example3">Prenom: </label>
+            <div class="col-sm-8">
+            <input type="text" id="prenomuser" formControlName="prenomuser" class="form-control input-small">
+          </div>
+        </div>
+
+        <div class="row mb-3 offset-md-3">
+          <label class="form-label" for="form3Example3">Nom: </label>
+            <div class="col-sm-8">
+            <input type="text" id="nomuser" formControlName="nomuser" class="form-control input-small">
+          </div>
+        </div>
+
+        <div class="row mb-3 offset-md-3">
+          <label class="form-label" for="form3Example3">Email: </label>
+            <div class="col-sm-8">
+            <input type="email" id="emailuser" formControlName="emailuser" class="form-control input-small">
+          </div>
+        </div>
+
+        <div class="row mb-3 offset-md-3">
+          <label class="form-label" for="form3Example3">Mot de passe: </label>
+            <div class="col-sm-8">
+            <input type="password" id="passworduser" formControlName="passworduser" class="form-control input-small">
+          </div>
+        </div>
+
+        <div class="row mb-3 offset-md-3">
+          <label class="form-label" for="form3Example3 ">Telephone: </label>
+            <div class="col-sm-8">
+            <input type="text" id="telephoneuser" formControlName="telephoneuser" class="form-control input-small">
+          </div>
+        </div>
+      
+        <div class="row mb-3 offset-md-3" >
+            <label class="form-label" for="form3Example3 ">INE: </label>
+            <div class="col-sm-8">
+            <input type="text" id="ineuser" formControlName="ineuser" class="form-control input-small">
+          </div>
+        </div>
+
+        <div class="row mb-3 offset-md-3" >
+          <label class="form-label" for="form3Example3 ">Adresse: </label>
+            <div class="col-sm-8">
+            <textarea id="adresseuser" formControlName="adresseuser" class="form-control input-small"  rows="5">Adresse</textarea>
+          </div>
+        </div>
+        
+        <div class="row mb-3 offset-md-3" >
+          <label class="form-label" for="form3Example3 ">Date de Naissance: </label>
+            <div class="col-sm-8">
+            <input type="date" id="datenaissuser" formControlName="datenaissuser" class="form-control input-small">
+          </div>
+        </div>
+
+        <div class="row mb-3 mt-5">
+          <div class="col-md-6 mb-3">
+            <fieldset class="mb-3 offset-7">
+              <legend class="form-label" style="font-size: medium; font-weight: bold;">Roles: </legend>
+              <!-- Contenu du premier fieldset -->
+              <div class="col-sm-8">
+                <div class="form-check" *ngFor="let role of roles"> <!-- Supposons que vous ayez une liste de rôles -->
+                  <input class="form-check-input" type="radio" formControlName="role" [value]="role" id="{{role.id}}">
+                  <label class="form-check-label" style="font-size:small" [for]="role.id">
+                    {{ role.nomRoles}}
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+            
+            
+            
+            
+          </div>
+          <div class="col-md-6">
+            <fieldset class="mb-3 offset-2">
+              <legend class="form-label" style="font-size: medium; font-weight: bold;">Sexe: </legend>
+              <!-- Contenu du deuxième fieldset -->
+              <div class="col-sm-8">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sexeuser" formControlName="sexeuser" id="gridRadios4" value="Masculin" checked="">
+                  <label class="form-check-label" style="font-size:small" for="gridRadios4">
+                    MASCULIN
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sexeuser" formControlName="sexeuser" id="gridRadios5" value="Feminin">
+                  <label class="form-check-label" style="font-size:small" for="gridRadios5">
+                    FEMININ
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        
+        
+
+   
+        <div class="row mb-3 offset-4">
+          <div class="col-sm-8">
+            <button type="submit" class="btn btn-primary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Soumettre</font></font></button>
+          </div>
+        </div>
+
+      </form><!-- End General Form Elements -->
+
+    </div>
+   </div>
+ </div>
+</div>

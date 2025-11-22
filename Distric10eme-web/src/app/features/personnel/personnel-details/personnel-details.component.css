@@ -1,0 +1,13 @@
+.card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+strong {
+  color: #012970;
+  font-weight: 600;
+}
+
+p {
+  color: #6c757d;
+}
+

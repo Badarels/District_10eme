@@ -1,0 +1,108 @@
+<div class="pagetitle">
+  <h1>Liste des utilisateurs</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+      <li class="breadcrumb-item active">Administration</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="content-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="d-flex align-items-center mb-3 user-list-toggles gap-2">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-light" [class.active]="activeTab==='list'" (click)="setTab('list')">Vue Liste</button>
+              <button type="button" class="btn btn-light" [class.active]="activeTab==='grid'" (click)="setTab('grid')">Vue Grille</button>
+            </div>
+            <button class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" [routerLink]="['/users/ajout']">
+              <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Ajouter</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title">Utilisateurs</h2>
+              <div class="row g-2 align-items-end mb-3">
+                <div class="col-md-4 col-lg-4 ms-auto justify-content-md-end">
+                  <label class="form-label">Recherche</label>
+                  <div class="input-group">
+                    <input class="form-control with-blue-border" type="search" placeholder="Nom, email, rôle..." [(ngModel)]="searchTerm" />
+                    <span class="input-group-text"><i class="fas fa-search fa-recherche"></i></span>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border" role="status"></div>
+              </div>
+
+              <div *ngIf="!loading && filteredUsers.length === 0" class="text-center py-5 text-muted">
+                Aucun utilisateur trouvé.
+              </div>
+
+              <div *ngIf="!loading && filteredUsers.length > 0">
+                <div class="table-responsive" *ngIf="activeTab === 'list'; else gridView">
+                  <table class="table table-striped align-middle datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prénom</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Rôle</th>
+                        <th scope="col">Statut</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let user of filteredUsers">
+                        <td>{{ user.nom }}</td>
+                        <td>{{ user.prenom }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.roleNom }}</td>
+                        <td>
+                          <span class="badge" [ngClass]="user.actif ? 'bg-success' : 'bg-danger'">
+                            {{ user.actif ? 'Actif' : 'Inactif' }}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <ng-template #gridView>
+                  <div class="row user-grid g-3">
+                    <div class="col-12 text-center text-muted" *ngIf="filteredUsers.length === 0">
+                      Aucun utilisateur trouvé.
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12" *ngFor="let user of filteredUsers">
+                      <div class="card card-profile user-grid-card">
+                        <div class="card-body pt-3">
+                          <div class="text-center">
+                            <div class="profile-photo mb-2">
+                              <img src="assets/img/profile-img.jpg" width="64" height="64" class="img-fluid rounded-circle" alt="" />
+                            </div>
+                            <div class="fw-semibold small">{{ user.nom }} {{ user.prenom }}</div>
+                            <div class="text-muted extra-small">{{ user.roleNom }}</div>
+                            <div class="mt-2 small">
+                              <div><i class="bi bi-envelope me-1"></i>{{ user.email }}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

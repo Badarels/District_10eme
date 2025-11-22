@@ -1,0 +1,123 @@
+/* Style du filigrane de chargement */
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+  color: #0d6efd;
+}
+
+/* Style des badges */
+.badge {
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  letter-spacing: 0.5px;
+}
+
+/* Style des boutons d'action */
+.btn-group .btn {
+  border-radius: 0.25rem;
+  margin: 0 0.1rem;
+  transition: all 0.2s;
+}
+
+.btn-group .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Style des icônes */
+.bi {
+  font-size: 1rem;
+}
+
+/* Style du fil d'Ariane */
+.breadcrumb {
+  background-color: transparent;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: ">";
+}
+
+/* Style des cartes */
+.card {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  margin-bottom: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+/* Style des tableaux */
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  border-top: none;
+  padding: 0.75rem 1rem;
+}
+
+.table td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-color: #edf2f9;
+}
+
+/* Style des champs de formulaire */
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #4a5568;
+}
+
+.form-select, .form-control {
+  border: 1px solid #d2ddec;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-select:focus, .form-control:focus {
+  border-color: #85c1e9;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+}
+
+/* Style des boutons */
+.btn-outline-primary {
+  color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Style de la pagination */
+.pagination {
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+
+/* Style des messages d'erreur */
+.text-muted {
+  color: #6c757d !important;
+}
+

@@ -1,0 +1,91 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Détails du Patient</h2>
+        <div>
+          <button class="btn btn-warning me-2" (click)="editPatient()">
+            <i class="bi bi-pencil"></i> Modifier
+          </button>
+          <button class="btn btn-secondary" (click)="goBack()">
+            <i class="bi bi-arrow-left"></i> Retour
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && patient" class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <strong>Numéro de Dossier:</strong>
+          <p class="mb-0">{{ patient.numeroDossier }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <strong>Groupe Sanguin:</strong>
+          <p class="mb-0">{{ patient.groupeSanguin || 'Non renseigné' }}</p>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <strong>Nom:</strong>
+          <p class="mb-0">{{ patient.nom }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <strong>Prénom:</strong>
+          <p class="mb-0">{{ patient.prenom }}</p>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <strong>Sexe:</strong>
+          <p class="mb-0">{{ patient.sexe === 'M' ? 'Masculin' : 'Féminin' }}</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <strong>Date de Naissance:</strong>
+          <p class="mb-0">{{ patient.dateNaissance | date:'dd/MM/yyyy' }}</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <strong>Date d'Enregistrement:</strong>
+          <p class="mb-0">{{ patient.dateEnregistrement | date:'dd/MM/yyyy' }}</p>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <strong>Téléphone:</strong>
+          <p class="mb-0">{{ patient.telephone || 'Non renseigné' }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <strong>Email:</strong>
+          <p class="mb-0">{{ patient.email || 'Non renseigné' }}</p>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="col-12 mb-3">
+          <strong>Adresse:</strong>
+          <p class="mb-0">{{ patient.adresse || 'Non renseigné' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

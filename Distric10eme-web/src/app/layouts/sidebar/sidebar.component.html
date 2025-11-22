@@ -1,0 +1,195 @@
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-header d-flex align-items-center justify-content-between">
+    <h5 class="sidebar-title mb-0 fw-bold text-primary text-uppercase position-relative">Menu</h5>
+    <style>
+      .sidebar-title {
+        font-weight: 600;
+        color: #012970;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    </style>
+    <button class="btn btn-link p-0 d-lg-none" (click)="toggle()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+  <div class="sidebar-content">
+    <ul class="sidebar-nav" id="sidebar-nav">
+    <!-- Dashboard -->
+    <li class="nav-item mb-1">
+      <a class="nav-link d-flex align-items-center gap-2" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <i class="bi bi-speedometer2 fs-5"></i>
+        <span>Tableau de bord</span>
+      </a>
+    </li>
+
+    <!-- Patients -->
+    <li class="nav-item mb-1">
+      <a class="nav-link d-flex align-items-center justify-content-between" [class.collapsed]="patientsCollapsed" (click)="toggleSection('patients'); $event.preventDefault()" role="button" href="#">
+        <i class="bi bi-person-heart fs-5 me-2"></i>
+        <span>Patients</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <div id="patients-nav" class="collapse" [ngbCollapse]="patientsCollapsed">
+        <ul class="nav-content list-unstyled ms-4 mt-1">
+          <li>
+            <a routerLink="/patients/ajout" routerLinkActive="active">
+              <i class="bi bi-person-plus"></i> Nouveau patient
+            </a>
+          </li>
+          <li>
+            <a routerLink="/patients" routerLinkActive="active">
+              <i class="bi bi-list-ul"></i> Liste des patients
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Rendez-vous -->
+    <li class="nav-item mb-1">
+      <a class="nav-link d-flex align-items-center justify-content-between" [class.collapsed]="rendezvousCollapsed" (click)="toggleSection('rendezvous'); $event.preventDefault()" role="button" href="#">
+        <i class="bi bi-calendar-check fs-5 me-2"></i>
+        <span>Rendez-vous</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <div id="rendezvous-nav" class="collapse" [ngbCollapse]="rendezvousCollapsed">
+        <ul class="nav-content list-unstyled ms-4 mt-1">
+          <li>
+            <a routerLink="/rendezvous/ajout" routerLinkActive="active">
+              <i class="bi bi-plus-circle"></i> Nouveau rendez-vous
+            </a>
+          </li>
+          <li>
+            <a routerLink="/rendezvous" routerLinkActive="active">
+              <i class="bi bi-list-ul"></i> Liste des rendez-vous
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Consultations -->
+    <li class="nav-item mb-1">
+      <a class="nav-link d-flex align-items-center justify-content-between" [class.collapsed]="consultationsCollapsed" (click)="toggleSection('consultations'); $event.preventDefault()" role="button" href="#">
+        <i class="bi bi-clipboard-pulse fs-5 me-2"></i>
+        <span>Consultations</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <div id="consultations-nav" class="collapse" [ngbCollapse]="consultationsCollapsed">
+        <ul class="nav-content list-unstyled ms-4 mt-1">
+          <li>
+            <a routerLink="/consultations/consultation/nouvelle" routerLinkActive="active">
+              <i class="bi bi-plus-circle"></i> Nouvelle consultation
+            </a>
+          </li>
+          <li>
+            <a routerLink="/consultations" routerLinkActive="active">
+              <i class="bi bi-list-ul"></i> Liste des consultations
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Hospitalisations -->
+    <li class="nav-item mb-1">
+      <a class="nav-link d-flex align-items-center justify-content-between" [class.collapsed]="hospitalisationsCollapsed" (click)="toggleSection('hospitalisations'); $event.preventDefault()" role="button" href="#">
+        <i class="bi bi-hospital fs-5 me-2"></i>
+        <span>Hospitalisations</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <div id="hospitalisations-nav" class="collapse" [ngbCollapse]="hospitalisationsCollapsed">
+        <ul class="nav-content list-unstyled ms-4 mt-1">
+          <li>
+            <a routerLink="/hospitalisations/ajout" routerLinkActive="active">
+              <i class="bi bi-plus-circle"></i> Nouvelle hospitalisation
+            </a>
+          </li>
+          <li>
+            <a routerLink="/hospitalisations" routerLinkActive="active">
+              <i class="bi bi-list-ul"></i> Liste des hospitalisations
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Personnel médical -->
+    <li class="nav-item mb-1">
+      <a class="nav-link d-flex align-items-center justify-content-between" [class.collapsed]="personnelCollapsed" (click)="toggleSection('personnel'); $event.preventDefault()" role="button" href="#">
+        <i class="bi bi-people fs-5 me-2"></i>
+        <span>Personnel médical</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <div id="personnel-nav" class="collapse" [ngbCollapse]="personnelCollapsed">
+        <ul class="nav-content list-unstyled ms-4 mt-1">
+          <li>
+            <a routerLink="/personnel" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <i class="bi bi-list-ul"></i> Liste du personnel
+            </a>
+          </li>
+          <li>
+            <a routerLink="/personnel/ajout" routerLinkActive="active">
+              <i class="bi bi-person-plus"></i> Ajouter un membre
+            </a>
+          </li>
+          <li>
+            <a routerLink="/personnel/planning" routerLinkActive="active">
+              <i class="bi bi-calendar-week"></i> Planning du personnel
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Administration -->
+    <li class="nav-item mb-1">
+      <a class="nav-link d-flex align-items-center justify-content-between" [class.collapsed]="administrationCollapsed" (click)="toggleSection('administration'); $event.preventDefault()" role="button" href="#">
+        <i class="bi bi-gear fs-5 me-2"></i>
+        <span>Administration</span>
+        <i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <div id="administration-nav" class="collapse" [ngbCollapse]="administrationCollapsed">
+        <ul class="nav-content list-unstyled ms-4 mt-1">
+          <li>
+            <a routerLink="/users" routerLinkActive="active">
+              <i class="bi bi-people"></i> Utilisateurs
+            </a>
+          </li>
+          <li>
+            <a routerLink="/administration/roles" routerLinkActive="active">
+              <i class="bi bi-shield-lock"></i> Rôles &amp; permissions
+            </a>
+          </li>
+          <li>
+            <a routerLink="/administration/services" routerLinkActive="active">
+              <i class="bi bi-building"></i> Services hospitaliers
+            </a>
+          </li>
+          <li>
+            <a routerLink="/administration/specialites" routerLinkActive="active">
+              <i class="bi bi-heart-pulse"></i> Spécialités médicales
+            </a>
+          </li>
+          <li>
+            <a routerLink="/administration/parametres" routerLinkActive="active">
+              <i class="bi bi-sliders"></i> Paramètres
+            </a>
+          </li>
+          <li>
+            <a routerLink="/reporting" routerLinkActive="active">
+              <i class="bi bi-graph-up"></i> Rapports
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    </ul>
+  </div>
+</aside>
+
+<!-- Overlay pour mobile -->
+<div *ngIf="isMobile && isCollapsed" class="sidebar-overlay" (click)="toggle()"></div>

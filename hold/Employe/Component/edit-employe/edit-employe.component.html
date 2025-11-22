@@ -1,0 +1,167 @@
+<div class="pagetitle">
+      <h1>Modifier employe</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a [routerLink]="'/Acceuil/accueil'">Accueil</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="'/ListeEmploye/liste-employe'">Employes</a></li>
+          <li class="breadcrumb-item active">EditerEmploye</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile" >
+      <div class="row">
+        
+       
+        <div class="col-xl-8">
+           <div class="card">
+                <form [formGroup]="employeForm" (ngSubmit)="modifierEmploye()">
+                    <div class="card-body pt-3">
+                    <!-- Bordered Tabs -->
+                    <ul class="nav nav-tabs nav-tabs-bordered">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-edit">Ajout Employe</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-overview">Coordonnées Employe</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content pt-2">
+                        <div class="tab-pane fade show active profile-edit pt-3" id="profile-edit">
+
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Nom:</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="text" id="nom" formControlName="nom" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Prenom:</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="text" id="prenom" formControlName="prenom" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="typeHoraireMission" class="col-md-4 col-lg-3 col-form-label horairelabel">Sexe</label> 
+                                <div class="col-md-6 col-lg-6">      
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="sexe" formControlName="sexe" aria-label="sexe">
+                                            <option value="Masculin">Masculin</option>
+                                            <option value="Féminin">Féminin</option>
+                                        </select>
+                                        <label for="floatingSelect">Sexe</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Lieu DE Naissance:</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="text" id="lieunaissance" formControlName="lieunaissance" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+                            
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Date de Naissance</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="date" id="datenaissance" formControlName="datenaissance" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Date d'empboche</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="date" id="dateEmboche" formControlName="dateEmboche" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Poste:</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="text" id="poste" formControlName="poste" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="typeHoraireMission" class="col-md-4 col-lg-3 col-form-label horairelabel">Type</label> 
+                                <div class="col-md-6 col-lg-6">      
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="type" formControlName="type" aria-label="type">
+                                            <option value="Contractuel">Contractuel</option>
+                                            <option value="Permanent">Permanent</option>
+                                            <option value="Temps partiel">Temps partiel</option>
+                                            <option value="Stagiaire">Stagiaire</option>  
+                                            <option value="Freelance">Freelance</option>  
+                                            <option value="Consultant">Consultant</option>
+                                            <option value="Prestataire">Prestataire</option>
+                                        </select>
+                                        <label for="floatingSelect">Type</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Salaire :</div>  
+                                <div class="col-md-6 col-lg-6">      
+                                    <input type="number" placeholder="00.0" class="form-control" id="salaireDeBase" formControlName="salaireDeBase">
+                                </div>    
+                            </div>
+
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">ipres:</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="text" id="ipres" formControlName="ipres" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">vrs:</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="text" id="vrs" formControlName="vrs" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+
+                     </div> 
+                    
+                    <div class="tab-pane fade  profile-overview" id="profile-overview">
+                        <h5 class="card-title">Coordonnées De L'employé</h5>
+                      
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Adresse</div>  
+                                <div class="col-md-6 col-lg-6">      
+                                    <textarea  name="adresseEmploye" placeholder="Adresse Employé" class="form-control" id="adresseEmploye" style="height: 100px;" formControlName="adresseEmploye"></textarea>
+                                </div>    
+                            </div>
+
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Téléphone:</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="text" id="telephone" formControlName="telephone" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Email:</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="email" id="email" formControlName="email" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!-- End Bordered Tabs -->
+
+                    </div>
+                        <div class="card-footer text-muted">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                <button type="reset" class="btn btn-secondary" onclick="goBack()" style="margin-left: 10px;">Annuler</button>
+                            </div>
+                        </div>
+                </form>  
+            </div>
+        </div>
+      </div>
+    </section>

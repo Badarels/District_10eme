@@ -1,0 +1,125 @@
+<div class="pagetitle">
+  <h1>Liste des consultations</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+      <li class="breadcrumb-item active">Consultations</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="content-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="d-flex align-items-center mb-3 gap-2">
+            <button class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" (click)="addConsultation()">
+              <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Nouvelle consultation</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title">Consultations</h2>
+              <div class="row g-2 align-items-end mb-3">
+                <div class="col-md-4 col-lg-4">
+                  <label class="form-label">Recherche rapide</label>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control with-blue-border"
+                      placeholder="Patient, médecin, motif, diagnostic..."
+                      [(ngModel)]="searchTerm"
+                      (ngModelChange)="applyFilter()"
+                    />
+                    <span class="input-group-text">
+                      <i class="fas fa-search fa-recherche"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border" role="status"></div>
+              </div>
+
+              <div *ngIf="!loading && filteredConsultations.length === 0" class="text-center py-5 text-muted">
+                Aucune consultation trouvée.
+              </div>
+
+              <div *ngIf="!loading && filteredConsultations.length > 0" class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Patient</th>
+                      <th>Médecin</th>
+                      <th>Type</th>
+                      <th>Diagnostic</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let consultation of filteredConsultations">
+                      <td>{{ consultation.dateConsultation | date:'dd/MM/yyyy HH:mm' }}</td>
+                      <td>
+                        <a [routerLink]="['/patients/detail', consultation.patientId]" class="text-primary">
+                          {{ patients[consultation.patientId].prenom }} {{ patients[consultation.patientId].nom }}
+                          <small class="d-block text-muted" *ngIf="patients[consultation.patientId]?.numeroDossier">
+                            Dossier #{{ patients[consultation.patientId].numeroDossier }}
+                          </small>
+                        </a>
+                      </td>
+                      <td>
+                        <span *ngIf="medecins[consultation.medecinId]">
+                          Dr {{ medecins[consultation.medecinId].prenom }} {{ medecins[consultation.medecinId].nom }}
+                          <small class="d-block text-muted" *ngIf="medecins[consultation.medecinId]?.specialiteNom">
+                            {{ medecins[consultation.medecinId].specialiteNom }}
+                          </small>
+                        </span>
+                        <span *ngIf="!medecins[consultation.medecinId]" class="text-muted">
+                          Non spécifié
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                          'bg-primary': consultation.typeConsultation === 'CONSULTATION_EXTERNE',
+                          'bg-danger': consultation.typeConsultation === 'URGENCE',
+                          'bg-success': consultation.typeConsultation === 'SUIVI',
+                          'bg-info': consultation.typeConsultation === 'VACCINATION',
+                          'bg-warning': consultation.typeConsultation === 'CONSULTATION_PRENATALE',
+                          'bg-secondary': !consultation.typeConsultation
+                        }">
+                          {{ getTypeConsultationLibelle(consultation.typeConsultation) }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="text-truncate" style="max-width: 200px;" [title]="consultation.diagnostic">
+                          {{ consultation.diagnostic || '-' }}
+                        </div>
+                      </td>
+                      <td class="text-end">
+                        <div class="btn-group" role="group">
+                          <button class="btn btn-sm btn-outline-primary" [routerLink]="['/consultations/consultation/editer', consultation.id]">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          <button class="btn btn-sm btn-outline-danger" (click)="deleteConsultation(consultation.id)">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

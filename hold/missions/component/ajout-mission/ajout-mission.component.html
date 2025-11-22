@@ -1,0 +1,225 @@
+
+    <div class="pagetitle">
+      <h1>Ajout Mission</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a [routerLink]="'/Acceuil/accueil'">Accueil</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="'/listeMission/list-mission'">Missions</a></li>
+          <li class="breadcrumb-item active">AjoutMission</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile" >
+      <div class="row">
+        
+       
+        <div class="col-xl-8">
+           <div class="card">
+                <form [formGroup]="missionForm" (ngSubmit)="AjouterMission()">
+                    <div class="card-body pt-3">
+                    <!-- Bordered Tabs -->
+                    <ul class="nav nav-tabs nav-tabs-bordered">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-edit">Ajout Mission</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-overview">Horaire Mission</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content pt-2">
+                        <div class="tab-pane fade show active profile-edit pt-3" id="profile-edit">
+                            <div class="row mb-3">
+                                <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Detail Mission</label>  
+                                <div class="col-md-8 col-lg-8">      
+                                    <textarea  name="detailMission" placeholder="Détail Mission" class="form-control" id="detailMission" style="height: 100px;" formControlName="detailMission"></textarea>
+                                </div>    
+                            </div>    
+                               
+                            <div class="row mb-3">
+                                <label for="statutAnnonce" class="col-md-4 col-lg-3 col-form-label">Statut de l'annonce</label> 
+                                <div class="col-md-8 col-lg-8">      
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="statutAnnonce" formControlName="statutAnnonce" aria-label="statutAnnonce">
+                                            <option value="En Cours">En Cours</option>
+                                            <option value="Validé">  Validé</option>  
+                                            <option value="Annulation CH">Annulation CH</option>
+                                            <option value="En Attente">En Attente</option>  
+                                            <option value="Annulation Medecin">Annulation Medecin</option>  
+                                        </select>
+                                        <label for="floatingSelect">Statut</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="salaire" class="col-md-4 col-lg-3 col-form-label">Salaire</label>  
+                                <div class="col-md-8 col-lg-8">      
+                                    <input type="number" placeholder="00.0" class="form-control" id="salaireMission" formControlName="salaireMission">
+                                </div>    
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <label for="specilaite" class="col-md-4 col-lg-3 col-form-label" >Specilaité</label>
+                                <div class="col-md-5 col-lg-5">
+                                  <div #dropdown class="dropdown" (click)="toggleDropdownSpecialite()">
+                                    <button type="button" class="btn btn-light dropdown-toggle border-subtle-blue" data-bs-toggle="dropdown" aria-expanded="false" style="width: 400px;">
+                                    <span *ngIf="!selectedSpecialite">Choisir une specialité...</span>
+                                    <span *ngIf="selectedSpecialite">
+                                        {{ selectedSpecialite.nomSpecialite}}
+                                        <button type="button" class="btn btn-close btn-lg" aria-label="Close" (click)="deselectSpecialite()"></button>
+                                    </span>
+                                    </button>
+                                    <ul class="dropdown-menu" [class.show]="showDropdownSpecialiste">
+                                    <li style="margin: 10px;">
+                                        <div class="col-md-8 col-lg-8">
+                                        <div class="input-group" style="width: 350px;">
+                                            <input type="search" class="form-control fas fa-search with-blue-border" placeholder="Rechercher" [(ngModel)]="searchText" name="searchText" style="width: 300px;">
+                                            <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                            </div>
+                                        </div>
+                                        </div>   
+                                    </li>
+                                    <li *ngFor="let specialite of specialites">
+                                        <a class="dropdown-item" (click)="selectSpecialite(specialite)">
+                                        {{ specialite.nomSpecialite }}
+                                        </a>
+                                    </li>
+                                    </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="Medecin" class="col-md-4 col-lg-3 col-form-label" >Medecin</label>
+                                <div class="col-md-5 col-lg-5">
+                                  <div #dropdown class="dropdown" (click)="toggleDropdownMedecin()">
+                                    <button type="button" class="btn btn-light dropdown-toggle border-subtle-blue" data-bs-toggle="dropdown" aria-expanded="false" style="width: 400px;">
+                                    <span *ngIf="!selectedMedecin">Choisir un Médecin...</span>
+                                    <span *ngIf="selectedMedecin">
+                                       Dr. {{ selectedMedecin.prenomMedecin}} {{ selectedMedecin.nomMedecin}}
+                                        <button type="button" class="btn btn-close btn-lg" aria-label="Close" (click)="deselectMedecin()"></button>
+                                    </span>
+                                    </button>
+                                    <ul class="dropdown-menu" [class.show]="showDropdownMed">
+                                    <li style="margin: 10px;">
+                                        <div class="col-md-8 col-lg-8">
+                                        <div class="input-group" style="width: 350px;">
+                                            <input type="search" class="form-control fas fa-search with-blue-border" placeholder="Rechercher" [(ngModel)]="searchText" name="searchText" style="width: 300px;">
+                                            <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                            </div>
+                                        </div>
+                                        </div>   
+                                    </li>
+                                    <li *ngFor="let medecin of medecins">
+                                        <a class="dropdown-item" (click)="selectMedecin(medecin)">
+                                          Dr. {{ medecin.prenomMedecin}} {{ medecin.nomMedecin}}
+                                        </a>
+                                    </li>
+                                    </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="Job" class="col-md-4 col-lg-3 col-form-label" >Cleint</label>
+                                <div class="col-md-8 col-lg-9">
+                                    <div #dropdown class="dropdown" (click)="toggleDropdownCh()">
+                                    <button type="button" class="btn btn-light dropdown-toggle border-subtle-blue" data-bs-toggle="dropdown" aria-expanded="false" [disabled]="afficherFormulaireAdresse" style="width: 400px;">
+                                    <span *ngIf="!selectedCh">Choisir un CH...</span>
+                                    <span *ngIf="selectedCh">
+                                        {{ selectedCh.nom_ch }}
+                                        <button type="button" class="btn btn-close btn-lg" aria-label="Close" (click)="deselectCh()"></button>
+                                    </span> 
+                                    </button>
+                                    <ul class="dropdown-menu" [class.show]="showDropdownCh">
+                                    <li style="margin: 10px;">
+                                        <div class="col-md-8 col-lg-8">
+                                        <div class="input-group" style="width: 350px;">
+                                            <input type="search" class="form-control fas fa-search with-blue-border" placeholder="Rechercher" [(ngModel)]="searchText" name="searchText" style="width: 300px;">
+                                            <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                            </div>
+                                        </div>
+                                        </div>   
+                                    </li>
+                                    <li *ngFor="let ch of chs">
+                                        <a class="dropdown-item" (click)="selectCh(ch)">
+                                        {{ ch.nom_ch}} 
+                                        </a>
+                                    </li>
+                                    </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="tab-pane fade  profile-overview" id="profile-overview">
+                        <h5 class="card-title">Horaire du Missions</h5>
+                      
+
+                        <div class="row mb-3">
+                            <label for="typeHoraireMission" class="col-md-4 col-lg-3 col-form-label horairelabel">Type Horaire Mission</label> 
+                            <div class="col-md-6 col-lg-6">      
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="typeHoraireMission" formControlName="typeHoraireMission" aria-label="typeHoraireMission">
+                                        <option value="JOUR">Jour</option>
+                                        <option value="NUIT">Nuit</option>
+                                        <option value="Matin">Matin</option>
+                                        <option value="Garde 24H">Garde 24H</option>  
+                                        <option value="Journée + Astreinte">Journée + Astreinte</option>  
+                                        <option value="Astreinte">Astreinte</option>
+           
+                                    </select>
+                                    <label for="floatingSelect">Type Mission</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Date de début</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="date" id="dateMissions" formControlName="dateMissions" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+   
+                            <div class="row rowprofil">
+                                <div class="col-lg-3 col-md-4 label horairelabel">Date de fin</div>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="date" id="dateFinMissions" formControlName="dateFinMissions" class="form-control input-small border-subtle-blue horaire_date">                 
+                                </div>
+                            </div>
+
+                            <!-- Add this code inside the "profile-overview" tab -->
+                            <div class="row mb-3">
+                                <label for="startTime" class="col-md-4 col-lg-3 col-form-label horairelabel">Heure de début</label>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="time" class="form-control" id="startTime" placeholder="Choisir une heure" formControlName="startTime">
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <label for="endTime" class="col-md-4 col-lg-3 col-form-label horairelabel">Heure de fin</label>
+                                <div class="col-md-5 col-lg-5">
+                                <input type="time" class="form-control" id="endTime" placeholder="Choisir une heure" formControlName="endTime">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!-- End Bordered Tabs -->
+
+                    </div>
+                        <div class="card-footer text-muted">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                <button type="reset" class="btn btn-secondary" [routerLink]="'/listeMission/list-mission'" style="margin-left: 10px;">Annuler</button>
+                            </div>
+                        </div>
+                </form>  
+            </div>
+        </div>
+      </div>
+    </section>

@@ -1,0 +1,86 @@
+<div class="pagetitle">
+  <h1>Tableau de bord</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a>Accueil</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section dashboard">
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading" class="row">
+    <div class="col-xxl-3 col-md-6">
+      <div class="card info-card sales-card">
+        <div class="card-body" [routerLink]="['/patients']">
+          <h5 class="card-title">Patients <span>| Total</span></h5>
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-person-heart"></i>
+            </div>
+            <div class="ps-3">
+              <h6>{{ stats.totalPatients }}</h6>
+              <span class="text-muted small">dossiers suivis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xxl-3 col-md-6">
+      <div class="card info-card revenue-card">
+        <div class="card-body" [routerLink]="['/rendezvous']">
+          <h5 class="card-title">Rendez-vous <span>| Agenda</span></h5>
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-calendar-check"></i>
+            </div>
+            <div class="ps-3">
+              <h6>{{ stats.totalRendezVous }}</h6>
+              <span class="text-muted small">programmés</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xxl-3 col-md-6">
+      <div class="card info-card customers-card">
+        <div class="card-body" [routerLink]="['/consultations']">
+          <h5 class="card-title">Consultations <span>| Suivies</span></h5>
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-clipboard-pulse"></i>
+            </div>
+            <div class="ps-3">
+              <h6>{{ stats.totalConsultations }}</h6>
+              <span class="text-muted small">enregistrées</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xxl-3 col-md-6">
+      <div class="card info-card warning-card">
+        <div class="card-body" [routerLink]="['/hospitalisations']">
+          <h5 class="card-title">Hospitalisations <span>| En cours</span></h5>
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-hospital"></i>
+            </div>
+            <div class="ps-3">
+              <h6>{{ stats.totalHospitalisations }}</h6>
+              <span class="text-muted small">patients hospitalisés</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

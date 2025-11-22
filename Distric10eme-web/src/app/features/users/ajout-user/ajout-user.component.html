@@ -1,0 +1,74 @@
+<div class="pagetitle">
+  <h1>Ajouter un utilisateur</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+      <li class="breadcrumb-item"><a [routerLink]="'/users'">Utilisateurs</a></li>
+      <li class="breadcrumb-item active">Création</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="content-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title">Informations utilisateur</h2>
+              <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Prénom <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="prenom" placeholder="Prénom" />
+                    <div class="invalid-feedback d-block" *ngIf="userForm.get('prenom')?.invalid && userForm.get('prenom')?.touched">
+                      Le prénom est requis.
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Nom <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="nom" placeholder="Nom" />
+                    <div class="invalid-feedback d-block" *ngIf="userForm.get('nom')?.invalid && userForm.get('nom')?.touched">
+                      Le nom est requis.
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" formControlName="email" placeholder="Email" />
+                    <div class="invalid-feedback d-block" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+                      Adresse email invalide.
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Rôle</label>
+                    <select class="form-select" formControlName="role">
+                      <option value="">Sélectionner</option>
+                      <option *ngFor="let role of roles" [value]="role.key">{{ role.label }}</option>
+                    </select>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" formControlName="actif" id="actifCheck" />
+                      <label class="form-check-label" for="actifCheck">Compte actif</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                  <button type="button" class="btn btn-outline-secondary" (click)="onCancel()" [disabled]="loading">
+                    Annuler
+                  </button>
+                  <button type="submit" class="btn btn-primary" [disabled]="loading || userForm.invalid">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                    Enregistrer
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,82 @@
+    <div class="pagetitle">
+        <h1>Profil Mission</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a [routerLink]="'/Acceuil/accueil'">Accueil</a></li>
+            <li class="breadcrumb-item"><a [routerLink]="'/listeMission/list-mission'">Missions</a></li>
+            <li class="breadcrumb-item active">profilMission</li>
+          </ol>
+        </nav>
+      </div><!-- End Page Title -->
+
+    <section class="section profile" *ngIf="mission">
+      <div class="row">
+       
+        <div class="col-xl-8">
+
+          <div class="card">
+            <div class="card-body pt-3">
+              <!-- Bordered Tabs -->
+              <ul class="nav nav-tabs nav-tabs-bordered">
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Aperçu</button>
+                </li>
+
+              </ul>
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                  <h5 class="card-title">A propos</h5>
+                  <p class="medium">{{mission.detailMission}}</p>
+                  
+                  <h3 class="card-title">Profile Details</h3>
+
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">Specialités :</div>
+                      <div class="col-lg-9 col-md-8">{{mission.specialite?.nomSpecialite}}</div>
+                    </div>
+
+                    <div class="row rowprofil">
+                        <div class="col-lg-3 col-md-4 label labelprofil">Client :</div>
+                        <div class="col-lg-9 col-md-8">{{mission.centreHospitalier?.nom_ch}}</div>
+                      </div>
+
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">Medecin :</div>
+                      <div class="col-lg-9 col-md-8">{{mission.medecin?.prenomMedecin}} {{mission.medecin?.nomMedecin}}</div>
+                    </div>
+
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">Statut de l'annonce : </div>
+                      <div class="col-lg-7 col-md-8">{{mission.statutAnnonce}}</div>
+                    </div>
+
+                    <div class="row rowprofil">
+                        <div class="col-lg-3 col-md-4 label labelprofil"> Type d'horaire :</div>
+                        <div class="col-lg-9 col-md-8">{{mission.typeHoraireMission}}</div>
+                    </div>
+
+                    <div class="row rowprofil">
+                        <div class="col-lg-3 col-md-4 label labelprofil">Salaire :</div>
+                        <div class="col-lg-9 col-md-8">{{mission.salaireMission}}</div>
+                    </div>
+
+                    <div class="row rowprofil">
+                      <div class="col-lg-3 col-md-4 label labelprofil">Date de mission :</div>
+                      <div class="col-lg-9 col-md-8">{{mission.dateMissions| date:'dd-MM-yyyy'}}</div>
+                    </div>
+
+                    <div class="row rowprofil">
+                        <div class="col-lg-3 col-md-4 label labelprofil">Date de Fin :</div>
+                        <div class="col-lg-9 col-md-8">{{mission.dateFinMissions| date:'dd-MM-yyyy'}}</div>
+                      </div>
+                </div>
+
+                </div>
+              </div><!-- End Bordered Tabs -->
+
+            </div>
+          </div>
+
+        </div>
+    </section>

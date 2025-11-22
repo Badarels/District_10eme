@@ -1,0 +1,106 @@
+
+
+
+    <div class="pagetitle">
+      <h1>Liste des Missions</h1>
+      <div class="col-lg-12">
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a [routerLink]="'/Accueil/accueil'">ACCUEIL</a></li>
+          <li class="breadcrumb-item">Liste</li>
+        </ol>
+      </nav>
+      </div>
+    </div><!-- End Page Title -->
+    <section class="section">
+        <div class="row">
+          <div class="col-lg-12">
+  
+            <div class="card">
+                <div class="card-body">
+              
+                  <div class="d-flex align-items-center mb-2">
+                    <h2 class="card-title mb-0">Missions</h2>
+                    <a class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" [routerLink]="'/mission/ajout-mission'">
+                      <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Ajouter</span>
+                    </a>
+                  </div>
+                  <!-- Formulaire de recherche à droite avec une taille md-5 -->
+                  <div class="col-md-4 col-lg-4 ms-auto justify-content-md-end">
+                    <form class="form-inline mb-3 ml-auto">
+                      <div class="form-group mx-md-2 mb-2">
+                        <div class="input-group">
+                          <input class="form-control with-blue-border fas fa-search medecin-search-input" type="search" [(ngModel)]="filteText" placeholder="Rechercher" aria-label="Search" name="filteText">
+                          <span class="input-group-text"><i class="fas fa-search fa-recherche"></i></span>
+                        </div>  
+                      </div>
+                    </form>
+                  </div> 
+
+                  <div class="table-responsive">
+                  <!-- Tableau avec des lignes rayées -->
+                  <table class="table datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col" style="width: 300px;">Detail Missions</th>
+                        <th scope="col" style="width: 200px;">Nom Medecin</th>
+                        <th scope="col" style="width: 200px;">Email Medecin</th>
+                        <th scope="col" style="width: 300px;">Telephone Medecin</th>
+                        <th scope="col" style="width: 200px;">Types</th>
+                        <th scope="col" style="width: 200px;">Client</th>
+                        <th scope="col" style="width: 200px;">Adresse Mission</th>
+                        <th scope="col" style="width: 200px;">Specilaite</th>
+                        <th scope="col" style="width: 200px;">Salaire</th>
+                        <th scope="col" style="width: 200px;">Date Mission</th>
+                        <th scope="col" style="width: 200px;">Date Fin Mission</th>
+                        <th scope="col" style="width: 200px;">Action</th>
+                      </tr>
+                    </thead> 
+                    <tbody>
+                   
+                    <tr *ngFor="let miss of missions | mission: filteText;">
+                        <!-- Contenu de la ligne -->
+                        <td>{{miss?.detailMission}}</td>
+                        <td>{{miss?.medecin?.prenomMedecin}} {{miss?.medecin?.nomMedecin}}</td>
+                        <td>{{miss?.medecin?.emailMedecin}}</td>
+                        <td>{{miss?.medecin?.telephoneMedecin_1}}</td>
+                        <td>{{miss?.typeHoraireMission}}</td>
+                        <td>{{miss?.centreHospitalier?.nom_ch}}</td>
+                        <td>{{miss?.centreHospitalier?.adresse?.numeroRue || 'N/A'}}
+                           {{miss?.centreHospitalier?.adresse?.nomRue || 'N/A' }}, 
+                           {{miss?.centreHospitalier?.adresse?.codePostal || 'N/A' }}, 
+                           {{miss?.centreHospitalier?.adresse?.ville || 'N/A' }},
+                           {{miss?.centreHospitalier?.adresse?.departement || 'N/A'}}, 
+                           {{miss?.centreHospitalier?.adresse?.region || 'N/A' }}</td>             
+                        <td>{{miss?.specialite?.nomSpecialite}}</td>
+                        <td>{{miss?.salaireMission}}</td>
+                        <td>{{miss?.dateMissions | date:'dd/MM/yyyy'}}</td>
+                        <td>{{miss?.dateFinMissions | date:'dd/MM/yyyy'}}</td>
+                        <td>
+                          <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-light buttonMenu d-inline-flex align-items-start" id="dropdownMenuButton" ngbDropdownToggle>
+                              <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <div ngbDropdownMenu [ngClass]="{'show': isDropdownOpen}" aria-labelledby="dropdownMenuButton">
+                              <!-- Utilisez [routerLink] pour "Modifier" et (click) pour "Supprimer" -->
+                              <button class="dropdown-item" [routerLink]="['/mission/profil-mission', miss?.id]">Aperçu</button>
+                              <button class="dropdown-item" [routerLink]="['/mission/edit-mission', miss?.id]">Modifier</button>
+                              <button class="dropdown-item" (click)="supprimerMissions($event, miss?.id)">Supprimer</button>
+                            </div>
+                          </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <!-- Fin du tableau avec des lignes rayées -->
+                </div>
+                </div>
+              </div>
+          </div>
+        </div>
+
+      </section>
+
+
+
+

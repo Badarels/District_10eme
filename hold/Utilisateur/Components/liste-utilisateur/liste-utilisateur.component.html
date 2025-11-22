@@ -1,0 +1,124 @@
+    <div class="pagetitle">
+        <h1>Liste des utilisateurs</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a [routerLink]="'/Accueil/accueil'">ACCUEIL</a></li>
+                <li class="breadcrumb-item">Liste</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <!-- Content body start -->
+        <div class="content-body">
+            <!-- row -->
+            <div class="container-fluid">       
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="d-flex align-items-center mb-3 user-list-toggles w-100 gap-2">
+                          <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-light" [class.active]="activeTab==='list'" (click)="setTab('list')">Vue Liste</button>
+                            <button type="button" class="btn btn-light" [class.active]="activeTab==='grid'" (click)="setTab('grid')">Vue Grille</button>
+                          </div>
+                          <a class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" [routerLink]="'/ajoutUtilisateur/ajout'">
+                            <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Ajouter</span>
+                          </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div id="list-view" class="col-lg-12" *ngIf="activeTab==='list'">
+                                <div class="card">
+                                    <div class="card-body">
+                                      <h2 class="card-title">Utilisateurs</h2>              
+                                      <!-- Formulaire de recherche à droite avec une taille md-5 -->
+                                      <div class="col-md-4 col-lg-4 ms-auto justify-content-md-end">
+                                        <form class="form-inline mb-3 ml-auto">
+                                          <div class="form-group mx-md-2 mb-2">
+                                            <div class="input-group">
+                                              <input class="form-control with-blue-border fas fa-search medecin-search-input" type="search" placeholder="Rechercher" [(ngModel)]="filtreText" aria-label="Search" name="filtreText">
+                                              <span class="input-group-text"><i class="fas fa-search fa-recherche"></i></span>
+                                            </div>  
+                                          </div>
+                                        </form>
+                                      </div> 
+                                      <div class="table-responsive user_card user-list">
+                                        <!-- Tableau avec des lignes rayées -->
+                                        <table class="table table-striped align-middle datatable">
+                                          <thead>
+                                            <tr>
+                                              <th scope="col" style="width: 900px;">Nom</th>
+                                              <th scope="col" style="width: 200px;">Prenom</th>
+                                              <th scope="col" style="width: 600px;">Adresse</th>
+                                              <th scope="col" style="width: 200px;">Sexe</th>
+                                              <th scope="col" style="width: 800px;">Date de Naissance</th>
+                                              <th scope="col" style="width: 200px;">Email</th>  
+                                              <th scope="col" style="width: 200px;">Telephone</th>
+                                              <th scope="col" style="width: 200px;">N° piece d'indentité</th>
+                                              <th scope="col" style="width: 200px;">Role</th>
+                                              <th scope="col" style="width: 200px;">Action</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr *ngFor="let user of users | users: filtreText;">
+                                              <td>{{user?.nomUser}}</td>
+                                              <td>{{user?.prenomUser}}</td>
+                                              <td>{{user?.adresseUser}}</td>
+                                              <td>{{user?.sexeUser}}</td>
+                                              <td>{{user?.dateNaissanceUser}}</td>
+                                              <td>{{user?.emailUser}}</td>
+                                              <td>{{user?.telephoneUser}}</td>
+                                              <td>{{user?.numeroPieceIdentiteUser}}</td>
+                                              <td>{{user?.roles?.nomRoles}}</td>
+                                              <td>
+                                                <div ngbDropdown class="d-inline-block">
+                                                  <button class="btn btn-light buttonMenu d-inline-flex align-items-start" id="dropdownMenuButton" ngbDropdownToggle>
+                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                  </button>
+                                                  <div ngbDropdownMenu [ngClass]="{'show': isDropdownOpen}" aria-labelledby="dropdownMenuButton">
+                                                    <button class="dropdown-item" [routerLink]="['/listeUtilisateur/profil', user?.id]">Aperçu</button>
+                                                    <button class="dropdown-item" [routerLink]="['/listeUtilisateur/edit', user?.id]">Modifier</button>
+                                                    <button class="dropdown-item" (click)="supprimerUsers($event, user?.id)">Supprimer</button>
+                                                  </div>
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>  
+                                </div>
+                            </div>
+
+                            <div id="grid-view" class="col-lg-12" *ngIf="activeTab==='grid'">
+                                <div class="row user-grid g-3">
+                                    <div class="col-12 text-center text-muted" *ngIf="(users | users: filtreText).length === 0">
+                                        Aucun utilisateur trouvé.
+                                    </div>
+                                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12" *ngFor="let user of users | users: filtreText;">
+                                        <div class="card card-profile user-grid-card">
+                                            <div class="card-body pt-3">
+                                                <div class="text-center">
+                                                    <div class="profile-photo mb-2">
+                                                        <img src="assets/img/profile-img.jpg" width="64" height="64" class="img-fluid rounded-circle" alt="">
+                                                    </div>
+                                                    <div class="fw-semibold small">{{user?.nomUser}} {{user?.prenomUser}}</div>
+                                                    <div class="text-muted extra-small">{{user?.roles?.nomRoles}}</div>
+                                                    <div class="mt-2 small">
+                                                        <div><i class="bi bi-telephone me-1"></i>{{user?.telephoneUser}}</div>
+                                                        <div class="text-truncate"><i class="bi bi-geo-alt me-1"></i>{{user?.adresseUser}}</div>
+                                                    </div>
+                                                    <a class="btn btn-outline-primary btn-sm mt-3 px-3" [routerLink]="['/listeUtilisateur/profil', user?.id]">Aperçu</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+

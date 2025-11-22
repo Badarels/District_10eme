@@ -1,0 +1,118 @@
+<div class="pagetitle">
+  <h1>Liste des patients</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+      <li class="breadcrumb-item active">Patients</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="content-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="d-flex align-items-center mb-3 gap-2">
+            <button class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" (click)="addPatient()">
+              <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Ajouter un patient</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title">Patients</h2>
+              <div class="row g-2 align-items-end mb-3">
+                <div class="col-md-4 col-lg-4">
+                  <label class="form-label">Recherche rapide</label>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control with-blue-border"
+                      placeholder="Nom, prénom, email, téléphone..."
+                      [(ngModel)]="searchTerm"
+                      (ngModelChange)="applyFilter()"
+                    />
+                    <span class="input-group-text">
+                      <i class="fas fa-search fa-recherche"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                  <label class="form-label">Numéro de dossier</label>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Saisir le numéro"
+                      [(ngModel)]="searchTerm"
+                      name="search"
+                    />
+                    <button class="btn btn-outline-primary" type="button" (click)="onSearch()">
+                      <i class="bi bi-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border" role="status"></div>
+              </div>
+
+              <div *ngIf="!loading && filteredPatients.length === 0" class="text-center py-5 text-muted">
+                Aucun patient trouvé.
+              </div>
+
+              <div *ngIf="!loading && filteredPatients.length > 0" class="table-responsive patient-list">
+                <table class="table table-striped align-middle datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">N° dossier</th>
+                      <th scope="col">Nom</th>
+                      <th scope="col">Prénom</th>
+                      <th scope="col">Sexe</th>
+                      <th scope="col">Date de naissance</th>
+                      <th scope="col">Téléphone</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let patient of filteredPatients">
+                      <td>{{ patient.numeroDossier || '—' }}</td>
+                      <td>{{ patient.nom }}</td>
+                      <td>{{ patient.prenom }}</td>
+                      <td>
+                        <span class="badge" [ngClass]="patient.sexe === 'F' ? 'bg-info' : 'bg-secondary'">
+                          {{ patient.sexe || 'N/A' }}
+                        </span>
+                      </td>
+                      <td>{{ patient.dateNaissance | date:'dd/MM/yyyy' }}</td>
+                      <td>{{ patient.telephone || '—' }}</td>
+                      <td>{{ patient.email || '—' }}</td>
+                      <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                          <button class="btn btn-light" (click)="viewDetails(patient.id!)" title="Détails">
+                            <i class="bi bi-eye"></i>
+                          </button>
+                          <button class="btn btn-light" (click)="editPatient(patient.id!)" title="Modifier">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          <button class="btn btn-light text-danger" (click)="deletePatient(patient.id!)" title="Supprimer">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
