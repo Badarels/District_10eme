@@ -1,0 +1,16 @@
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\ConsultationServiceApplication.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\dto\PrescriptionDTO.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\repository\PrescriptionRepository.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\dto\DiagnosticDTO.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\event\ConsultationEvent.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\service\ConsultationService.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\entity\Prescription.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\dto\ConsultationDTO.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\entity\Consultation.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\config\KafkaTopicConfig.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\kafka\KafkaConsumerService.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\kafka\KafkaProducerService.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\controller\ConsultationController.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\repository\DiagnosticRepository.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\entity\Diagnostic.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\consultation-service\src\main\java\com\district\consultation\repository\ConsultationRepository.java

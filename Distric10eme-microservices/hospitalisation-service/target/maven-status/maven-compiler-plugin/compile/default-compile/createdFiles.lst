@@ -1,0 +1,9 @@
+com\district\hospitalisation\service\HospitalisationService.class
+com\district\hospitalisation\dto\HospitalisationDTO.class
+com\district\hospitalisation\entity\ServiceHospitalier.class
+com\district\hospitalisation\HospitalisationServiceApplication.class
+com\district\hospitalisation\repository\HospitalisationRepository.class
+com\district\hospitalisation\entity\Chambre.class
+com\district\hospitalisation\entity\Hospitalisation.class
+com\district\hospitalisation\controller\HospitalisationController.class
+com\district\hospitalisation\entity\Lit.class

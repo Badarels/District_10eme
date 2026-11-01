@@ -1,17 +1,49 @@
-.container-fluid {
-  padding: 20px;
+.stat-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
-.table th {
-  background-color: #f8f9fa;
-  font-weight: 600;
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.btn-sm {
-  padding: 0.25rem 0.5rem;
+.patient-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
+.bg-primary-gradient {
+  background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+}
+
+.bg-danger-gradient {
+  background: linear-gradient(135deg, #e63946, #d90429);
+}
+
+.patient-row {
+  transition: background-color 0.15s ease;
+}
+
+.patient-row:hover {
+  background-color: #f8faff !important;
+}
+
+.hover-primary:hover {
+  color: #0d6efd !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

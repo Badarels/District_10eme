@@ -1,0 +1,147 @@
+name: CD - Build & Publication Docker (GHCR)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  # ==========================================
+  # 1. Préparation : Compilation des JARs Maven
+  # ==========================================
+  build-jars:
+    name: Package Backend JARs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code source
+        uses: actions/checkout@v4
+
+      - name: Configurer Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Compiler et packager tous les microservices
+        working-directory: ./Distric10eme-microservices
+        run: |
+          mvn -B clean package -DskipTests
+
+      - name: Archiver les JARs pour les builds Docker
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jars
+          path: Distric10eme-microservices/**/target/*.jar
+          retention-days: 1
+
+  # ==============================================================
+  # 2. Build & Push des Images Docker Backend (Matrice Parallèle)
+  # ==============================================================
+  publish-microservices:
+    name: Build & Push Image ${{ matrix.service }}
+    needs: build-jars
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - service-registry
+          - api-gateway
+          - user-service
+          - patient-service
+          - personnel-service
+          - rendezvous-service
+          - consultation-service
+          - hospitalisation-service
+          - reporting-service
+          - notification-service
+
+    steps:
+      - name: Récupérer le code source
+        uses: actions/checkout@v4
+
+      - name: Récupérer les JARs pré-compilés
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jars
+          path: Distric10eme-microservices
+
+      - name: Déplacer le JAR dans le dossier target du service
+        run: |
+          mkdir -p Distric10eme-microservices/${{ matrix.service }}/target
+          cp Distric10eme-microservices/${{ matrix.service }}*.jar Distric10eme-microservices/${{ matrix.service }}/target/ || true
+          # Fallback si le jar est directement dans le sous-dossier
+          find Distric10eme-microservices/${{ matrix.service }} -name "*.jar" ! -path "*/target/*" -exec cp {} Distric10eme-microservices/${{ matrix.service }}/target/ \; || true
+
+      - name: Configurer Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Connexion au registre GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extraire les métadonnées Docker (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+
+      - name: Construire et Pousser l'image Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Distric10eme-microservices/${{ matrix.service }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  # ==============================================================
+  # 3. Build & Push de l'Image Docker Frontend Angular
+  # ==============================================================
+  publish-frontend:
+    name: Build & Push Frontend Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le code source
+        uses: actions/checkout@v4
+
+      - name: Configurer Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Connexion au registre GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extraire les métadonnées Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/frontend-web
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+
+      - name: Construire et Pousser l'image Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Distric10eme-web
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

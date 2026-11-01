@@ -2,3 +2,49 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Styles pour l'impression de l'ordonnance */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  
+  #ordonnancePrintArea,
+  #ordonnancePrintArea * {
+    visibility: visible;
+  }
+
+  #ordonnancePrintArea {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px !important;
+    background: white !important;
+  }
+
+  .modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    width: 100%;
+    background: white !important;
+  }
+
+  .modal-dialog {
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .modal-content {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .d-print-none {
+    display: none !important;
+  }
+}

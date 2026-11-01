@@ -1,4 +1,256 @@
-.card {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* =============================================
+   LISTE RENDEZ-VOUS — Styles scopés (lrdv-)
+   ============================================= */
+
+/* ---- En-tête ---- */
+.lrdv-header { padding: 1rem 0 0.5rem; border-bottom: 1px solid #e9ecef; }
+.lrdv-title { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0; }
+
+/* ---- Bouton nouveau ---- */
+.lrdv-btn-new {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+}
+.lrdv-btn-new:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.4); }
+
+/* ---- KPI ---- */
+.lrdv-kpi {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.4rem;
+  border-radius: 14px;
+  color: #fff;
+}
+.lrdv-kpi-indigo { background: linear-gradient(135deg, #4f46e5, #6366f1); }
+.lrdv-kpi-cyan   { background: linear-gradient(135deg, #0891b2, #06b6d4); }
+.lrdv-kpi-green  { background: linear-gradient(135deg, #16a34a, #22c55e); }
+.lrdv-kpi-amber  { background: linear-gradient(135deg, #b45309, #f59e0b); }
+
+.lrdv-kpi-icon {
+  width: 48px; height: 48px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.lrdv-kpi-val { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+.lrdv-kpi-lbl { font-size: 0.82rem; opacity: 0.88; margin-top: 2px; font-weight: 500; }
+
+/* ---- Toolbar (filtres + recherche) ---- */
+.lrdv-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
 }
 
+/* Onglets statut */
+.lrdv-statut-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.lrdv-tab {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  border-radius: 999px;
+  padding: 0.35rem 1rem;
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.lrdv-tab:hover { background: #e0e7ff; color: #4f46e5; border-color: #a5b4fc; }
+.lrdv-tab-active {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+}
+
+/* Recherche */
+.lrdv-search-wrap { position: relative; }
+.lrdv-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+.lrdv-search-input {
+  padding: 0.55rem 1rem 0.55rem 2.4rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  width: 280px;
+  transition: all 0.2s;
+  background: #f8fafc;
+}
+.lrdv-search-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+  background: #fff;
+}
+
+/* ---- Loader ---- */
+.lrdv-loader {
+  text-align: center;
+  padding: 4rem 0;
+  color: #94a3b8;
+}
+
+/* ---- État vide ---- */
+.lrdv-empty {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #94a3b8;
+}
+.lrdv-empty-icon { font-size: 3.5rem; color: #cbd5e1; display: block; margin-bottom: 1rem; }
+.lrdv-empty-text { font-size: 1.05rem; margin-bottom: 1.5rem; }
+
+/* ---- Liste ---- */
+.lrdv-list { display: flex; flex-direction: column; gap: 0.9rem; }
+
+/* ---- Carte RDV ---- */
+.lrdv-card {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.1rem 1.4rem;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.lrdv-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  border-radius: 4px 0 0 4px;
+}
+.lrdv-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+.lrdv-card-today::before { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+.lrdv-card-today { border-color: #fde68a; }
+
+/* Badge "Aujourd'hui" */
+.lrdv-today-badge {
+  position: absolute;
+  top: 0; right: 0;
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: #7c2d12;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0 14px 0 10px;
+}
+
+/* Bloc date */
+.lrdv-date-block {
+  text-align: center;
+  min-width: 60px;
+  flex-shrink: 0;
+}
+.lrdv-day   { font-size: 1.7rem; font-weight: 800; color: #4f46e5; line-height: 1; }
+.lrdv-month { font-size: 0.72rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; }
+.lrdv-time  { font-size: 0.78rem; color: #64748b; margin-top: 4px; }
+
+/* Divider vertical */
+.lrdv-divider {
+  width: 1px;
+  height: 50px;
+  background: #e9ecef;
+  flex-shrink: 0;
+}
+
+/* Bloc patient */
+.lrdv-patient-block {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 160px;
+  flex: 1;
+}
+.lrdv-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.lrdv-patient-name { font-weight: 700; font-size: 0.93rem; color: #1e293b; }
+
+/* Bloc médecin */
+.lrdv-medecin-block {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 160px;
+  flex: 1;
+}
+.lrdv-medecin-icon { font-size: 1.3rem; color: #22c55e; flex-shrink: 0; }
+.lrdv-medecin-name { font-weight: 600; font-size: 0.88rem; color: #374151; }
+
+/* Bloc motif */
+.lrdv-motif-block {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1.5;
+  min-width: 140px;
+}
+.lrdv-motif-icon  { color: #94a3b8; flex-shrink: 0; }
+.lrdv-motif-text  { font-size: 0.85rem; color: #64748b; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+
+/* Texte secondaire générique */
+.lrdv-sub { font-size: 0.75rem; color: #94a3b8; }
+
+/* Bloc statut */
+.lrdv-statut-block { margin-left: auto; flex-shrink: 0; }
+
+/* Badges statut */
+.lrdv-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.32rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.lrdv-badge-green  { background: #dcfce7; color: #16a34a; }
+.lrdv-badge-red    { background: #fee2e2; color: #dc2626; }
+.lrdv-badge-blue   { background: #dbeafe; color: #2563eb; }
+.lrdv-badge-amber  { background: #fef3c7; color: #b45309; }
+.lrdv-badge-orange { background: #ffedd5; color: #ea580c; }
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .lrdv-divider { display: none; }
+  .lrdv-card { flex-direction: column; align-items: flex-start; }
+  .lrdv-statut-block { margin-left: 0; }
+  .lrdv-search-input { width: 100%; }
+}

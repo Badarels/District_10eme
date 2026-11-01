@@ -1,0 +1,17 @@
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\service\PatientServiceInterface.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\mapper\PatientMapper.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\exception\ConflictException.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\exception\GlobalExceptionHandler.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\service\PatientService.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\PatientServiceApplication.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\repository\PatientRepository.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\exception\EntityNotFoundException.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\dto\PatientCreateDto.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\entity\Patient.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\controller\PatientController.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\exception\PatientAlreadyExistsException.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\dto\PatientDTO.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\controller\TestKafkaController.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\service\KafkaProducerService.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\dto\PatientSearchDto.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\patient-service\src\main\java\com\district\patient\service\impl\PatientServiceImpl.java

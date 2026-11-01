@@ -95,10 +95,28 @@ export class EditPersonnelComponent implements OnInit {
   onSubmit(): void {
     if (this.personnelForm.valid) {
       this.loading = true;
-      const formValue = this.personnelForm.value;
+      const formValue = { ...this.personnelForm.value };
       
       if (!formValue.specialiteId) {
         delete formValue.specialiteId;
+      } else {
+        formValue.specialiteId = Number(formValue.specialiteId);
+      }
+
+      if (!formValue.numeroOrdre || !formValue.numeroOrdre.trim()) {
+        formValue.numeroOrdre = null;
+      } else {
+        formValue.numeroOrdre = formValue.numeroOrdre.trim();
+      }
+
+      if (!formValue.numeroLicence || !formValue.numeroLicence.trim()) {
+        formValue.numeroLicence = null;
+      } else {
+        formValue.numeroLicence = formValue.numeroLicence.trim();
+      }
+
+      if (!formValue.dateEmbauche) {
+        formValue.dateEmbauche = null;
       }
       
       this.personnelService.update(this.personnelId, formValue).subscribe({

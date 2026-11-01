@@ -17,5 +17,7 @@ public interface PersonnelMedicalRepository extends JpaRepository<PersonnelMedic
     List<PersonnelMedical> findByTypePersonnel(TypePersonnel typePersonnel);
     List<PersonnelMedical> findByActif(boolean actif);
     List<PersonnelMedical> findByTypePersonnelAndActif(TypePersonnel typePersonnel, boolean actif);
+    List<PersonnelMedical> findByTypePersonnelAndSpecialiteId(TypePersonnel typePersonnel, Long specialiteId);
+    long countByTypePersonnel(TypePersonnel typePersonnel);
 }
 

@@ -1,13 +1,103 @@
-.card {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.form-patient-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+}
+
+.card-accent-line {
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #0d6efd 0%, #00b4d8 100%);
+}
+
+.avatar-preview-circle {
+  width: 44px;
+  height: 44px;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.bg-male-gradient {
+  background: linear-gradient(135deg, #0d6efd 0%, #0077b6 100%);
+}
+
+.bg-female-gradient {
+  background: linear-gradient(135deg, #e63946 0%, #d90429 100%);
+}
+
+.section-badge {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.border-end-md {
+  border-right: 1px solid #f1f5f9;
+}
+
+@media (max-width: 767px) {
+  .border-end-md {
+    border-right: none;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .form-label {
+  margin-bottom: 0.35rem;
+}
+
+.form-control, .form-select {
+  border-color: #cbd5e1;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  background-color: #fafbfc;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: #ffffff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+}
+
+.gender-toggle-btn {
+  border-color: #cbd5e1;
+  background-color: #fafbfc;
+  color: #475569;
+  font-size: 0.9rem;
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
-.text-danger {
-  color: #dc3545;
+.gender-toggle-btn:hover {
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+  color: #1e293b;
 }
 
+.gender-toggle-btn.active-male {
+  background-color: #e0f2fe;
+  border-color: #0284c7;
+  color: #0369a1;
+  font-weight: 600;
+}
+
+.gender-toggle-btn.active-female {
+  background-color: #ffe4e6;
+  border-color: #e11d48;
+  color: #be123c;
+  font-weight: 600;
+}

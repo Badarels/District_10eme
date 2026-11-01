@@ -1,59 +1,254 @@
-<div class="pagetitle">
-  <h1>Nouveau rendez-vous</h1>
-  <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
-      <li class="breadcrumb-item"><a [routerLink]="'/rendezvous'">Rendez-vous</a></li>
-      <li class="breadcrumb-item active">Création</li>
-    </ol>
-  </nav>
+<!-- En-tête de page -->
+<div class="rdv-page-header mb-4">
+  <div class="d-flex align-items-center gap-3">
+    <button class="btn btn-icon-back" (click)="onCancel()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <div>
+      <h1 class="rdv-page-title mb-0">
+        <i class="bi bi-calendar-plus me-2"></i>Nouveau Rendez-vous
+      </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 mt-1">
+          <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="'/rendezvous'">Rendez-vous</a></li>
+          <li class="breadcrumb-item active">Création</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
 </div>
 
-<section class="section">
-  <div class="content-body">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body">
-              <h2 class="card-title">Informations du rendez-vous</h2>
-              <form [formGroup]="rendezVousForm" (ngSubmit)="onSubmit()">
-                <div class="row g-3">
-                  <div class="col-md-6">
-                    <label class="form-label">Patient <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" formControlName="patientId" placeholder="Identifiant patient" />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label">Médecin <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" formControlName="medecinId" placeholder="Identifiant médecin" />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label">Date et heure <span class="text-danger">*</span></label>
-                    <input type="datetime-local" class="form-control" formControlName="dateHeure" />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label">Motif</label>
-                    <input type="text" class="form-control" formControlName="motif" placeholder="Objet du rendez-vous" />
-                  </div>
-                  <div class="col-12">
-                    <label class="form-label">Statut</label>
-                    <input type="text" class="form-control" formControlName="statut" placeholder="Ex : Confirmé, En attente..." />
-                  </div>
-                </div>
+<div class="row justify-content-center">
+  <div class="col-xl-9 col-lg-11">
+    <form [formGroup]="rendezVousForm" (ngSubmit)="onSubmit()">
 
-                <div class="d-flex justify-content-end gap-2 mt-4">
-                  <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Annuler</button>
-                  <button type="submit" class="btn btn-primary" [disabled]="loading || rendezVousForm.invalid">
-                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
-                    Enregistrer
-                  </button>
-                </div>
-              </form>
+      <!-- Bannière patient pré-sélectionné (depuis fiche patient) -->
+      <div *ngIf="selectedPatient" class="rdv-preselect-banner mb-4">
+        <div class="rdv-preselect-avatar">{{ getInitials(selectedPatient.prenom, selectedPatient.nom) }}</div>
+        <div class="flex-grow-1">
+          <div class="rdv-preselect-name">{{ selectedPatient.prenom }} {{ selectedPatient.nom }}</div>
+          <div class="rdv-preselect-meta">
+            <i class="bi bi-folder2-open me-1"></i>{{ selectedPatient.numeroDossier }}
+            <span class="mx-2">·</span>
+            <i class="bi bi-telephone me-1"></i>{{ selectedPatient.telephone || 'N/A' }}
+          </div>
+        </div>
+        <span class="rdv-preselect-badge"><i class="bi bi-check-circle-fill me-1"></i>Patient lié</span>
+      </div>
+
+      <!-- ===== SECTION 1 : PATIENT ===== -->
+      <div class="rdv-section mb-4">
+        <div class="rdv-section-header rdv-header-blue">
+          <i class="bi bi-person-circle"></i>
+          <span>Sélection du patient</span>
+          <span class="rdv-required-chip">Obligatoire</span>
+        </div>
+        <div class="rdv-section-body">
+
+          <!-- Patient non sélectionné -->
+          <div *ngIf="!selectedPatient" class="rdv-search-patient" (click)="$event.stopPropagation()">
+            <div class="rdv-search-input-wrap">
+              <i class="bi bi-search rdv-search-icon"></i>
+              <input
+                type="text"
+                class="rdv-search-input"
+                placeholder="Nom, prénom ou numéro de dossier..."
+                [(ngModel)]="patientSearchTerm"
+                [ngModelOptions]="{standalone: true}"
+                (input)="onPatientSearchChange()"
+                (click)="openPatientDropdown($event)"
+                autocomplete="off"
+                id="rdv-patient-search"
+              />
+              <span *ngIf="loadingPatients" class="spinner-border spinner-border-sm rdv-search-spinner"></span>
             </div>
+
+            <!-- Dropdown patients -->
+            <div *ngIf="showPatientDropdown" class="rdv-dropdown">
+              <div *ngIf="filteredPatients.length === 0" class="rdv-dropdown-empty">
+                <i class="bi bi-inbox me-2"></i>Aucun patient trouvé
+              </div>
+              <div
+                *ngFor="let p of filteredPatients | slice:0:7"
+                class="rdv-dropdown-row"
+                (mousedown)="selectPatient(p)"
+              >
+                <div class="rdv-mini-avatar rdv-blue">{{ getInitials(p.prenom, p.nom) }}</div>
+                <div>
+                  <div class="rdv-row-name">{{ p.prenom }} {{ p.nom }}</div>
+                  <div class="rdv-row-sub">{{ p.numeroDossier }} &nbsp;·&nbsp; {{ p.telephone }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="rendezVousForm.get('patientId')?.invalid && rendezVousForm.get('patientId')?.touched"
+                 class="rdv-error-msg">
+              <i class="bi bi-exclamation-circle me-1"></i>Veuillez sélectionner un patient
+            </div>
+          </div>
+
+          <!-- Patient sélectionné -->
+          <div *ngIf="selectedPatient" class="rdv-selected-row">
+            <div class="rdv-mini-avatar rdv-blue">{{ getInitials(selectedPatient.prenom, selectedPatient.nom) }}</div>
+            <div class="flex-grow-1">
+              <div class="rdv-row-name">{{ selectedPatient.prenom }} {{ selectedPatient.nom }}</div>
+              <div class="rdv-row-sub">{{ selectedPatient.numeroDossier }} · {{ selectedPatient.telephone }}</div>
+            </div>
+            <button type="button" class="rdv-btn-change" (click)="clearSelectedPatient()">
+              <i class="bi bi-pencil me-1"></i>Changer
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===== SECTION 2 : MÉDECIN ===== -->
+      <div class="rdv-section mb-4">
+        <div class="rdv-section-header rdv-header-green">
+          <i class="bi bi-person-badge"></i>
+          <span>Médecin assigné</span>
+          <span class="rdv-required-chip">Obligatoire</span>
+        </div>
+        <div class="rdv-section-body">
+
+          <!-- Médecin non sélectionné -->
+          <div *ngIf="!selectedMedecin" class="rdv-search-medecin" (click)="$event.stopPropagation()">
+            <div class="rdv-search-input-wrap">
+              <i class="bi bi-search rdv-search-icon"></i>
+              <input
+                type="text"
+                class="rdv-search-input"
+                placeholder="Nom du médecin ou spécialité..."
+                [(ngModel)]="medecinSearchTerm"
+                [ngModelOptions]="{standalone: true}"
+                (input)="onMedecinSearchChange()"
+                (click)="openMedecinDropdown($event)"
+                autocomplete="off"
+                id="rdv-medecin-search"
+              />
+              <span *ngIf="loadingMedecins" class="spinner-border spinner-border-sm rdv-search-spinner"></span>
+            </div>
+
+            <!-- Dropdown médecins -->
+            <div *ngIf="showMedecinDropdown" class="rdv-dropdown">
+              <div *ngIf="filteredMedecins.length === 0" class="rdv-dropdown-empty">
+                <i class="bi bi-inbox me-2"></i>Aucun médecin trouvé
+              </div>
+              <div
+                *ngFor="let m of filteredMedecins | slice:0:6"
+                class="rdv-dropdown-row"
+                (mousedown)="selectMedecin(m)"
+              >
+                <div class="rdv-mini-avatar rdv-green">{{ getInitials(m.prenom, m.nom) }}</div>
+                <div>
+                  <div class="rdv-row-name">Dr. {{ m.prenom }} {{ m.nom }}</div>
+                  <div class="rdv-row-sub">{{ m.specialiteNom || 'Médecine générale' }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="rendezVousForm.get('medecinId')?.invalid && rendezVousForm.get('medecinId')?.touched"
+                 class="rdv-error-msg">
+              <i class="bi bi-exclamation-circle me-1"></i>Veuillez sélectionner un médecin
+            </div>
+          </div>
+
+          <!-- Médecin sélectionné -->
+          <div *ngIf="selectedMedecin" class="rdv-selected-row">
+            <div class="rdv-mini-avatar rdv-green">{{ getInitials(selectedMedecin.prenom, selectedMedecin.nom) }}</div>
+            <div class="flex-grow-1">
+              <div class="rdv-row-name">Dr. {{ selectedMedecin.prenom }} {{ selectedMedecin.nom }}</div>
+              <div class="rdv-row-sub">{{ selectedMedecin.specialiteNom || 'Médecine générale' }}</div>
+            </div>
+            <button type="button" class="rdv-btn-change" (click)="clearSelectedMedecin()">
+              <i class="bi bi-pencil me-1"></i>Changer
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===== SECTION 3 : DATE, STATUT & MOTIF ===== -->
+      <div class="rdv-section mb-4">
+        <div class="rdv-section-header rdv-header-amber">
+          <i class="bi bi-calendar-event"></i>
+          <span>Planification</span>
+        </div>
+        <div class="rdv-section-body">
+          <div class="row g-4">
+
+            <div class="col-md-6">
+              <label class="rdv-label" for="rdv-date">
+                <i class="bi bi-clock me-1"></i>Date et heure <span class="text-danger">*</span>
+              </label>
+              <input
+                type="datetime-local"
+                id="rdv-date"
+                class="form-control rdv-input"
+                formControlName="dateHeure"
+                [class.is-invalid]="rendezVousForm.get('dateHeure')?.invalid && rendezVousForm.get('dateHeure')?.touched"
+              />
+              <div class="invalid-feedback">Veuillez indiquer une date et heure</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="rdv-label" for="rdv-statut">
+                <i class="bi bi-tag me-1"></i>Statut
+              </label>
+              <select id="rdv-statut" class="form-select rdv-input" formControlName="statut">
+                <option value="PLANIFIE">⏳ Planifié</option>
+                <option value="CONFIRME">✅ Confirmé</option>
+                <option value="ANNULE">❌ Annulé</option>
+                <option value="TERMINE">✔️ Terminé</option>
+                <option value="ABSENT">🚫 Absent</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="rdv-label" for="rdv-motif">
+                <i class="bi bi-chat-left-text me-1"></i>Motif du rendez-vous
+              </label>
+              <input
+                type="text"
+                id="rdv-motif"
+                class="form-control rdv-input"
+                formControlName="motif"
+                placeholder="Ex : Consultation de suivi, résultats d'analyses..."
+              />
+              <!-- Suggestions rapides -->
+              <div class="d-flex flex-wrap gap-2 mt-2">
+                <button
+                  *ngFor="let s of motifSuggestions"
+                  type="button"
+                  class="rdv-chip"
+                  (click)="chooseMotif(s)"
+                >
+                  {{ s }}
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
 
+      <!-- ===== BOUTONS D'ACTION ===== -->
+      <div class="d-flex justify-content-end gap-3 mb-5">
+        <button type="button" class="rdv-btn-cancel" (click)="onCancel()">
+          <i class="bi bi-x-lg me-2"></i>Annuler
+        </button>
+        <button
+          type="submit"
+          class="rdv-btn-submit"
+          [disabled]="loading || rendezVousForm.invalid"
+        >
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!loading" class="bi bi-check-circle-fill me-2"></i>
+          Enregistrer le rendez-vous
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

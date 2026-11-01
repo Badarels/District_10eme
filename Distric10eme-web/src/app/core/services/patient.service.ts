@@ -35,5 +35,9 @@ export class PatientService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  generateNumeroDossier(): Observable<{ numeroDossier: string }> {
+    return this.http.get<{ numeroDossier: string }>(`${this.apiUrl}/generate-numero-dossier`);
+  }
 }
 

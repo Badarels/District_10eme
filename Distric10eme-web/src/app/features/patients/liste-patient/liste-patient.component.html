@@ -1,5 +1,5 @@
 <div class="pagetitle">
-  <h1>Liste des patients</h1>
+  <h1>Gestion des Patients</h1>
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
@@ -9,108 +9,276 @@
 </div>
 
 <section class="section">
-  <div class="content-body">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="d-flex align-items-center mb-3 gap-2">
-            <button class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" (click)="addPatient()">
-              <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Ajouter un patient</span>
-            </button>
+  <!-- 1. CARTES STATISTIQUES EN HAUT -->
+  <div class="row g-3 mb-4">
+    <!-- Total Patients -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card stat-card shadow-sm border-0 border-start border-4 border-primary h-100">
+        <div class="card-body p-3 d-flex align-items-center">
+          <div class="stat-icon bg-primary-subtle text-primary rounded-circle me-3">
+            <i class="bi bi-people-fill fs-3"></i>
+          </div>
+          <div>
+            <span class="text-muted small fw-semibold text-uppercase">Total Patients</span>
+            <h3 class="mb-0 fw-bold text-dark">{{ totalPatients }}</h3>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body">
-              <h2 class="card-title">Patients</h2>
-              <div class="row g-2 align-items-end mb-3">
-                <div class="col-md-4 col-lg-4">
-                  <label class="form-label">Recherche rapide</label>
-                  <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control with-blue-border"
-                      placeholder="Nom, prénom, email, téléphone..."
-                      [(ngModel)]="searchTerm"
-                      (ngModelChange)="applyFilter()"
-                    />
-                    <span class="input-group-text">
-                      <i class="fas fa-search fa-recherche"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="col-md-4 col-lg-3">
-                  <label class="form-label">Numéro de dossier</label>
-                  <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Saisir le numéro"
-                      [(ngModel)]="searchTerm"
-                      name="search"
-                    />
-                    <button class="btn btn-outline-primary" type="button" (click)="onSearch()">
-                      <i class="bi bi-search"></i>
-                    </button>
-                  </div>
-                </div>
+    <!-- Hommes -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card stat-card shadow-sm border-0 border-start border-4 border-info h-100">
+        <div class="card-body p-3 d-flex align-items-center">
+          <div class="stat-icon bg-info-subtle text-info rounded-circle me-3">
+            <i class="bi bi-gender-male fs-3"></i>
+          </div>
+          <div>
+            <span class="text-muted small fw-semibold text-uppercase">Patients Hommes</span>
+            <h3 class="mb-0 fw-bold text-dark">{{ totalHommes }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Femmes -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card stat-card shadow-sm border-0 border-start border-4 border-danger h-100">
+        <div class="card-body p-3 d-flex align-items-center">
+          <div class="stat-icon bg-danger-subtle text-danger rounded-circle me-3">
+            <i class="bi bi-gender-female fs-3"></i>
+          </div>
+          <div>
+            <span class="text-muted small fw-semibold text-uppercase">Patientes Femmes</span>
+            <h3 class="mb-0 fw-bold text-dark">{{ totalFemmes }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SECTION PRINCIPALE : TABLEAU ET FILTRES -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        
+        <!-- En-tête de la carte avec Titre & Bouton d'action -->
+        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <h5 class="card-title m-0 text-primary d-flex align-items-center gap-2">
+              <i class="bi bi-person-lines-fill fs-4"></i> Répertoire des Dossiers Patients
+            </h5>
+            <small class="text-muted">Consultez, recherchez et gérez les dossiers médicaux des patients</small>
+          </div>
+          <button class="btn btn-primary d-inline-flex align-items-center gap-2 px-3 shadow-sm" (click)="addPatient()">
+            <i class="bi bi-person-plus-fill"></i>
+            <span>Nouveau Patient</span>
+          </button>
+        </div>
+
+        <div class="card-body p-4">
+          <!-- Barre de Filtres et Recherche -->
+          <div class="row g-2 mb-4 align-items-center">
+            
+            <!-- Recherche textuelle -->
+            <div class="col-lg-5 col-md-6">
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input
+                  type="text"
+                  class="form-control border-start-0 bg-light"
+                  placeholder="Rechercher par nom, prénom, N° dossier, tél, email..."
+                  [(ngModel)]="searchTerm"
+                  (input)="applyFilter()"
+                />
+                <button *ngIf="searchTerm" class="btn btn-light border border-start-0" type="button" (click)="searchTerm = ''; applyFilter()">
+                  <i class="bi bi-x"></i>
+                </button>
               </div>
+            </div>
 
-              <div *ngIf="loading" class="text-center py-5">
-                <div class="spinner-border" role="status"></div>
-              </div>
+            <!-- Filtre Sexe -->
+            <div class="col-lg-3 col-md-3">
+              <select class="form-select bg-light" [(ngModel)]="selectedSexe" (change)="applyFilter()">
+                <option value="">Tous les sexes</option>
+                <option value="M">Hommes (M)</option>
+                <option value="F">Femmes (F)</option>
+              </select>
+            </div>
 
-              <div *ngIf="!loading && filteredPatients.length === 0" class="text-center py-5 text-muted">
-                Aucun patient trouvé.
-              </div>
+            <!-- Filtre Groupe Sanguin -->
+            <div class="col-lg-2 col-md-3">
+              <select class="form-select bg-light" [(ngModel)]="selectedGroupeSanguin" (change)="applyFilter()">
+                <option value="">Tous groupes</option>
+                <option value="O+">Groupe O+</option>
+                <option value="O-">Groupe O-</option>
+                <option value="A+">Groupe A+</option>
+                <option value="A-">Groupe A-</option>
+                <option value="B+">Groupe B+</option>
+                <option value="B-">Groupe B-</option>
+                <option value="AB+">Groupe AB+</option>
+                <option value="AB-">Groupe AB-</option>
+              </select>
+            </div>
 
-              <div *ngIf="!loading && filteredPatients.length > 0" class="table-responsive patient-list">
-                <table class="table table-striped align-middle datatable">
-                  <thead>
-                    <tr>
-                      <th scope="col">N° dossier</th>
-                      <th scope="col">Nom</th>
-                      <th scope="col">Prénom</th>
-                      <th scope="col">Sexe</th>
-                      <th scope="col">Date de naissance</th>
-                      <th scope="col">Téléphone</th>
-                      <th scope="col">Email</th>
-                      <th scope="col">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let patient of filteredPatients">
-                      <td>{{ patient.numeroDossier || '—' }}</td>
-                      <td>{{ patient.nom }}</td>
-                      <td>{{ patient.prenom }}</td>
-                      <td>
-                        <span class="badge" [ngClass]="patient.sexe === 'F' ? 'bg-info' : 'bg-secondary'">
-                          {{ patient.sexe || 'N/A' }}
-                        </span>
-                      </td>
-                      <td>{{ patient.dateNaissance | date:'dd/MM/yyyy' }}</td>
-                      <td>{{ patient.telephone || '—' }}</td>
-                      <td>{{ patient.email || '—' }}</td>
-                      <td>
-                        <div class="btn-group btn-group-sm" role="group">
-                          <button class="btn btn-light" (click)="viewDetails(patient.id!)" title="Détails">
-                            <i class="bi bi-eye"></i>
-                          </button>
-                          <button class="btn btn-light" (click)="editPatient(patient.id!)" title="Modifier">
-                            <i class="bi bi-pencil"></i>
-                          </button>
-                          <button class="btn btn-light text-danger" (click)="deletePatient(patient.id!)" title="Supprimer">
-                            <i class="bi bi-trash"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+            <!-- Bouton Réinitialiser & Compteur -->
+            <div class="col-lg-2 text-lg-end">
+              <button
+                *ngIf="searchTerm || selectedSexe || selectedGroupeSanguin"
+                class="btn btn-outline-secondary btn-sm w-100"
+                (click)="resetFilters()"
+              >
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Réinitialiser
+              </button>
+              <div *ngIf="!searchTerm && !selectedSexe && !selectedGroupeSanguin" class="text-muted small">
+                <strong>{{ filteredPatients.length }}</strong> patient(s)
               </div>
             </div>
           </div>
+
+          <!-- Spinner de chargement -->
+          <div *ngIf="loading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-2 text-muted">Chargement des dossiers patients...</p>
+          </div>
+
+          <!-- Aucun patient trouvé -->
+          <div *ngIf="!loading && filteredPatients.length === 0" class="text-center py-5 bg-light rounded border border-dashed">
+            <i class="bi bi-person-x fs-1 text-muted d-block mb-3"></i>
+            <h5 class="text-muted fw-bold">Aucun dossier patient trouvé</h5>
+            <p class="text-muted small mb-3">
+              {{ searchTerm || selectedSexe || selectedGroupeSanguin ? 'Aucun résultat ne correspond à vos critères de recherche.' : 'Le registre ne contient aucun patient pour l\'instant.' }}
+            </p>
+            <button *ngIf="searchTerm || selectedSexe || selectedGroupeSanguin" class="btn btn-outline-secondary btn-sm me-2" (click)="resetFilters()">
+              <i class="bi bi-arrow-counterclockwise me-1"></i> Réinitialiser les filtres
+            </button>
+            <button class="btn btn-primary btn-sm" (click)="addPatient()">
+              <i class="bi bi-person-plus-fill me-1"></i> Enregistrer un patient
+            </button>
+          </div>
+
+          <!-- Tableau des patients -->
+          <div *ngIf="!loading && filteredPatients.length > 0" class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light text-secondary text-uppercase small">
+                <tr>
+                  <th style="width: 120px;">N° Dossier</th>
+                  <th>Patient</th>
+                  <th>Sexe</th>
+                  <th>Âge & Naissance</th>
+                  <th>Contact</th>
+                  <th>Groupe Sanguin</th>
+                  <th class="text-end" style="width: 140px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let patient of filteredPatients" class="patient-row cursor-pointer" (click)="viewDetails(patient.id!)">
+                  
+                  <!-- N° Dossier -->
+                  <td>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fw-bold font-monospace">
+                      #{{ patient.numeroDossier || '—' }}
+                    </span>
+                  </td>
+
+                  <!-- Patient (Avatar + Nom complet) -->
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="patient-avatar me-3 rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm"
+                           [ngClass]="patient.sexe === 'F' || patient.sexe === 'Féminin' ? 'bg-danger-gradient' : 'bg-primary-gradient'">
+                        {{ getInitials(patient.prenom, patient.nom) }}
+                      </div>
+                      <div>
+                        <a [routerLink]="['/patients/details', patient.id]" class="text-decoration-none fw-bold text-dark hover-primary" (click)="$event.stopPropagation()">
+                          {{ patient.prenom }} {{ patient.nom }}
+                        </a>
+                        <div class="text-muted small" *ngIf="patient.adresse">
+                          <i class="bi bi-geo-alt me-1"></i>{{ patient.adresse }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Sexe -->
+                  <td>
+                    <span *ngIf="patient.sexe === 'M' || patient.sexe === 'Masculin'" class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1">
+                      <i class="bi bi-gender-male me-1"></i> Homme
+                    </span>
+                    <span *ngIf="patient.sexe === 'F' || patient.sexe === 'Féminin'" class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
+                      <i class="bi bi-gender-female me-1"></i> Femme
+                    </span>
+                    <span *ngIf="patient.sexe !== 'M' && patient.sexe !== 'Masculin' && patient.sexe !== 'F' && patient.sexe !== 'Féminin'" class="badge bg-light text-muted border">
+                      {{ patient.sexe || 'N/A' }}
+                    </span>
+                  </td>
+
+                  <!-- Âge & Date de Naissance -->
+                  <td>
+                    <div class="fw-semibold text-dark">{{ calculateAge(patient.dateNaissance) }}</div>
+                    <small class="text-muted">
+                      <i class="bi bi-calendar3 me-1"></i>{{ patient.dateNaissance | date:'dd/MM/yyyy' }}
+                    </small>
+                  </td>
+
+                  <!-- Téléphone & Email -->
+                  <td>
+                    <div *ngIf="patient.telephone" class="text-dark small fw-semibold">
+                      <i class="bi bi-telephone text-primary me-1"></i>{{ patient.telephone }}
+                    </div>
+                    <div *ngIf="patient.email" class="text-muted small text-truncate" style="max-width: 180px;">
+                      <i class="bi bi-envelope me-1"></i>{{ patient.email }}
+                    </div>
+                    <span *ngIf="!patient.telephone && !patient.email" class="text-muted small">—</span>
+                  </td>
+
+                  <!-- Groupe Sanguin -->
+                  <td>
+                    <span *ngIf="patient.groupeSanguin" class="badge bg-danger text-white rounded-pill px-2 py-1 shadow-sm">
+                      <i class="bi bi-droplet-fill me-1"></i>{{ patient.groupeSanguin }}
+                    </span>
+                    <span *ngIf="!patient.groupeSanguin" class="text-muted small">Non renseigné</span>
+                  </td>
+
+                  <!-- Actions -->
+                  <td class="text-end" (click)="$event.stopPropagation()">
+                    <div class="btn-group btn-group-sm">
+                      <button
+                        class="btn btn-outline-primary"
+                        (click)="viewDetails(patient.id!)"
+                        title="Voir le dossier complet"
+                      >
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button
+                        class="btn btn-outline-secondary"
+                        (click)="editPatient(patient.id!)"
+                        title="Modifier les informations"
+                      >
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button
+                        class="btn btn-outline-danger"
+                        (click)="deletePatient(patient.id!, $event)"
+                        title="Supprimer ce dossier"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pied de tableau avec total -->
+          <div *ngIf="!loading && filteredPatients.length > 0" class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top text-muted small">
+            <span>Affichage de <strong>{{ filteredPatients.length }}</strong> sur <strong>{{ totalPatients }}</strong> patient(s)</span>
+            <span class="text-muted"><i class="bi bi-shield-check text-success me-1"></i> Dossiers gérés par le District 10ème</span>
+          </div>
+
         </div>
       </div>
     </div>

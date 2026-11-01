@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -24,13 +26,19 @@ public class PatientController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<PatientDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<PatientDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(patientService.findById(id));
     }
     
     @GetMapping("/numero/{numeroDossier}")
-    public ResponseEntity<PatientDTO> findByNumeroDossier(@PathVariable String numeroDossier) {
+    public ResponseEntity<PatientDTO> findByNumeroDossier(@PathVariable("numeroDossier") String numeroDossier) {
         return ResponseEntity.ok(patientService.findByNumeroDossier(numeroDossier));
+    }
+
+    @GetMapping("/generate-numero-dossier")
+    public ResponseEntity<Map<String, String>> generateNumeroDossier() {
+        String num = patientService.generateUniqueNumeroDossier();
+        return ResponseEntity.ok(Collections.singletonMap("numeroDossier", num));
     }
     
     @PostMapping
@@ -39,14 +47,13 @@ public class PatientController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<PatientDTO> update(@PathVariable Long id, @Valid @RequestBody PatientDTO dto) {
+    public ResponseEntity<PatientDTO> update(@PathVariable("id") Long id, @Valid @RequestBody PatientDTO dto) {
         return ResponseEntity.ok(patientService.update(id, dto));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         patientService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
-

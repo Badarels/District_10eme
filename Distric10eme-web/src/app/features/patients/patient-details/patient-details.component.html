@@ -1,91 +1,753 @@
-<div class="container-fluid">
-  <div class="row mb-4">
-    <div class="col-12">
-      <div class="d-flex justify-content-between align-items-center">
-        <h2 class="mb-0">Détails du Patient</h2>
-        <div>
-          <button class="btn btn-warning me-2" (click)="editPatient()">
-            <i class="bi bi-pencil"></i> Modifier
-          </button>
-          <button class="btn btn-secondary" (click)="goBack()">
-            <i class="bi bi-arrow-left"></i> Retour
-          </button>
-        </div>
-      </div>
+<!-- En-tête et Fil d'Ariane -->
+<div class="pagetitle d-print-none mb-3">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h1 class="h3 fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+        <i class="bi bi-folder2-open text-primary"></i> Dossier Médical Informatisé
+      </h1>
+      <nav>
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="'/patients'">Patients</a></li>
+          <li class="breadcrumb-item active" *ngIf="patient">Dossier #{{ patient.numeroDossier }}</li>
+        </ol>
+      </nav>
     </div>
-  </div>
 
-  <div *ngIf="loading" class="text-center py-5">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Chargement...</span>
-    </div>
-  </div>
-
-  <div *ngIf="!loading && patient" class="card">
-    <div class="card-body">
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <strong>Numéro de Dossier:</strong>
-          <p class="mb-0">{{ patient.numeroDossier }}</p>
-        </div>
-        <div class="col-md-6 mb-3">
-          <strong>Groupe Sanguin:</strong>
-          <p class="mb-0">{{ patient.groupeSanguin || 'Non renseigné' }}</p>
-        </div>
-      </div>
-
-      <hr />
-
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <strong>Nom:</strong>
-          <p class="mb-0">{{ patient.nom }}</p>
-        </div>
-        <div class="col-md-6 mb-3">
-          <strong>Prénom:</strong>
-          <p class="mb-0">{{ patient.prenom }}</p>
-        </div>
-      </div>
-
-      <hr />
-
-      <div class="row">
-        <div class="col-md-4 mb-3">
-          <strong>Sexe:</strong>
-          <p class="mb-0">{{ patient.sexe === 'M' ? 'Masculin' : 'Féminin' }}</p>
-        </div>
-        <div class="col-md-4 mb-3">
-          <strong>Date de Naissance:</strong>
-          <p class="mb-0">{{ patient.dateNaissance | date:'dd/MM/yyyy' }}</p>
-        </div>
-        <div class="col-md-4 mb-3">
-          <strong>Date d'Enregistrement:</strong>
-          <p class="mb-0">{{ patient.dateEnregistrement | date:'dd/MM/yyyy' }}</p>
-        </div>
-      </div>
-
-      <hr />
-
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <strong>Téléphone:</strong>
-          <p class="mb-0">{{ patient.telephone || 'Non renseigné' }}</p>
-        </div>
-        <div class="col-md-6 mb-3">
-          <strong>Email:</strong>
-          <p class="mb-0">{{ patient.email || 'Non renseigné' }}</p>
-        </div>
-      </div>
-
-      <hr />
-
-      <div class="row">
-        <div class="col-12 mb-3">
-          <strong>Adresse:</strong>
-          <p class="mb-0">{{ patient.adresse || 'Non renseigné' }}</p>
-        </div>
-      </div>
+    <!-- Barre d'actions rapides en haut -->
+    <div class="d-flex align-items-center gap-2 flex-wrap" *ngIf="patient">
+      <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill" (click)="goBack()">
+        <i class="bi bi-arrow-left me-1"></i> Retour liste
+      </button>
+      <button class="btn btn-outline-dark btn-sm px-3 rounded-pill" (click)="printDossier()" title="Imprimer le dossier complet">
+        <i class="bi bi-printer me-1"></i> Imprimer
+      </button>
+      <button class="btn btn-outline-primary btn-sm px-3 rounded-pill" (click)="editPatient()">
+        <i class="bi bi-pencil me-1"></i> Modifier
+      </button>
+      <button class="btn btn-success btn-sm px-3 rounded-pill shadow-sm" (click)="nouvelleConsultation()">
+        <i class="bi bi-plus-circle me-1"></i> Nouvelle Consultation
+      </button>
+      <button class="btn btn-info text-white btn-sm px-3 rounded-pill shadow-sm" (click)="nouveauRdv()">
+        <i class="bi bi-calendar-plus me-1"></i> Prendre RDV
+      </button>
     </div>
   </div>
 </div>
 
+<!-- État de chargement initial -->
+<div *ngIf="loading" class="text-center py-5">
+  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Chargement...</span>
+  </div>
+  <p class="mt-3 text-muted fw-semibold">Chargement du dossier médical en cours...</p>
+</div>
+
+<!-- CONTENU PRINCIPAL DU DOSSIER PATIENT -->
+<section *ngIf="!loading && patient" class="section patient-dossier" id="patientDossierPrintArea">
+  
+  <!-- 1. HERO BANNER : CARTE D'IDENTITÉ DU PATIENT -->
+  <div class="card hero-patient-card shadow-sm border-0 mb-4 overflow-hidden position-relative">
+    <div class="hero-accent-strip"></div>
+    <div class="card-body p-4">
+      <div class="row align-items-center g-3">
+        
+        <!-- Avatar + Identité -->
+        <div class="col-lg-8 col-md-12 d-flex align-items-center gap-4">
+          <div class="patient-main-avatar rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow position-relative"
+               [ngClass]="patient.sexe === 'F' || patient.sexe === 'Féminin' ? 'bg-female-gradient' : 'bg-male-gradient'">
+            {{ getInitials(patient.prenom, patient.nom) }}
+            <span class="status-indicator-dot" title="Dossier Médical Actif"></span>
+          </div>
+
+          <div>
+            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+              <h2 class="mb-0 fw-bold text-dark fs-3">{{ patient.prenom }} {{ patient.nom }}</h2>
+              
+              <!-- N° Dossier avec copie rapide -->
+              <span class="badge badge-dossier font-monospace cursor-pointer" (click)="copyNumeroDossier()" title="Cliquer pour copier le N° dossier">
+                #{{ patient.numeroDossier }}
+                <i class="bi" [ngClass]="copiedDossier ? 'bi-check2 text-success' : 'bi-clipboard ms-1'"></i>
+              </span>
+
+              <!-- Badge Statut -->
+              <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2">
+                <i class="bi bi-check-circle-fill me-1"></i> Patient Actif
+              </span>
+            </div>
+
+            <!-- Ruban clinique rapide -->
+            <div class="d-flex flex-wrap align-items-center gap-2 mt-2 pt-1">
+              <!-- Genre -->
+              <span *ngIf="patient.sexe === 'M' || patient.sexe === 'Masculin'" class="badge badge-clinical bg-info-subtle text-info border border-info-subtle">
+                <i class="bi bi-gender-male me-1"></i> Homme
+              </span>
+              <span *ngIf="patient.sexe === 'F' || patient.sexe === 'Féminin'" class="badge badge-clinical bg-danger-subtle text-danger border border-danger-subtle">
+                <i class="bi bi-gender-female me-1"></i> Femme
+              </span>
+
+              <!-- Âge & Date de naissance -->
+              <span class="badge badge-clinical bg-light text-dark border">
+                <i class="bi bi-cake2 text-warning me-1"></i> {{ calculateAge(patient.dateNaissance) }} ({{ patient.dateNaissance | date:'dd/MM/yyyy' }})
+              </span>
+
+              <!-- Groupe Sanguin -->
+              <span *ngIf="patient.groupeSanguin" class="badge badge-clinical bg-danger text-white shadow-sm">
+                <i class="bi bi-droplet-fill me-1"></i> {{ patient.groupeSanguin }}
+              </span>
+
+              <!-- Téléphone cliquable -->
+              <a *ngIf="patient.telephone" [href]="'tel:' + patient.telephone" class="badge badge-clinical bg-light text-primary border text-decoration-none">
+                <i class="bi bi-telephone text-success me-1"></i> {{ patient.telephone }}
+              </a>
+
+              <!-- Adresse -->
+              <span *ngIf="patient.adresse" class="badge badge-clinical bg-light text-muted border">
+                <i class="bi bi-geo-alt text-danger me-1"></i> {{ patient.adresse }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date et Établissement (colonne droite) -->
+        <div class="col-lg-4 col-md-12 text-lg-end text-start border-start-lg ps-lg-4">
+          <div class="text-muted small fw-semibold text-uppercase tracking-wider">Centre de Rattachement</div>
+          <div class="fw-bold text-primary fs-6">District Sanitaire du 10ème</div>
+          <div class="text-muted small mt-1">
+            <i class="bi bi-calendar-check me-1"></i>
+            Enregistré le : <strong>{{ patient.dateEnregistrement ? (patient.dateEnregistrement | date:'dd/MM/yyyy') : 'Initial' }}</strong>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. CARTES STATS KPI (RÉSUMÉ DU DOSSIER) -->
+  <div class="row g-3 mb-4">
+    <!-- Consultations effectuées -->
+    <div class="col-md-3 col-sm-6">
+      <div class="card kpi-card shadow-sm border-0 h-100">
+        <div class="card-body p-3 d-flex align-items-center">
+          <div class="kpi-icon bg-primary-subtle text-primary rounded-circle me-3">
+            <i class="bi bi-clipboard2-pulse fs-4"></i>
+          </div>
+          <div>
+            <span class="text-muted small text-uppercase fw-semibold">Consultations</span>
+            <h4 class="mb-0 fw-bold text-dark">{{ consultations.length }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Médicaments Prescrits -->
+    <div class="col-md-3 col-sm-6">
+      <div class="card kpi-card shadow-sm border-0 h-100">
+        <div class="card-body p-3 d-flex align-items-center">
+          <div class="kpi-icon bg-success-subtle text-success rounded-circle me-3">
+            <i class="bi bi-capsule fs-4"></i>
+          </div>
+          <div>
+            <span class="text-muted small text-uppercase fw-semibold">Médicaments</span>
+            <h4 class="mb-0 fw-bold text-dark">{{ totalMedicamentsPrescrits }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dernière Visite -->
+    <div class="col-md-3 col-sm-6">
+      <div class="card kpi-card shadow-sm border-0 h-100">
+        <div class="card-body p-3 d-flex align-items-center">
+          <div class="kpi-icon bg-info-subtle text-info rounded-circle me-3">
+            <i class="bi bi-clock-history fs-4"></i>
+          </div>
+          <div>
+            <span class="text-muted small text-uppercase fw-semibold">Dernière visite</span>
+            <h6 class="mb-0 fw-bold text-dark text-truncate" style="max-width: 140px;">
+              {{ derniereConsultation?.dateConsultation ? (derniereConsultation?.dateConsultation | date:'dd/MM/yyyy') : 'Aucune' }}
+            </h6>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Groupe Sanguin & Risque -->
+    <div class="col-md-3 col-sm-6">
+      <div class="card kpi-card shadow-sm border-0 h-100">
+        <div class="card-body p-3 d-flex align-items-center">
+          <div class="kpi-icon bg-danger-subtle text-danger rounded-circle me-3">
+            <i class="bi bi-heart-pulse-fill fs-4"></i>
+          </div>
+          <div>
+            <span class="text-muted small text-uppercase fw-semibold">Groupe Sanguin</span>
+            <h4 class="mb-0 fw-bold text-danger">{{ patient.groupeSanguin || 'N/A' }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. WORKSPACE MULTI-ONGLETS -->
+  <div class="card shadow-sm border-0">
+    
+    <!-- Barre d'onglets moderne -->
+    <div class="card-header bg-white border-bottom p-0 d-print-none">
+      <ul class="nav nav-tabs custom-nav-tabs px-3" role="tablist">
+        <li class="nav-item">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'dossier'"
+            (click)="activeTab = 'dossier'"
+            type="button"
+          >
+            <i class="bi bi-person-lines-fill me-2"></i> Informations Générales & Fiche
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'consultations'"
+            (click)="activeTab = 'consultations'"
+            type="button"
+          >
+            <i class="bi bi-clipboard2-pulse me-2"></i> Consultations & Diagnostics
+            <span class="badge bg-primary rounded-pill ms-2">{{ consultations.length }}</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'ordonnances'"
+            (click)="activeTab = 'ordonnances'"
+            type="button"
+          >
+            <i class="bi bi-prescription2 me-2"></i> Ordonnances & Traitements
+            <span class="badge bg-success rounded-pill ms-2">{{ allPrescriptions.length }}</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'parcours'"
+            (click)="activeTab = 'parcours'"
+            type="button"
+          >
+            <i class="bi bi-hospital me-2"></i> Rendez-vous & Séjours
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-body p-4">
+
+      <!-- ============================================== -->
+      <!-- ONGLET 1 : INFORMATIONS GÉNÉRALES & CONTACT    -->
+      <!-- ============================================== -->
+      <div *ngIf="activeTab === 'dossier'">
+        <div class="row g-4">
+          
+          <!-- Bloc 1 : Identité & État Civil -->
+          <div class="col-lg-6">
+            <div class="card shadow-none border h-100">
+              <div class="card-header bg-light py-3 border-bottom d-flex align-items-center gap-2">
+                <i class="bi bi-person-vcard text-primary fs-5"></i>
+                <h6 class="m-0 fw-bold text-dark">État Civil & Identité</h6>
+              </div>
+              <div class="card-body p-4">
+                <table class="table table-borderless table-details mb-0">
+                  <tbody>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold" style="width: 40%;">Nom de famille</td>
+                      <td class="fw-bold text-dark fs-6">{{ patient.nom }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold">Prénom(s)</td>
+                      <td class="fw-bold text-dark fs-6">{{ patient.prenom }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold">Genre / Sexe</td>
+                      <td>
+                        <span *ngIf="patient.sexe === 'M' || patient.sexe === 'Masculin'" class="badge bg-info-subtle text-info border border-info-subtle">
+                          <i class="bi bi-gender-male me-1"></i> Masculin (Homme)
+                        </span>
+                        <span *ngIf="patient.sexe === 'F' || patient.sexe === 'Féminin'" class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                          <i class="bi bi-gender-female me-1"></i> Féminin (Femme)
+                        </span>
+                        <span *ngIf="patient.sexe !== 'M' && patient.sexe !== 'Masculin' && patient.sexe !== 'F' && patient.sexe !== 'Féminin'">
+                          {{ patient.sexe || 'Non spécifié' }}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold">Date de naissance</td>
+                      <td>
+                        <span class="fw-semibold text-dark">{{ patient.dateNaissance | date:'dd MMMM yyyy' }}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold">Âge calculé</td>
+                      <td>
+                        <span class="badge bg-light text-dark border fw-bold">{{ calculateAge(patient.dateNaissance) }}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold">Groupe Sanguin</td>
+                      <td>
+                        <span *ngIf="patient.groupeSanguin" class="badge bg-danger text-white px-2 py-1 shadow-sm">
+                          <i class="bi bi-droplet-fill me-1"></i> {{ patient.groupeSanguin }}
+                        </span>
+                        <span *ngIf="!patient.groupeSanguin" class="text-muted">Non renseigné</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloc 2 : Coordonnées & Suivi Administratif -->
+          <div class="col-lg-6">
+            <div class="card shadow-none border h-100">
+              <div class="card-header bg-light py-3 border-bottom d-flex align-items-center gap-2">
+                <i class="bi bi-geo-alt-fill text-success fs-5"></i>
+                <h6 class="m-0 fw-bold text-dark">Coordonnées & Informations de Contact</h6>
+              </div>
+              <div class="card-body p-4">
+                <table class="table table-borderless table-details mb-0">
+                  <tbody>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold" style="width: 40%;">Téléphone principal</td>
+                      <td>
+                        <a *ngIf="patient.telephone" [href]="'tel:' + patient.telephone" class="text-decoration-none fw-bold text-primary">
+                          <i class="bi bi-telephone-outbound text-success me-1"></i> {{ patient.telephone }}
+                        </a>
+                        <span *ngIf="!patient.telephone" class="text-muted">Non renseigné</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold">Courriel (Email)</td>
+                      <td>
+                        <a *ngIf="patient.email" [href]="'mailto:' + patient.email" class="text-decoration-none text-dark">
+                          <i class="bi bi-envelope-at me-1 text-primary"></i> {{ patient.email }}
+                        </a>
+                        <span *ngIf="!patient.email" class="text-muted">Non renseigné</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold">Adresse de résidence</td>
+                      <td class="fw-semibold text-dark">
+                        <i class="bi bi-geo-alt text-danger me-1" *ngIf="patient.adresse"></i>
+                        {{ patient.adresse || 'Non renseignée' }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold">N° Dossier Médical</td>
+                      <td>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle font-monospace px-2 py-1">
+                          #{{ patient.numeroDossier }}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold">Date de création dossier</td>
+                      <td class="text-dark">
+                        {{ patient.dateEnregistrement ? (patient.dateEnregistrement | date:'dd/MM/yyyy à HH:mm') : 'Dossier Initial' }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted text-uppercase small fw-bold">Statut légal</td>
+                      <td>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">
+                          <i class="bi bi-shield-check me-1"></i> Dossier valide & actif
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloc 3 : Synthèse Clinique & Alertes -->
+          <div class="col-12">
+            <div class="card shadow-none border bg-light">
+              <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-clipboard2-check text-primary fs-4"></i>
+                    <h6 class="m-0 fw-bold text-dark">Synthèse Clinique & Recommandations</h6>
+                  </div>
+                  <span class="badge bg-light text-muted border">Mise à jour en temps réel</span>
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <div class="p-3 bg-white rounded border">
+                      <div class="text-muted small fw-bold text-uppercase mb-1">
+                        <i class="bi bi-droplet text-danger me-1"></i> Groupe Sanguin
+                      </div>
+                      <div class="fs-5 fw-bold text-dark">{{ patient.groupeSanguin || 'Non typé' }}</div>
+                      <small class="text-muted">Compatible transfusions standard</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="p-3 bg-white rounded border">
+                      <div class="text-muted small fw-bold text-uppercase mb-1">
+                        <i class="bi bi-file-medical text-primary me-1"></i> Suivi Médical
+                      </div>
+                      <div class="fs-5 fw-bold text-dark">{{ consultations.length }} consultation(s)</div>
+                      <small class="text-muted">Historique complet disponible</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="p-3 bg-white rounded border">
+                      <div class="text-muted small fw-bold text-uppercase mb-1">
+                        <i class="bi bi-prescription text-success me-1"></i> Prescriptions Cumulées
+                      </div>
+                      <div class="fs-5 fw-bold text-dark">{{ totalMedicamentsPrescrits }} médicament(s)</div>
+                      <small class="text-muted">Dernier traitement vérifié</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- ONGLET 2 : HISTORIQUE DES CONSULTATIONS        -->
+      <!-- ============================================== -->
+      <div *ngIf="activeTab === 'consultations'">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <div>
+            <h6 class="fw-bold text-dark m-0">Parcours Clinique & Consultations</h6>
+            <small class="text-muted">Chronologie de tous les passages du patient auprès des praticiens du district</small>
+          </div>
+          <button class="btn btn-primary btn-sm px-3" (click)="nouvelleConsultation()">
+            <i class="bi bi-plus-circle me-1"></i> Nouvelle Consultation
+          </button>
+        </div>
+
+        <!-- Chargement -->
+        <div *ngIf="loadingConsultations" class="text-center py-4">
+          <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+          <span class="ms-2 text-muted small">Chargement des antécédents médicaux...</span>
+        </div>
+
+        <!-- État vide -->
+        <div *ngIf="!loadingConsultations && consultations.length === 0" class="text-center py-5 bg-light rounded border border-dashed">
+          <i class="bi bi-clipboard2-x fs-1 text-muted d-block mb-3"></i>
+          <h5 class="text-muted fw-bold">Aucune consultation enregistrée pour ce patient</h5>
+          <p class="text-muted small mb-3">Ce patient n'a pas encore fait l'objet d'une consultation médicale dans notre système.</p>
+          <button class="btn btn-primary btn-sm" (click)="nouvelleConsultation()">
+            <i class="bi bi-plus-circle me-1"></i> Enregistrer une première consultation
+          </button>
+        </div>
+
+        <!-- Timeline des consultations -->
+        <div *ngIf="!loadingConsultations && consultations.length > 0" class="consultations-timeline">
+          <div *ngFor="let cons of consultations; let idx = index" class="timeline-item mb-4">
+            
+            <div class="card timeline-card border shadow-sm">
+              <!-- En-tête consultation -->
+              <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <span class="badge bg-primary px-2 py-1">Consultation #{{ cons.id }}</span>
+                  <span class="fw-bold text-dark">
+                    <i class="bi bi-calendar3 text-primary me-1"></i>
+                    {{ cons.dateConsultation | date:'dd MMMM yyyy à HH:mm' }}
+                  </span>
+                  <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1">
+                    {{ cons.motif || 'Motif non renseigné' }}
+                  </span>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-light text-dark border px-2 py-1">
+                    <i class="bi bi-person-fill text-success me-1"></i>
+                    {{ getMedecinName(cons.medecinId) }} ({{ getMedecinSpecialite(cons.medecinId) }})
+                  </span>
+                </div>
+              </div>
+
+              <!-- Corps consultation -->
+              <div class="card-body p-4">
+                
+                <!-- Observations & Diagnostic -->
+                <div class="mb-3" *ngIf="cons.description">
+                  <div class="text-muted small fw-bold text-uppercase mb-1">
+                    <i class="bi bi-chat-left-text text-secondary me-1"></i> Compte-rendu médical & Diagnostic :
+                  </div>
+                  <div class="p-3 bg-light rounded text-dark small border-start border-3 border-primary">
+                    {{ cons.description }}
+                  </div>
+                </div>
+
+                <!-- Ordonnance attachée -->
+                <div class="mt-3" *ngIf="cons.prescriptions && cons.prescriptions.length > 0">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="text-success small fw-bold text-uppercase d-flex align-items-center gap-1">
+                      <i class="bi bi-prescription fs-6"></i> Ordonnance prescrite ({{ cons.prescriptions.length }} médicament(s)) :
+                    </div>
+                    <button class="btn btn-outline-success btn-sm py-0 px-2 small" (click)="openOrdonnanceModal(cons)">
+                      <i class="bi bi-printer me-1"></i> Imprimer l'ordonnance
+                    </button>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="table table-sm table-bordered align-middle mb-0">
+                      <thead class="table-light small">
+                        <tr>
+                          <th style="width: 35px;" class="text-center">#</th>
+                          <th>Médicament</th>
+                          <th>Posologie & Instructions</th>
+                          <th style="width: 130px;">Durée</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let p of cons.prescriptions; let i = index" class="small">
+                          <td class="text-center fw-bold text-muted">{{ i + 1 }}</td>
+                          <td class="fw-bold text-dark">{{ p.medicament }}</td>
+                          <td>{{ p.posologie || 'Selon avis médical' }}</td>
+                          <td><span class="badge bg-light text-dark border">{{ p.duree || '-' }}</span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div *ngIf="!cons.prescriptions || cons.prescriptions.length === 0" class="text-muted small mt-2">
+                  <i class="bi bi-dash-circle me-1"></i> Aucun médicament prescrit lors de cette consultation.
+                </div>
+
+                <!-- Actions de la consultation -->
+                <div class="d-flex justify-content-end gap-2 mt-3 pt-3 border-top">
+                  <button
+                    *ngIf="cons.prescriptions && cons.prescriptions.length > 0"
+                    type="button"
+                    class="btn btn-sm btn-outline-success"
+                    (click)="openOrdonnanceModal(cons)"
+                  >
+                    <i class="bi bi-file-earmark-medical me-1"></i> Voir Ordonnance
+                  </button>
+                  <a [routerLink]="['/consultations/consultation/editer', cons.id]" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-pencil me-1"></i> Modifier
+                  </a>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- ONGLET 3 : PHARMACIE & ORDONNANCES CONSOLIDÉES -->
+      <!-- ============================================== -->
+      <div *ngIf="activeTab === 'ordonnances'">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <div>
+            <h6 class="fw-bold text-dark m-0">Traitements & Médicaments Prescrits</h6>
+            <small class="text-muted">Récapitulatif de l'ensemble des molécules prescrites au cours des consultations</small>
+          </div>
+          <button class="btn btn-outline-dark btn-sm" (click)="printDossier()">
+            <i class="bi bi-printer me-1"></i> Imprimer le récapitulatif
+          </button>
+        </div>
+
+        <div *ngIf="allPrescriptions.length === 0" class="text-center py-5 bg-light rounded border border-dashed">
+          <i class="bi bi-capsule fs-1 text-muted d-block mb-3"></i>
+          <h5 class="text-muted fw-bold">Aucun traitement prescrit</h5>
+          <p class="text-muted small">Le patient n'a actuellement aucun historique de médicaments prescrits.</p>
+        </div>
+
+        <div *ngIf="allPrescriptions.length > 0" class="table-responsive">
+          <table class="table table-hover align-middle border">
+            <thead class="table-light text-uppercase small text-secondary">
+              <tr>
+                <th style="width: 40px;" class="text-center">#</th>
+                <th>Médicament</th>
+                <th>Posologie</th>
+                <th>Durée</th>
+                <th>Date Prescription</th>
+                <th>Prescrit Par</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of allPrescriptions; let idx = index">
+                <td class="text-center fw-bold text-muted">{{ idx + 1 }}</td>
+                <td class="fw-bold text-dark">
+                  <i class="bi bi-capsule text-success me-1"></i> {{ item.medicament }}
+                </td>
+                <td>{{ item.posologie || '-' }}</td>
+                <td><span class="badge bg-light text-dark border">{{ item.duree || '-' }}</span></td>
+                <td>
+                  <span class="text-muted small">
+                    {{ item.consultationDate | date:'dd/MM/yyyy' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                    {{ item.medecinNom || 'Médecin' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- ONGLET 4 : RENDEZ-VOUS & PARCOURS DE SOINS     -->
+      <!-- ============================================== -->
+      <div *ngIf="activeTab === 'parcours'">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="card border p-4 text-center h-100 bg-light">
+              <i class="bi bi-calendar-check fs-1 text-primary mb-3"></i>
+              <h5 class="fw-bold text-dark">Rendez-vous Médicaux</h5>
+              <p class="text-muted small mb-4">Planifiez une consultation ou une visite de contrôle pour {{ patient.prenom }} {{ patient.nom }}.</p>
+              <button class="btn btn-primary btn-sm px-4 align-self-center rounded-pill" (click)="nouveauRdv()">
+                <i class="bi bi-calendar-plus me-1"></i> Planifier un rendez-vous
+              </button>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card border p-4 text-center h-100 bg-light">
+              <i class="bi bi-hospital fs-1 text-danger mb-3"></i>
+              <h5 class="fw-bold text-dark">Séjours & Hospitalisations</h5>
+              <p class="text-muted small mb-4">Gérez les admissions en lit, transferts et sorties de ce patient dans le district.</p>
+              <button class="btn btn-outline-danger btn-sm px-4 align-self-center rounded-pill" (click)="nouvelleHospitalisation()">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Gestion Hospitalisation
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================== -->
+<!-- MODAL D'IMPRESSION D'ORDONNANCE MÉDICALE        -->
+<!-- ============================================== -->
+<div *ngIf="selectedConsultationForPrint" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content shadow border-0">
+      
+      <!-- En-tête Modal (non imprimé) -->
+      <div class="modal-header bg-light border-bottom d-print-none">
+        <h5 class="modal-title text-success d-flex align-items-center gap-2">
+          <i class="bi bi-file-earmark-medical fs-4"></i> Ordonnance Médicale - Consultation #{{ selectedConsultationForPrint.id }}
+        </h5>
+        <button type="button" class="btn-close" aria-label="Fermer" (click)="closeOrdonnanceModal()"></button>
+      </div>
+
+      <!-- Corps de l'Ordonnance Imprimable -->
+      <div class="modal-body p-4 bg-white" id="ordonnancePrintArea">
+        
+        <!-- En-tête Médical Officiel -->
+        <div class="row pb-3 mb-3 border-bottom border-2 border-primary">
+          <div class="col-7">
+            <h5 class="fw-bold text-primary mb-1">DISTRICT SANITAIRE DU 10ÈME</h5>
+            <div class="text-muted small">Ministère de la Santé et de l'Action Sociale</div>
+            <div class="text-muted small">Service de Consultation Médicale</div>
+            <div class="text-muted small"><i class="bi bi-geo-alt"></i> Dakar, Sénégal</div>
+          </div>
+          <div class="col-5 text-end">
+            <div class="fw-bold fs-6 text-dark">
+              {{ getMedecinName(selectedConsultationForPrint.medecinId) }}
+            </div>
+            <div class="badge bg-success-subtle text-success mb-1">
+              {{ getMedecinSpecialite(selectedConsultationForPrint.medecinId) }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations Patient et Date -->
+        <div class="row p-3 mb-4 rounded bg-light border">
+          <div class="col-7">
+            <div class="text-muted small">PATIENT(E) :</div>
+            <div class="fw-bold fs-5 text-dark">
+              {{ patient?.prenom }} {{ patient?.nom }}
+            </div>
+            <div class="text-muted small">
+              <span class="me-3">Dossier N° : <strong>#{{ patient?.numeroDossier }}</strong></span>
+              <span *ngIf="patient?.telephone">Tél : {{ patient?.telephone }}</span>
+            </div>
+          </div>
+          <div class="col-5 text-end">
+            <div class="text-muted small">DATE DE PRESCRIPTION :</div>
+            <div class="fw-bold text-dark fs-6">
+              {{ selectedConsultationForPrint.dateConsultation | date:'dd MMMM yyyy' }}
+            </div>
+            <div class="text-muted small">Motif : {{ selectedConsultationForPrint.motif }}</div>
+          </div>
+        </div>
+
+        <!-- Symbole Rx Ordonnance -->
+        <div class="d-flex align-items-center mb-3">
+          <span class="fs-3 fw-bold text-primary font-monospace me-2">℞</span>
+          <span class="text-uppercase fw-bold text-secondary tracking-wide">Prescriptions Médicales</span>
+        </div>
+
+        <!-- Tableau des médicaments -->
+        <div class="table-responsive mb-4">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 40px;" class="text-center">#</th>
+                <th>Médicament</th>
+                <th>Posologie & Mode d'administration</th>
+                <th style="width: 140px;">Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of selectedConsultationForPrint.prescriptions; let idx = index">
+                <td class="text-center fw-bold text-muted">{{ idx + 1 }}</td>
+                <td class="fw-bold text-dark">{{ p.medicament }}</td>
+                <td>{{ p.posologie || 'Selon prescription médicale' }}</td>
+                <td><span class="badge bg-light text-dark border">{{ p.duree || '-' }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Note et Signature -->
+        <div class="row mt-5 pt-3">
+          <div class="col-7">
+            <small class="text-muted font-italic">
+              * Respecter scrupuleusement la posologie indiquée.<br>
+              * Ne pas interrompre le traitement sans avis médical.
+            </small>
+          </div>
+          <div class="col-5 text-end">
+            <div class="text-muted small mb-4">Signature & Cachet du Praticien :</div>
+            <div class="border-bottom border-dark d-inline-block" style="width: 180px; height: 50px;"></div>
+            <div class="small fw-bold mt-1">
+              {{ getMedecinName(selectedConsultationForPrint.medecinId) }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pied de modal (Actions non imprimées) -->
+      <div class="modal-footer bg-light border-top d-print-none">
+        <button type="button" class="btn btn-secondary" (click)="closeOrdonnanceModal()">
+          Fermer
+        </button>
+        <button type="button" class="btn btn-success" (click)="printOrdonnance()">
+          <i class="bi bi-printer me-1"></i> Imprimer l'ordonnance
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

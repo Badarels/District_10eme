@@ -1,91 +1,154 @@
-<div class="pagetitle">
-  <h1>Liste des rendez-vous</h1>
-  <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
-      <li class="breadcrumb-item active">Rendez-vous</li>
-    </ol>
-  </nav>
+<!-- ====== EN-TÊTE ====== -->
+<div class="lrdv-header mb-4">
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <div>
+      <h1 class="lrdv-title"><i class="bi bi-calendar-week me-2"></i>Rendez-vous</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 mt-1">
+          <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+          <li class="breadcrumb-item active">Rendez-vous</li>
+        </ol>
+      </nav>
+    </div>
+    <button class="lrdv-btn-new" (click)="addRendezVous()" id="btn-nouveau-rdv">
+      <i class="bi bi-plus-circle-fill me-2"></i>Nouveau rendez-vous
+    </button>
+  </div>
 </div>
 
-<section class="section">
-  <div class="content-body">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="d-flex align-items-center mb-3 gap-2">
-            <button class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" (click)="addRendezVous()">
-              <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Nouveau rendez-vous</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body">
-              <h2 class="card-title">Rendez-vous</h2>
-              <div class="col-md-4 col-lg-4 ms-auto justify-content-md-end">
-                <form class="form-inline mb-3 ms-auto">
-                  <div class="form-group mx-md-2 mb-2">
-                    <div class="input-group">
-                      <input
-                        class="form-control with-blue-border"
-                        type="search"
-                        [(ngModel)]="searchTerm"
-                        (ngModelChange)="applyFilter()"
-                        placeholder="Rechercher (patient, médecin, motif, statut...)"
-                        aria-label="Search"
-                        name="searchTerm"
-                      />
-                      <span class="input-group-text">
-                        <i class="fas fa-search fa-recherche"></i>
-                      </span>
-                    </div>
-                  </div>
-                </form>
-              </div>
-
-              <div *ngIf="loading" class="text-center py-5">
-                <div class="spinner-border" role="status"></div>
-              </div>
-
-              <div *ngIf="!loading && filteredRendezVous.length === 0" class="text-center py-5 text-muted">
-                Aucun rendez-vous trouvé.
-              </div>
-
-              <div *ngIf="!loading && filteredRendezVous.length > 0" class="table-responsive">
-                <table class="table table-striped align-middle datatable">
-                  <thead>
-                    <tr>
-                      <th scope="col">Date</th>
-                      <th scope="col">Heure</th>
-                      <th scope="col">Patient</th>
-                      <th scope="col">Médecin</th>
-                      <th scope="col">Motif</th>
-                      <th scope="col">Statut</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let rdv of filteredRendezVous">
-                      <td>{{ rdv.dateHeure | date:'dd/MM/yyyy' }}</td>
-                      <td>{{ rdv.dateHeure | date:'HH:mm' }}</td>
-                      <td>{{ rdv.patientId }}</td>
-                      <td>{{ rdv.medecinId }}</td>
-                      <td>{{ rdv.motif || '—' }}</td>
-                      <td>
-                        <span class="badge" [ngClass]="getBadgeClass(rdv.statut)">
-                          {{ rdv.statut || 'En attente' }}
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+<!-- ====== KPI CARDS ====== -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3">
+    <div class="lrdv-kpi lrdv-kpi-indigo">
+      <div class="lrdv-kpi-icon"><i class="bi bi-calendar-check"></i></div>
+      <div>
+        <div class="lrdv-kpi-val">{{ totalRdv }}</div>
+        <div class="lrdv-kpi-lbl">Total</div>
       </div>
     </div>
   </div>
-</section>
+  <div class="col-6 col-xl-3">
+    <div class="lrdv-kpi lrdv-kpi-cyan">
+      <div class="lrdv-kpi-icon"><i class="bi bi-calendar-day"></i></div>
+      <div>
+        <div class="lrdv-kpi-val">{{ rdvAujourdhui }}</div>
+        <div class="lrdv-kpi-lbl">Aujourd'hui</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="lrdv-kpi lrdv-kpi-green">
+      <div class="lrdv-kpi-icon"><i class="bi bi-check-circle"></i></div>
+      <div>
+        <div class="lrdv-kpi-val">{{ rdvConfirmes }}</div>
+        <div class="lrdv-kpi-lbl">Confirmés</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="lrdv-kpi lrdv-kpi-amber">
+      <div class="lrdv-kpi-icon"><i class="bi bi-hourglass-split"></i></div>
+      <div>
+        <div class="lrdv-kpi-val">{{ rdvEnAttente }}</div>
+        <div class="lrdv-kpi-lbl">En attente</div>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- ====== FILTRES & RECHERCHE ====== -->
+<div class="lrdv-toolbar mb-4">
+  <!-- Filtres par statut -->
+  <div class="lrdv-statut-tabs">
+    <button
+      *ngFor="let f of statutFilters"
+      class="lrdv-tab"
+      [class.lrdv-tab-active]="filterStatut === f.value"
+      (click)="setFilter(f.value)"
+    >
+      {{ f.label }}
+    </button>
+  </div>
+  <!-- Recherche -->
+  <div class="lrdv-search-wrap">
+    <i class="bi bi-search lrdv-search-icon"></i>
+    <input
+      type="text"
+      class="lrdv-search-input"
+      placeholder="Rechercher patient, médecin, motif..."
+      [(ngModel)]="searchTerm"
+      (input)="applyFilter()"
+    />
+  </div>
+</div>
+
+<!-- ====== CHARGEMENT ====== -->
+<div *ngIf="loading" class="lrdv-loader">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p class="mt-3 text-muted">Chargement des rendez-vous...</p>
+</div>
+
+<!-- ====== VIDE ====== -->
+<div *ngIf="!loading && filteredRendezVous.length === 0" class="lrdv-empty">
+  <i class="bi bi-calendar-x lrdv-empty-icon"></i>
+  <p class="lrdv-empty-text">Aucun rendez-vous trouvé</p>
+  <button class="lrdv-btn-new" (click)="addRendezVous()">
+    <i class="bi bi-plus-circle-fill me-2"></i>Créer un rendez-vous
+  </button>
+</div>
+
+<!-- ====== LISTE DES CARTES ====== -->
+<div *ngIf="!loading && filteredRendezVous.length > 0" class="lrdv-list">
+  <div *ngFor="let rdv of filteredRendezVous" class="lrdv-card" [class.lrdv-card-today]="isToday(rdv.dateHeure)">
+
+    <!-- Indicateur "Aujourd'hui" -->
+    <div *ngIf="isToday(rdv.dateHeure)" class="lrdv-today-badge">
+      <i class="bi bi-star-fill me-1"></i>Aujourd'hui
+    </div>
+
+    <!-- Date & Heure -->
+    <div class="lrdv-date-block">
+      <div class="lrdv-day">{{ rdv.dateHeure | date:'dd' }}</div>
+      <div class="lrdv-month">{{ rdv.dateHeure | date:'MMM' : '' : 'fr-FR' | uppercase }}</div>
+      <div class="lrdv-time">
+        <i class="bi bi-clock me-1"></i>{{ rdv.dateHeure | date:'HH:mm' }}
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="lrdv-divider"></div>
+
+    <!-- Infos patient -->
+    <div class="lrdv-patient-block">
+      <div class="lrdv-avatar">{{ getPatientInitials(rdv.patientId) }}</div>
+      <div>
+        <div class="lrdv-patient-name">{{ getPatientName(rdv.patientId) }}</div>
+        <div class="lrdv-sub"><i class="bi bi-person-fill me-1"></i>Patient</div>
+      </div>
+    </div>
+
+    <!-- Infos médecin -->
+    <div class="lrdv-medecin-block">
+      <i class="bi bi-person-badge-fill lrdv-medecin-icon"></i>
+      <div>
+        <div class="lrdv-medecin-name">{{ getMedecinName(rdv.medecinId) }}</div>
+        <div class="lrdv-sub">{{ getMedecinSpec(rdv.medecinId) }}</div>
+      </div>
+    </div>
+
+    <!-- Motif -->
+    <div class="lrdv-motif-block">
+      <i class="bi bi-chat-left-text lrdv-motif-icon"></i>
+      <span class="lrdv-motif-text">{{ rdv.motif || 'Aucun motif renseigné' }}</span>
+    </div>
+
+    <!-- Statut -->
+    <div class="lrdv-statut-block">
+      <span class="lrdv-badge" [ngClass]="getStatutConfig(rdv.statut).cls">
+        <i class="bi me-1" [ngClass]="getStatutConfig(rdv.statut).icon"></i>
+        {{ getStatutConfig(rdv.statut).label }}
+      </span>
+    </div>
+
+  </div>
+</div>

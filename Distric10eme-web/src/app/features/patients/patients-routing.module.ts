@@ -21,6 +21,11 @@ const routes: Routes = [
   {
     path: 'details/:id',
     component: PatientDetailsComponent
+  },
+  {
+    path: 'details',
+    redirectTo: '',
+    pathMatch: 'full'
   }
 ];
 

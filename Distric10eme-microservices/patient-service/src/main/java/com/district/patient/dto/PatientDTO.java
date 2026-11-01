@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class PatientDTO {
     private Long id;
     
-    @NotBlank(message = "Le numéro de dossier est requis")
+    // Le numéro de dossier peut être fourni ou auto-généré par le backend
     private String numeroDossier;
     
     @NotBlank(message = "Le nom est requis")
@@ -35,4 +35,3 @@ public class PatientDTO {
     private String groupeSanguin;
     private LocalDate dateEnregistrement;
 }
-

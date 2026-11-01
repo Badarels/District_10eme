@@ -2,7 +2,12 @@ package com.district.hospitalisation.service;
 
 import com.district.hospitalisation.dto.HospitalisationDTO;
 import com.district.hospitalisation.entity.Hospitalisation;
+import com.district.hospitalisation.event.HospitalisationEvent;
+import com.district.hospitalisation.kafka.KafkaProducerService;
 import com.district.hospitalisation.repository.HospitalisationRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +19,16 @@ import java.util.stream.Collectors;
 @Transactional
 public class HospitalisationService {
     
+    private static final Logger log = LoggerFactory.getLogger(HospitalisationService.class);
+    
     @Autowired
     private HospitalisationRepository hospitalisationRepository;
+    
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
     
     public HospitalisationDTO create(HospitalisationDTO dto) {
         Hospitalisation hospitalisation = new Hospitalisation();
@@ -28,7 +41,9 @@ public class HospitalisationService {
         hospitalisation.setObservations(dto.getObservations());
         
         hospitalisation = hospitalisationRepository.save(hospitalisation);
-        return toDTO(hospitalisation);
+        HospitalisationDTO result = toDTO(hospitalisation);
+        publishHospitalisationEvent(hospitalisation, "CREATED");
+        return result;
     }
     
     public List<HospitalisationDTO> findAll() {
@@ -62,11 +77,31 @@ public class HospitalisationService {
         hospitalisation.setObservations(dto.getObservations());
         
         hospitalisation = hospitalisationRepository.save(hospitalisation);
-        return toDTO(hospitalisation);
+        HospitalisationDTO result = toDTO(hospitalisation);
+        publishHospitalisationEvent(hospitalisation, "UPDATED");
+        return result;
     }
     
     public void delete(Long id) {
         hospitalisationRepository.deleteById(id);
+    }
+    
+    private void publishHospitalisationEvent(Hospitalisation hospitalisation, String action) {
+        try {
+            HospitalisationEvent event = new HospitalisationEvent(
+                    hospitalisation.getId(),
+                    hospitalisation.getPatientId(),
+                    hospitalisation.getMedecinId(),
+                    hospitalisation.getLitId(),
+                    hospitalisation.getMotifAdmission(),
+                    action
+            );
+            String json = objectMapper.writeValueAsString(event);
+            String key = hospitalisation.getPatientId() != null ? hospitalisation.getPatientId().toString() : String.valueOf(hospitalisation.getId());
+            kafkaProducerService.sendMessage("hospitalisation.cree", key, json);
+        } catch (Exception e) {
+            log.error("Erreur lors de la publication de l'evenement Kafka Hospitalisation: {}", e.getMessage(), e);
+        }
     }
     
     private HospitalisationDTO toDTO(Hospitalisation hospitalisation) {

@@ -1,0 +1,67 @@
+name: CI - Integration Continue
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  # ==========================================
+  # 1. CI BACKEND : Java 17 & Maven Multi-module
+  # ==========================================
+  backend-ci:
+    name: Build & Tests Backend (Spring Boot)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le code source
+        uses: actions/checkout@v4
+
+      - name: Configurer Java 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Compiler et Tester tous les microservices
+        working-directory: ./Distric10eme-microservices
+        run: |
+          mvn -B clean test
+
+      - name: Archiver les rapports de tests (si échec)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-test-reports
+          path: Distric10eme-microservices/**/target/surefire-reports/
+
+  # ==========================================
+  # 2. CI FRONTEND : Node.js & Angular Build
+  # ==========================================
+  frontend-ci:
+    name: Build Frontend (Angular 19)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le code source
+        uses: actions/checkout@v4
+
+      - name: Configurer Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: ./Distric10eme-web/package-lock.json
+
+      - name: Installer les dépendances npm
+        working-directory: ./Distric10eme-web
+        run: |
+          npm ci --legacy-peer-deps
+
+      - name: Compiler le Frontend en mode Production
+        working-directory: ./Distric10eme-web
+        run: |
+          npm run build -- --configuration production

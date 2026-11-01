@@ -1,0 +1,12 @@
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\dto\HospitalisationDTO.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\entity\Hospitalisation.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\event\HospitalisationEvent.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\HospitalisationServiceApplication.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\kafka\KafkaProducerService.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\config\KafkaTopicConfig.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\entity\Lit.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\entity\Chambre.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\controller\HospitalisationController.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\entity\ServiceHospitalier.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\service\HospitalisationService.java
+C:\Users\AHMADOU BAMBA\Desktop\Memoire de master A.B.S\Distric10eme_APP\Distric10eme-microservices\hospitalisation-service\src\main\java\com\district\hospitalisation\repository\HospitalisationRepository.java

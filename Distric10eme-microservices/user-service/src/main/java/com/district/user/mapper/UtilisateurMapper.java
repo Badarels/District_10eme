@@ -28,5 +28,32 @@ public class UtilisateurMapper {
         
         return dto;
     }
-}
 
+    public Utilisateur toEntity(UtilisateurDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setId(dto.getId());
+        utilisateur.setNom(dto.getNom());
+        utilisateur.setPrenom(dto.getPrenom());
+        utilisateur.setEmail(dto.getEmail());
+        utilisateur.setActif(dto.isActif());
+        utilisateur.setDateCreation(dto.getDateCreation());
+        utilisateur.setDateModification(dto.getDateModification());
+        
+        return utilisateur;
+    }
+
+    public void updateEntityFromDTO(UtilisateurDTO dto, Utilisateur utilisateur) {
+        if (dto == null || utilisateur == null) {
+            return;
+        }
+        
+        if (dto.getNom() != null) utilisateur.setNom(dto.getNom());
+        if (dto.getPrenom() != null) utilisateur.setPrenom(dto.getPrenom());
+        if (dto.getEmail() != null) utilisateur.setEmail(dto.getEmail());
+        utilisateur.setActif(dto.isActif());
+    }
+}

@@ -1,0 +1,8 @@
+com\district\rendezvous\entity\StatutRendezVous.class
+com\district\rendezvous\dto\RendezVousDTO.class
+com\district\rendezvous\mapper\RendezVousMapper.class
+com\district\rendezvous\controller\RendezVousController.class
+com\district\rendezvous\service\RendezVousService.class
+com\district\rendezvous\entity\RendezVous.class
+com\district\rendezvous\repository\RendezVousRepository.class
+com\district\rendezvous\RendezVousServiceApplication.class

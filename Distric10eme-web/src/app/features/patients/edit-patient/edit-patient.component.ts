@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { PatientService } from '../../../core/services/patient.service';
 
 @Component({
@@ -16,8 +16,7 @@ import { PatientService } from '../../../core/services/patient.service';
     ReactiveFormsModule,
     RouterModule,
     NgbModule,
-    NgbDatepickerModule,
-    ToastrModule
+    NgbDatepickerModule
   ]
 })
 export class EditPatientComponent implements OnInit {
@@ -53,6 +52,17 @@ export class EditPatientComponent implements OnInit {
     });
   }
 
+  get patientInitials(): string {
+    const p = (this.patientForm.get('prenom')?.value || '').trim().charAt(0).toUpperCase();
+    const n = (this.patientForm.get('nom')?.value || '').trim().charAt(0).toUpperCase();
+    return (p + n) || 'P';
+  }
+
+  setSexe(value: string): void {
+    this.patientForm.patchValue({ sexe: value });
+    this.patientForm.get('sexe')?.markAsTouched();
+  }
+
   loadPatient(): void {
     this.loading = true;
     this.patientService.findById(this.patientId).subscribe({
@@ -67,6 +77,7 @@ export class EditPatientComponent implements OnInit {
         console.error('Erreur lors du chargement:', error);
         this.toastr.error('Erreur lors du chargement du patient', 'Erreur');
         this.loading = false;
+        this.router.navigate(['/patients']);
       }
     });
   }
@@ -79,7 +90,7 @@ export class EditPatientComponent implements OnInit {
       this.patientService.update(this.patientId, patientData).subscribe({
         next: () => {
           this.toastr.success('Patient modifié avec succès', 'Succès');
-          this.router.navigate(['/patients']);
+          this.router.navigate(['/patients/details', this.patientId]);
         },
         error: (error) => {
           console.error('Erreur lors de la modification:', error);
@@ -93,7 +104,6 @@ export class EditPatientComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/patients']);
+    this.router.navigate(['/patients/details', this.patientId]);
   }
 }
-

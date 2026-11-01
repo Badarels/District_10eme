@@ -20,6 +20,7 @@ export interface FichierJoint {
 
 export interface PrescriptionItem {
   id?: number;
+  consultationId?: number;
   medicament: string;
   posologie: string;
   duree: string;
@@ -41,23 +42,28 @@ export interface Consultation {
   medecinId: number;
   medecin?: PersonnelMedical;  // Relation avec le modèle PersonnelMedical
   dateConsultation: string;
-  typeConsultation: TypeConsultation;
-  
+  typeConsultation?: TypeConsultation;
+
+  // Champs principaux (mappés sur le backend)
+  motif?: string;
+  description?: string;
+
   // Section Anamnèse
   symptomes?: string;
-  
+
   // Section Examen clinique
   examenClinique?: ExamenClinique;
-  
+
   // Section Diagnostic
   diagnostic?: string;
-  
-  // Section Prescription
-  prescription: PrescriptionItem[];
-  
+
+  // Section Prescription / Ordonnance
+  prescriptions?: PrescriptionItem[];
+  prescription?: PrescriptionItem[];
+
   // Fichiers joints
   piecesJointes?: FichierJoint[];
-  
+
   // Métadonnées
   dateCreation?: string;
   dateModification?: string;

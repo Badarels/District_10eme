@@ -1,159 +1,229 @@
-<div class="pagetitle">
-  <h1>Modifier un patient</h1>
-  <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
-      <li class="breadcrumb-item"><a [routerLink]="'/patients'">Patients</a></li>
-      <li class="breadcrumb-item active">Édition</li>
-    </ol>
-  </nav>
+<div class="pagetitle mb-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h1 class="h4 fw-bold text-dark m-0 d-flex align-items-center gap-2">
+        <i class="bi bi-pencil-square text-primary"></i> Modifier le Dossier Patient
+      </h1>
+      <nav>
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="'/patients'">Patients</a></li>
+          <li class="breadcrumb-item active">Édition #{{ patientId }}</li>
+        </ol>
+      </nav>
+    </div>
+    <a [routerLink]="['/patients/details', patientId]" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+      <i class="bi bi-arrow-left me-1"></i> Retour au dossier
+    </a>
+  </div>
 </div>
 
 <section class="section">
-  <div class="content-body">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body">
-              <div *ngIf="loading && !patientForm.get('nom')?.value" class="text-center py-5">
-                <div class="spinner-border" role="status">
-                  <span class="visually-hidden">Chargement...</span>
+  <!-- FORMULAIRE PLEINE LARGEUR ÉLÉGANT -->
+  <div class="row">
+    <div class="col-12">
+      
+      <div class="card form-patient-card shadow-sm border-0 rounded-4 overflow-hidden">
+        
+        <!-- Ligne d'accentuation supérieure -->
+        <div class="card-accent-line"></div>
+
+        <!-- En-tête raffiné avec preview -->
+        <div class="card-header bg-white px-4 py-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar-preview-circle rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm"
+                 [ngClass]="patientForm.get('sexe')?.value === 'F' ? 'bg-female-gradient' : 'bg-male-gradient'">
+              {{ patientInitials }}
+            </div>
+            <div>
+              <h5 class="fw-bold text-dark m-0">
+                {{ patientForm.get('prenom')?.value }} {{ patientForm.get('nom')?.value }}
+              </h5>
+              <small class="text-muted">Mise à jour du dossier médical</small>
+            </div>
+          </div>
+
+          <!-- N° Dossier -->
+          <div class="d-flex align-items-center gap-2 bg-light px-3 py-1 rounded-pill border">
+            <i class="bi bi-lock-fill text-secondary"></i>
+            <span class="text-muted small">N° Dossier :</span>
+            <span class="fw-bold font-monospace text-primary">
+              {{ patientForm.get('numeroDossier')?.value }}
+            </span>
+          </div>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+
+          <div *ngIf="loading && !patientForm.get('nom')?.value" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-2 text-muted small">Chargement des données du patient...</p>
+          </div>
+
+          <form [formGroup]="patientForm" (ngSubmit)="onSubmit()" *ngIf="!loading || patientForm.get('nom')?.value">
+
+            <!-- DEUX COLONNES ÉQUILIBRÉES ET AÉRÉES -->
+            <div class="row g-4">
+              
+              <!-- COLONNE GAUCHE : IDENTITÉ & ÉTAT CIVIL -->
+              <div class="col-md-6 border-end-md pe-md-4">
+                <div class="section-title d-flex align-items-center gap-2 mb-3">
+                  <span class="section-badge bg-primary-subtle text-primary">1</span>
+                  <h6 class="m-0 fw-bold text-dark text-uppercase tracking-wider small">Identité & État Civil</h6>
+                </div>
+
+                <div class="row g-3">
+                  <!-- Prénom -->
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold text-secondary">Prénom(s) <span class="text-danger">*</span></label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Prénom"
+                      formControlName="prenom"
+                      [class.is-invalid]="patientForm.get('prenom')?.invalid && patientForm.get('prenom')?.touched"
+                    />
+                    <div *ngIf="patientForm.get('prenom')?.invalid && patientForm.get('prenom')?.touched" class="invalid-feedback">
+                      Le prénom est requis.
+                    </div>
+                  </div>
+
+                  <!-- Nom -->
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold text-secondary">Nom de famille <span class="text-danger">*</span></label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Nom"
+                      formControlName="nom"
+                      [class.is-invalid]="patientForm.get('nom')?.invalid && patientForm.get('nom')?.touched"
+                    />
+                    <div *ngIf="patientForm.get('nom')?.invalid && patientForm.get('nom')?.touched" class="invalid-feedback">
+                      Le nom de famille est requis.
+                    </div>
+                  </div>
+
+                  <!-- Sexe (Boutons Pille) -->
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold text-secondary">Sexe / Genre <span class="text-danger">*</span></label>
+                    <div class="d-flex gap-2">
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary flex-fill gender-toggle-btn"
+                        [class.active-male]="patientForm.get('sexe')?.value === 'M'"
+                        (click)="setSexe('M')"
+                      >
+                        <i class="bi bi-gender-male me-1"></i> Masculin
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary flex-fill gender-toggle-btn"
+                        [class.active-female]="patientForm.get('sexe')?.value === 'F'"
+                        (click)="setSexe('F')"
+                      >
+                        <i class="bi bi-gender-female me-1"></i> Féminin
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Date de Naissance & Groupe Sanguin -->
+                  <div class="col-sm-7">
+                    <label class="form-label small fw-semibold text-secondary">Date de Naissance <span class="text-danger">*</span></label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      formControlName="dateNaissance"
+                      [class.is-invalid]="patientForm.get('dateNaissance')?.invalid && patientForm.get('dateNaissance')?.touched"
+                    />
+                  </div>
+
+                  <div class="col-sm-5">
+                    <label class="form-label small fw-semibold text-secondary">Groupe Sanguin</label>
+                    <select class="form-select" formControlName="groupeSanguin">
+                      <option value="">Non typé</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <form [formGroup]="patientForm" (ngSubmit)="onSubmit()" *ngIf="!loading || patientForm.get('nom')?.value">
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Numéro de Dossier <span class="text-danger">*</span></label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="numeroDossier"
-              [class.is-invalid]="patientForm.get('numeroDossier')?.invalid && patientForm.get('numeroDossier')?.touched"
-            />
-            <div class="invalid-feedback" *ngIf="patientForm.get('numeroDossier')?.invalid && patientForm.get('numeroDossier')?.touched">
-              Le numéro de dossier est requis
-            </div>
-          </div>
+              <!-- COLONNE DROITE : COORDONNÉES & RÉSIDENCE -->
+              <div class="col-md-6 ps-md-4">
+                <div class="section-title d-flex align-items-center gap-2 mb-3">
+                  <span class="section-badge bg-success-subtle text-success">2</span>
+                  <h6 class="m-0 fw-bold text-dark text-uppercase tracking-wider small">Coordonnées & Domicile</h6>
+                </div>
 
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Groupe Sanguin</label>
-            <select class="form-select" formControlName="groupeSanguin">
-              <option value="">Sélectionner</option>
-              <option value="O+">O+</option>
-              <option value="O-">O-</option>
-              <option value="A+">A+</option>
-              <option value="A-">A-</option>
-              <option value="B+">B+</option>
-              <option value="B-">B-</option>
-              <option value="AB+">AB+</option>
-              <option value="AB-">AB-</option>
-            </select>
-          </div>
-        </div>
+                <div class="row g-3">
+                  <!-- Téléphone -->
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold text-secondary">Numéro de Téléphone</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-telephone"></i></span>
+                      <input
+                        type="tel"
+                        class="form-control border-start-0"
+                        placeholder="Ex: 77 123 45 67"
+                        formControlName="telephone"
+                      />
+                    </div>
+                  </div>
 
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Nom <span class="text-danger">*</span></label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="nom"
-              [class.is-invalid]="patientForm.get('nom')?.invalid && patientForm.get('nom')?.touched"
-            />
-            <div class="invalid-feedback" *ngIf="patientForm.get('nom')?.invalid && patientForm.get('nom')?.touched">
-              Le nom est requis
-            </div>
-          </div>
+                  <!-- Email -->
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold text-secondary">Adresse Email</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
+                      <input
+                        type="email"
+                        class="form-control border-start-0"
+                        placeholder="patient@email.com"
+                        formControlName="email"
+                        [class.is-invalid]="patientForm.get('email')?.invalid && patientForm.get('email')?.touched"
+                      />
+                    </div>
+                  </div>
 
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Prénom <span class="text-danger">*</span></label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="prenom"
-              [class.is-invalid]="patientForm.get('prenom')?.invalid && patientForm.get('prenom')?.touched"
-            />
-            <div class="invalid-feedback" *ngIf="patientForm.get('prenom')?.invalid && patientForm.get('prenom')?.touched">
-              Le prénom est requis
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-4 mb-3">
-            <label class="form-label">Sexe <span class="text-danger">*</span></label>
-            <select
-              class="form-select"
-              formControlName="sexe"
-              [class.is-invalid]="patientForm.get('sexe')?.invalid && patientForm.get('sexe')?.touched"
-            >
-              <option value="">Sélectionner</option>
-              <option value="M">Masculin</option>
-              <option value="F">Féminin</option>
-            </select>
-            <div class="invalid-feedback" *ngIf="patientForm.get('sexe')?.invalid && patientForm.get('sexe')?.touched">
-              Le sexe est requis
-            </div>
-          </div>
-
-          <div class="col-md-4 mb-3">
-            <label class="form-label">Date de Naissance <span class="text-danger">*</span></label>
-            <input
-              type="date"
-              class="form-control"
-              formControlName="dateNaissance"
-              [class.is-invalid]="patientForm.get('dateNaissance')?.invalid && patientForm.get('dateNaissance')?.touched"
-            />
-            <div class="invalid-feedback" *ngIf="patientForm.get('dateNaissance')?.invalid && patientForm.get('dateNaissance')?.touched">
-              La date de naissance est requise
-            </div>
-          </div>
-
-          <div class="col-md-4 mb-3">
-            <label class="form-label">Téléphone</label>
-            <input type="tel" class="form-control" formControlName="telephone" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Email</label>
-            <input
-              type="email"
-              class="form-control"
-              formControlName="email"
-              [class.is-invalid]="patientForm.get('email')?.invalid && patientForm.get('email')?.touched"
-            />
-            <div class="invalid-feedback" *ngIf="patientForm.get('email')?.invalid && patientForm.get('email')?.touched">
-              Email invalide
-            </div>
-          </div>
-        </div>
-
-                <div class="row">
-                  <div class="col-12 mb-3">
-                    <label class="form-label">Adresse</label>
-                    <textarea class="form-control" rows="3" formControlName="adresse"></textarea>
+                  <!-- Adresse de résidence -->
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold text-secondary">Adresse de Résidence</label>
+                    <textarea
+                      class="form-control"
+                      rows="3"
+                      placeholder="Quartier, commune, ville..."
+                      formControlName="adresse"
+                    ></textarea>
                   </div>
                 </div>
+              </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                  <button type="button" class="btn btn-outline-secondary" (click)="onCancel()" [disabled]="loading">
-                    Annuler
-                  </button>
-                  <button type="submit" class="btn btn-primary" [disabled]="loading || patientForm.invalid">
-                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
-                    Enregistrer
-                  </button>
-                </div>
-              </form>
             </div>
-          </div>
+
+            <!-- ACTIONS -->
+            <div class="d-flex justify-content-end align-items-center gap-2 mt-4 pt-3 border-top">
+              <button type="button" class="btn btn-light px-4 py-2 border rounded-pill" (click)="onCancel()" [disabled]="loading">
+                Annuler
+              </button>
+              <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm" [disabled]="loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!loading" class="bi bi-check2 me-1"></i> Enregistrer les Modifications
+              </button>
+            </div>
+
+          </form>
+
         </div>
       </div>
+
     </div>
   </div>
 </section>
-

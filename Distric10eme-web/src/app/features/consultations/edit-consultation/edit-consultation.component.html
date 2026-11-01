@@ -1,0 +1,405 @@
+<div class="pagetitle">
+  <h1>Modifier la Consultation</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+      <li class="breadcrumb-item"><a [routerLink]="'/consultations'">Consultations</a></li>
+      <li class="breadcrumb-item active">Modifier consultation #{{ consultationId }}</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="container-fluid p-0">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div *ngIf="loadingData" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement...</span>
+          </div>
+          <p class="mt-2 text-muted">Chargement des données de la consultation...</p>
+        </div>
+
+        <form *ngIf="!loadingData" [formGroup]="consultationForm" (ngSubmit)="onSubmit()">
+
+          <!-- 1. INFORMATIONS GÉNÉRALES -->
+          <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3 border-bottom">
+              <h5 class="card-title m-0 text-primary d-flex align-items-center gap-2">
+                <i class="bi bi-clipboard2-pulse fs-4"></i> 1. Informations de la Consultation #{{ consultationId }}
+              </h5>
+            </div>
+
+            <div class="card-body p-4">
+              <div class="row g-4">
+                
+                <!-- SÉLECTION PATIENT -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold d-flex align-items-center justify-content-between">
+                    <span>Patient <span class="text-danger">*</span></span>
+                    <a *ngIf="selectedPatient" (click)="clearSelectedPatient()" class="badge bg-light text-primary border text-decoration-none cursor-pointer">
+                      <i class="bi bi-arrow-repeat"></i> Changer de patient
+                    </a>
+                  </label>
+
+                  <!-- Si patient sélectionné -->
+                  <div *ngIf="selectedPatient" class="card border border-primary bg-primary-subtle p-3 selected-box position-relative">
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-circle bg-primary text-white me-3">
+                        <i class="bi bi-person-fill fs-4"></i>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div class="fw-bold fs-6 text-dark">{{ selectedPatient.prenom }} {{ selectedPatient.nom }}</div>
+                        <div class="text-muted small">
+                          <span class="badge bg-primary text-white me-2">Dossier #{{ selectedPatient.numeroDossier }}</span>
+                          <span *ngIf="selectedPatient.sexe" class="me-2"><i class="bi bi-gender-ambiguous"></i> {{ selectedPatient.sexe === 'M' ? 'Homme' : 'Femme' }}</span>
+                          <span *ngIf="selectedPatient.telephone"><i class="bi bi-telephone"></i> {{ selectedPatient.telephone }}</span>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-sm btn-outline-danger ms-2" (click)="clearSelectedPatient()" title="Supprimer la sélection">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Si aucun patient sélectionné : champ recherche + suggestions -->
+                  <div *ngIf="!selectedPatient" class="search-select-container position-relative">
+                    <div class="input-group">
+                      <span class="input-group-text bg-white"><i class="bi bi-search text-primary"></i></span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Rechercher par nom, prénom, N° dossier ou tél..."
+                        [(ngModel)]="patientSearchTerm"
+                        [ngModelOptions]="{standalone: true}"
+                        (input)="onPatientSearchChange()"
+                        (focus)="showPatientDropdown = true"
+                      />
+                      <button *ngIf="patientSearchTerm" class="btn btn-outline-secondary" type="button" (click)="patientSearchTerm = ''; onPatientSearchChange()">
+                        <i class="bi bi-x"></i>
+                      </button>
+                    </div>
+
+                    <!-- Liste déroulante des suggestions -->
+                    <div *ngIf="showPatientDropdown" class="dropdown-results shadow rounded mt-1 bg-white border">
+                      <div class="dropdown-header d-flex justify-content-between align-items-center py-2 px-3 bg-light border-bottom">
+                        <small class="text-muted fw-bold">PROPOSITIONS PATIENTS ({{ filteredPatients.length }})</small>
+                        <button type="button" class="btn-close btn-close-white btn-sm" aria-label="Fermer" (click)="showPatientDropdown = false"></button>
+                      </div>
+
+                      <div *ngIf="filteredPatients.length === 0" class="p-3 text-muted text-center">
+                        <i class="bi bi-person-x fs-3 d-block mb-1"></i>
+                        Aucun patient trouvé pour "{{ patientSearchTerm }}"
+                      </div>
+
+                      <ul *ngIf="filteredPatients.length > 0" class="list-group list-group-flush list-results">
+                        <li
+                          *ngFor="let p of filteredPatients"
+                          class="list-group-item list-group-item-action d-flex align-items-center justify-content-between cursor-pointer py-2 px-3"
+                          (click)="selectPatient(p)"
+                        >
+                          <div>
+                            <div class="fw-bold text-dark">{{ p.prenom }} {{ p.nom }}</div>
+                            <small class="text-muted">
+                              <span class="badge bg-secondary-subtle text-secondary me-2">#{{ p.numeroDossier }}</span>
+                              <span *ngIf="p.telephone" class="me-2"><i class="bi bi-telephone"></i> {{ p.telephone }}</span>
+                              <span *ngIf="p.dateNaissance"><i class="bi bi-calendar-event"></i> {{ p.dateNaissance | date:'dd/MM/yyyy' }}</span>
+                            </small>
+                          </div>
+                          <span class="btn btn-sm btn-light border text-primary">Sélectionner</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div *ngIf="consultationForm.get('patientId')?.invalid && consultationForm.get('patientId')?.touched" class="text-danger small mt-1">
+                      Veuillez sélectionner un patient.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SÉLECTION MÉDECIN -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold d-flex align-items-center justify-content-between">
+                    <span>Médecin consultant <span class="text-danger">*</span></span>
+                    <a *ngIf="selectedMedecin" (click)="clearSelectedMedecin()" class="badge bg-light text-primary border text-decoration-none cursor-pointer">
+                      <i class="bi bi-arrow-repeat"></i> Changer de médecin
+                    </a>
+                  </label>
+
+                  <!-- Si médecin sélectionné -->
+                  <div *ngIf="selectedMedecin" class="card border border-success bg-success-subtle p-3 selected-box position-relative">
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-circle bg-success text-white me-3">
+                        <i class="bi bi-heart-pulse-fill fs-4"></i>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div class="fw-bold fs-6 text-dark">Dr. {{ selectedMedecin.prenom }} {{ selectedMedecin.nom }}</div>
+                        <div class="text-muted small">
+                          <span class="badge bg-success text-white me-2">{{ selectedMedecin.specialiteNom || 'Médecine Générale' }}</span>
+                          <span *ngIf="selectedMedecin.numeroOrdre" class="me-2"><i class="bi bi-award"></i> Ordre: {{ selectedMedecin.numeroOrdre }}</span>
+                          <span *ngIf="selectedMedecin.telephone"><i class="bi bi-telephone"></i> {{ selectedMedecin.telephone }}</span>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-sm btn-outline-danger ms-2" (click)="clearSelectedMedecin()" title="Supprimer la sélection">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Si aucun médecin sélectionné : champ recherche + suggestions -->
+                  <div *ngIf="!selectedMedecin" class="search-select-container position-relative">
+                    <div class="input-group">
+                      <span class="input-group-text bg-white"><i class="bi bi-search text-success"></i></span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Rechercher par nom, prénom ou spécialité..."
+                        [(ngModel)]="medecinSearchTerm"
+                        [ngModelOptions]="{standalone: true}"
+                        (input)="onMedecinSearchChange()"
+                        (focus)="showMedecinDropdown = true"
+                      />
+                      <button *ngIf="medecinSearchTerm" class="btn btn-outline-secondary" type="button" (click)="medecinSearchTerm = ''; onMedecinSearchChange()">
+                        <i class="bi bi-x"></i>
+                      </button>
+                    </div>
+
+                    <!-- Liste déroulante des suggestions -->
+                    <div *ngIf="showMedecinDropdown" class="dropdown-results shadow rounded mt-1 bg-white border">
+                      <div class="dropdown-header d-flex justify-content-between align-items-center py-2 px-3 bg-light border-bottom">
+                        <small class="text-muted fw-bold">PROPOSITIONS MÉDECINS ({{ filteredMedecins.length }})</small>
+                        <button type="button" class="btn-close btn-close-white btn-sm" aria-label="Fermer" (click)="showMedecinDropdown = false"></button>
+                      </div>
+
+                      <div *ngIf="filteredMedecins.length === 0" class="p-3 text-muted text-center">
+                        <i class="bi bi-person-x fs-3 d-block mb-1"></i>
+                        Aucun médecin trouvé pour "{{ medecinSearchTerm }}"
+                      </div>
+
+                      <ul *ngIf="filteredMedecins.length > 0" class="list-group list-group-flush list-results">
+                        <li
+                          *ngFor="let m of filteredMedecins"
+                          class="list-group-item list-group-item-action d-flex align-items-center justify-content-between cursor-pointer py-2 px-3"
+                          (click)="selectMedecin(m)"
+                        >
+                          <div>
+                            <div class="fw-bold text-dark">Dr. {{ m.prenom }} {{ m.nom }}</div>
+                            <small class="text-muted">
+                              <span class="badge bg-success-subtle text-success me-2">{{ m.specialiteNom || 'Médecine Générale' }}</span>
+                              <span *ngIf="m.numeroOrdre" class="me-2">Ordre: {{ m.numeroOrdre }}</span>
+                              <span *ngIf="m.telephone"><i class="bi bi-telephone"></i> {{ m.telephone }}</span>
+                            </small>
+                          </div>
+                          <span class="btn btn-sm btn-light border text-success">Sélectionner</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div *ngIf="consultationForm.get('medecinId')?.invalid && consultationForm.get('medecinId')?.touched" class="text-danger small mt-1">
+                      Veuillez sélectionner un médecin.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DATE ET HEURE -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Date et Heure <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-calendar3"></i></span>
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      formControlName="dateConsultation"
+                      [class.is-invalid]="consultationForm.get('dateConsultation')?.invalid && consultationForm.get('dateConsultation')?.touched"
+                    />
+                  </div>
+                  <div *ngIf="consultationForm.get('dateConsultation')?.invalid && consultationForm.get('dateConsultation')?.touched" class="invalid-feedback d-block">
+                    La date et l'heure sont requises.
+                  </div>
+                </div>
+
+                <!-- MOTIF -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Motif de la consultation <span class="text-danger">*</span></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="motif"
+                    placeholder="Ex: Contrôle de routine, céphalées, douleurs..."
+                    [class.is-invalid]="consultationForm.get('motif')?.invalid && consultationForm.get('motif')?.touched"
+                  />
+                  <div *ngIf="consultationForm.get('motif')?.invalid && consultationForm.get('motif')?.touched" class="invalid-feedback d-block">
+                    Le motif est requis.
+                  </div>
+
+                  <!-- Suggestions rapides de motifs -->
+                  <div class="mt-2">
+                    <small class="text-muted d-block mb-1">Suggestions rapides :</small>
+                    <div class="d-flex flex-wrap gap-1">
+                      <button
+                        type="button"
+                        *ngFor="let suggestion of motifSuggestions"
+                        class="btn btn-sm btn-outline-secondary py-0 px-2 rounded-pill small"
+                        (click)="chooseMotif(suggestion)"
+                      >
+                        {{ suggestion }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. EXAMEN CLINIQUE & OBSERVATIONS MÉDICALES -->
+          <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3 border-bottom">
+              <h5 class="card-title m-0 text-secondary d-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-medical fs-4 text-primary"></i> 2. Examen Clinique & Observations
+              </h5>
+            </div>
+            <div class="card-body p-4">
+              <div class="row">
+                <div class="col-12">
+                  <label class="form-label fw-bold">Observations médicales / Symptômes / Diagnostic</label>
+                  <textarea
+                    class="form-control"
+                    rows="4"
+                    formControlName="description"
+                    placeholder="Constantes (TA, T°, Pouls), antécédents, anamnèse, examen physique, diagnostic clinique retenu..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. ORDONNANCE & PRESCRIPTIONS (DÉDIÉE) -->
+          <div class="card shadow-sm border-0 border-top border-4 border-success mb-4">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <div>
+                <h5 class="card-title m-0 text-success d-flex align-items-center gap-2">
+                  <i class="bi bi-capsule fs-4"></i> 3. Ordonnance & Prescriptions Médicales
+                </h5>
+                <small class="text-muted">Modifiez les médicaments, posologies et durées de traitement du patient</small>
+              </div>
+              <button type="button" class="btn btn-success btn-sm px-3" (click)="addPrescription()">
+                <i class="bi bi-plus-circle me-1"></i> Ajouter un médicament
+              </button>
+            </div>
+
+            <div class="card-body p-4">
+
+              <!-- Suggestions rapides de médicaments -->
+              <div class="mb-3 p-3 bg-light rounded border">
+                <small class="text-muted fw-bold d-block mb-2">
+                  <i class="bi bi-lightning-charge-fill text-warning"></i> Suggestions rapides de médicaments :
+                </small>
+                <div class="d-flex flex-wrap gap-1">
+                  <button
+                    type="button"
+                    *ngFor="let med of commonMedicines"
+                    class="btn btn-sm btn-outline-success py-1 px-2 rounded-pill small"
+                    (click)="addPrescription(med, '', '5 jours')"
+                  >
+                    + {{ med }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Si aucune prescription -->
+              <div *ngIf="prescriptions.length === 0" class="text-center py-4 bg-light rounded border border-dashed">
+                <i class="bi bi-prescription fs-1 text-muted d-block mb-2"></i>
+                <h6 class="text-muted mb-2">Aucun médicament prescrit pour cette consultation</h6>
+                <p class="text-muted small mb-3">Cliquez sur le bouton ci-dessous pour ajouter des prescriptions.</p>
+                <button type="button" class="btn btn-outline-success btn-sm" (click)="addPrescription()">
+                  <i class="bi bi-plus-circle me-1"></i> Rédiger une ordonnance
+                </button>
+              </div>
+
+              <!-- Liste des prescriptions -->
+              <div *ngIf="prescriptions.length > 0" formArrayName="prescriptions">
+                <div class="table-responsive">
+                  <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                      <tr>
+                        <th style="width: 40px;" class="text-center">#</th>
+                        <th style="width: 40%;">Médicament / DCI <span class="text-danger">*</span></th>
+                        <th style="width: 35%;">Posologie / Fréquence</th>
+                        <th style="width: 15%;">Durée</th>
+                        <th style="width: 10%;" class="text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let p of prescriptions.controls; let i = index" [formGroupName]="i">
+                        <td class="text-center fw-bold text-muted">{{ i + 1 }}</td>
+                        <td>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="medicament"
+                            placeholder="Ex: Paracétamol 1g, Amoxicilline 500mg..."
+                            [class.is-invalid]="p.get('medicament')?.invalid && p.get('medicament')?.touched"
+                          />
+                          <div *ngIf="p.get('medicament')?.invalid && p.get('medicament')?.touched" class="invalid-feedback">
+                            Le médicament est requis.
+                          </div>
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="posologie"
+                            placeholder="Ex: 1 cp 3 fois par jour après les repas"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="duree"
+                            placeholder="Ex: 5 jours, 1 mois..."
+                          />
+                        </td>
+                        <td class="text-center">
+                          <button
+                            type="button"
+                            class="btn btn-outline-danger btn-sm"
+                            (click)="removePrescription(i)"
+                            title="Supprimer ce médicament"
+                          >
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="d-flex justify-content-end mt-2">
+                  <button type="button" class="btn btn-sm btn-outline-success" (click)="addPrescription()">
+                    <i class="bi bi-plus-lg me-1"></i> Ajouter une autre ligne
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- BOUTONS D'ACTION -->
+          <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+            <button type="button" class="btn btn-secondary px-4" (click)="onCancel()" [disabled]="loading">
+              <i class="bi bi-x-circle me-1"></i> Annuler
+            </button>
+            <button type="submit" class="btn btn-primary px-4" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              <i *ngIf="!loading" class="bi bi-check-circle me-1"></i> Mettre à jour la consultation
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

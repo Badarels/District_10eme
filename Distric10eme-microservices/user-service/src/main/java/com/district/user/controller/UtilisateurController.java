@@ -24,7 +24,7 @@ public class UtilisateurController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<UtilisateurDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<UtilisateurDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(utilisateurService.findById(id));
     }
     
@@ -34,12 +34,12 @@ public class UtilisateurController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<UtilisateurDTO> update(@PathVariable Long id, @Valid @RequestBody UtilisateurDTO dto) {
+    public ResponseEntity<UtilisateurDTO> update(@PathVariable("id") Long id, @Valid @RequestBody UtilisateurDTO dto) {
         return ResponseEntity.ok(utilisateurService.update(id, dto));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         utilisateurService.delete(id);
         return ResponseEntity.noContent().build();
     }

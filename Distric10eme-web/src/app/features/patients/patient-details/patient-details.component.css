@@ -1,13 +1,190 @@
-.card {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* Hero Patient Card */
+.hero-patient-card {
+  background: #ffffff;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
 }
 
-strong {
-  color: #012970;
+.hero-accent-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(180deg, #0d6efd 0%, #00b4d8 100%);
+}
+
+.border-start-lg {
+  border-left: 1px solid #e9ecef;
+}
+
+@media (max-width: 991px) {
+  .border-start-lg {
+    border-left: none;
+    border-top: 1px solid #e9ecef;
+    padding-top: 1rem;
+    padding-left: 0 !important;
+  }
+}
+
+.patient-main-avatar {
+  width: 80px;
+  height: 80px;
+  font-size: 1.75rem;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.bg-male-gradient {
+  background: linear-gradient(135deg, #0d6efd 0%, #0077b6 100%);
+}
+
+.bg-female-gradient {
+  background: linear-gradient(135deg, #e63946 0%, #d90429 100%);
+}
+
+.status-indicator-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  background-color: #2ec4b6;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(46, 196, 182, 0.2);
+}
+
+.badge-dossier {
+  background: #f1f5f9;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.badge-dossier:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.badge-clinical {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+/* KPI Cards */
+.kpi-card {
+  border-radius: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06) !important;
+}
+
+.kpi-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Custom Navigation Tabs */
+.custom-nav-tabs {
+  border-bottom: 2px solid #e9ecef;
+}
+
+.custom-nav-tabs .nav-link {
+  border: none;
+  color: #64748b;
   font-weight: 600;
+  font-size: 0.92rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  background: transparent;
 }
 
-p {
-  color: #6c757d;
+.custom-nav-tabs .nav-link:hover {
+  color: #0d6efd;
+  border-bottom-color: #93c5fd;
 }
 
+.custom-nav-tabs .nav-link.active {
+  color: #0d6efd;
+  border-bottom-color: #0d6efd;
+  background: transparent;
+}
+
+/* Table Details */
+.table-details tr {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.table-details tr:last-child {
+  border-bottom: none;
+}
+
+.table-details td {
+  padding: 0.75rem 0.5rem;
+  vertical-align: middle;
+}
+
+/* Timeline Cards */
+.timeline-card {
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease;
+}
+
+.timeline-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* ============================================== */
+/* STYLES POUR L'IMPRESSION DU DOSSIER MÉDICAL     */
+/* ============================================== */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #patientDossierPrintArea,
+  #patientDossierPrintArea *,
+  #ordonnancePrintArea,
+  #ordonnancePrintArea * {
+    visibility: visible;
+  }
+
+  #patientDossierPrintArea,
+  #ordonnancePrintArea {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 15px !important;
+    background: white !important;
+  }
+
+  .d-print-none {
+    display: none !important;
+  }
+
+  .card {
+    border: 1px solid #dee2e6 !important;
+    box-shadow: none !important;
+  }
+}

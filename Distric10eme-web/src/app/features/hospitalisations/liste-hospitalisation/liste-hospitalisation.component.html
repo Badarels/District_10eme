@@ -1,92 +1,169 @@
-<div class="pagetitle">
-  <h1>Liste des hospitalisations</h1>
-  <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
-      <li class="breadcrumb-item active">Hospitalisations</li>
-    </ol>
-  </nav>
+<!-- ====== EN-TÊTE ====== -->
+<div class="lhosp-header mb-4">
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <div>
+      <h1 class="lhosp-title"><i class="bi bi-hospital me-2"></i>Hospitalisations</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 mt-1">
+          <li class="breadcrumb-item"><a [routerLink]="'/dashboard'">Accueil</a></li>
+          <li class="breadcrumb-item active">Hospitalisations</li>
+        </ol>
+      </nav>
+    </div>
+    <button class="lhosp-btn-new" (click)="addHospitalisation()" id="btn-nouvelle-hospitalisation">
+      <i class="bi bi-plus-circle-fill me-2"></i>Nouvelle hospitalisation
+    </button>
+  </div>
 </div>
 
-<section class="section">
-  <div class="content-body">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="d-flex align-items-center mb-3 gap-2">
-            <button class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" (click)="addHospitalisation()">
-              <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Nouvelle hospitalisation</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body">
-              <h2 class="card-title">Hospitalisations</h2>
-              <div class="row g-2 align-items-end mb-3">
-                <div class="col-md-4 col-lg-4">
-                  <label class="form-label">Recherche rapide</label>
-                  <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control with-blue-border"
-                      placeholder="Patient, médecin, lit, statut..."
-                      [(ngModel)]="searchTerm"
-                      (ngModelChange)="applyFilter()"
-                    />
-                    <span class="input-group-text">
-                      <i class="fas fa-search fa-recherche"></i>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div *ngIf="loading" class="text-center py-5">
-                <div class="spinner-border" role="status"></div>
-              </div>
-
-              <div *ngIf="!loading && filteredHospitalisations.length === 0" class="text-center py-5 text-muted">
-                Aucune hospitalisation trouvée.
-              </div>
-
-              <div *ngIf="!loading && filteredHospitalisations.length > 0" class="table-responsive">
-                <table class="table table-striped align-middle datatable">
-                  <thead>
-                    <tr>
-                      <th scope="col">Admission</th>
-                      <th scope="col">Sortie</th>
-                      <th scope="col">Patient</th>
-                      <th scope="col">Médecin</th>
-                      <th scope="col">Lit</th>
-                      <th scope="col">Statut</th>
-                      <th scope="col">Motif</th>
-                      <th scope="col">Observations</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let hosp of filteredHospitalisations">
-                      <td>{{ hosp.dateAdmission | date:'dd/MM/yyyy' }}</td>
-                      <td>{{ hosp.dateSortie | date:'dd/MM/yyyy' }}</td>
-                      <td>{{ hosp.patientId }}</td>
-                      <td>{{ hosp.medecinId }}</td>
-                      <td>{{ hosp.litId }}</td>
-                      <td>
-                        <span class="badge" [ngClass]="getStatutBadge(hosp)">
-                          {{ getStatutLabel(hosp) }}
-                        </span>
-                      </td>
-                      <td>{{ hosp.motifAdmission || '—' }}</td>
-                      <td>{{ hosp.observations || '—' }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+<!-- ====== KPI CARDS ====== -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3">
+    <div class="lhosp-kpi lhosp-kpi-indigo">
+      <div class="lhosp-kpi-icon"><i class="bi bi-hospital"></i></div>
+      <div>
+        <div class="lhosp-kpi-val">{{ totalHosp }}</div>
+        <div class="lhosp-kpi-lbl">Total</div>
       </div>
     </div>
   </div>
-</section>
+  <div class="col-6 col-xl-3">
+    <div class="lhosp-kpi lhosp-kpi-amber">
+      <div class="lhosp-kpi-icon"><i class="bi bi-heart-pulse"></i></div>
+      <div>
+        <div class="lhosp-kpi-val">{{ hospEnCours }}</div>
+        <div class="lhosp-kpi-lbl">En cours</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="lhosp-kpi lhosp-kpi-green">
+      <div class="lhosp-kpi-icon"><i class="bi bi-check-circle"></i></div>
+      <div>
+        <div class="lhosp-kpi-val">{{ hospCloturees }}</div>
+        <div class="lhosp-kpi-lbl">Clôturées</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="lhosp-kpi lhosp-kpi-cyan">
+      <div class="lhosp-kpi-icon"><i class="bi bi-calendar-plus"></i></div>
+      <div>
+        <div class="lhosp-kpi-val">{{ hospAujourdhui }}</div>
+        <div class="lhosp-kpi-lbl">Admissions du jour</div>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- ====== FILTRES & RECHERCHE ====== -->
+<div class="lhosp-toolbar mb-4">
+  <div class="lhosp-statut-tabs">
+    <button
+      *ngFor="let f of statutFilters"
+      class="lhosp-tab"
+      [class.lhosp-tab-active]="filterStatut === f.value"
+      (click)="setFilter(f.value)"
+    >
+      {{ f.label }}
+    </button>
+  </div>
+  <div class="lhosp-search-wrap">
+    <i class="bi bi-search lhosp-search-icon"></i>
+    <input
+      type="text"
+      class="lhosp-search-input"
+      placeholder="Rechercher patient, médecin, motif, lit..."
+      [(ngModel)]="searchTerm"
+      (input)="applyFilter()"
+    />
+  </div>
+</div>
+
+<!-- ====== CHARGEMENT ====== -->
+<div *ngIf="loading" class="lhosp-loader">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p class="mt-3 text-muted">Chargement des hospitalisations...</p>
+</div>
+
+<!-- ====== VIDE ====== -->
+<div *ngIf="!loading && filteredHospitalisations.length === 0" class="lhosp-empty">
+  <i class="bi bi-hospital lhosp-empty-icon"></i>
+  <p class="lhosp-empty-text">Aucune hospitalisation trouvée</p>
+  <button class="lhosp-btn-new" (click)="addHospitalisation()">
+    <i class="bi bi-plus-circle-fill me-2"></i>Créer une hospitalisation
+  </button>
+</div>
+
+<!-- ====== LISTE DES CARTES ====== -->
+<div *ngIf="!loading && filteredHospitalisations.length > 0" class="lhosp-list">
+  <div
+    *ngFor="let hosp of filteredHospitalisations"
+    class="lhosp-card"
+    [class.lhosp-card-today]="isToday(hosp.dateAdmission)"
+    [class.lhosp-card-closed]="!!hosp.dateSortie"
+  >
+
+    <div *ngIf="isToday(hosp.dateAdmission) && !hosp.dateSortie" class="lhosp-today-badge">
+      <i class="bi bi-star-fill me-1"></i>Admission du jour
+    </div>
+
+    <!-- Date admission -->
+    <div class="lhosp-date-block">
+      <div class="lhosp-day">{{ hosp.dateAdmission | date:'dd' }}</div>
+      <div class="lhosp-month">{{ hosp.dateAdmission | date:'MMM' : '' : 'fr-FR' | uppercase }}</div>
+      <div class="lhosp-time">
+        <i class="bi bi-box-arrow-in-right me-1"></i>Admission
+      </div>
+    </div>
+
+    <div class="lhosp-divider"></div>
+
+    <!-- Patient -->
+    <div class="lhosp-patient-block">
+      <div class="lhosp-avatar">{{ getPatientInitials(hosp.patientId) }}</div>
+      <div>
+        <div class="lhosp-patient-name">{{ getPatientName(hosp.patientId) }}</div>
+        <div class="lhosp-sub"><i class="bi bi-person-fill me-1"></i>Patient</div>
+      </div>
+    </div>
+
+    <!-- Médecin -->
+    <div class="lhosp-medecin-block">
+      <i class="bi bi-person-badge-fill lhosp-medecin-icon"></i>
+      <div>
+        <div class="lhosp-medecin-name">{{ getMedecinName(hosp.medecinId) }}</div>
+        <div class="lhosp-sub">{{ getMedecinSpec(hosp.medecinId) }}</div>
+      </div>
+    </div>
+
+    <!-- Lit + durée -->
+    <div class="lhosp-lit-block">
+      <i class="bi bi-door-open lhosp-lit-icon"></i>
+      <div>
+        <div class="lhosp-lit-name">Lit {{ hosp.litId }}</div>
+        <div class="lhosp-sub">
+          <i class="bi bi-hourglass-split me-1"></i>{{ getDuree(hosp) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Motif -->
+    <div class="lhosp-motif-block">
+      <i class="bi bi-chat-left-text lhosp-motif-icon"></i>
+      <span class="lhosp-motif-text">{{ hosp.motifAdmission || 'Aucun motif renseigné' }}</span>
+    </div>
+
+    <!-- Statut -->
+    <div class="lhosp-statut-block">
+      <span class="lhosp-badge" [ngClass]="getStatutConfig(hosp).cls">
+        <i class="bi me-1" [ngClass]="getStatutConfig(hosp).icon"></i>
+        {{ getStatutConfig(hosp).label }}
+      </span>
+      <div *ngIf="hosp.dateSortie" class="lhosp-sortie">
+        Sortie {{ hosp.dateSortie | date:'dd/MM/yyyy' }}
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,12 @@
+com\district\consultation\entity\Consultation.class
+com\district\consultation\entity\Diagnostic.class
+com\district\consultation\dto\DiagnosticDTO.class
+com\district\consultation\service\ConsultationService.class
+com\district\consultation\repository\ConsultationRepository.class
+com\district\consultation\entity\Prescription.class
+com\district\consultation\repository\PrescriptionRepository.class
+com\district\consultation\ConsultationServiceApplication.class
+com\district\consultation\dto\ConsultationDTO.class
+com\district\consultation\repository\DiagnosticRepository.class
+com\district\consultation\controller\ConsultationController.class
+com\district\consultation\dto\PrescriptionDTO.class

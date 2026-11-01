@@ -24,7 +24,7 @@ public class SpecialiteController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<SpecialiteDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<SpecialiteDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(specialiteService.findById(id));
     }
     
@@ -35,13 +35,13 @@ public class SpecialiteController {
     
     @PutMapping("/{id}")
     public ResponseEntity<SpecialiteDTO> update(
-            @PathVariable Long id, 
+            @PathVariable("id") Long id, 
             @Valid @RequestBody SpecialiteDTO dto) {
         return ResponseEntity.ok(specialiteService.update(id, dto));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         specialiteService.delete(id);
         return ResponseEntity.noContent().build();
     }

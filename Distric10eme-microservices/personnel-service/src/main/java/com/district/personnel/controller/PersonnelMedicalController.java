@@ -25,13 +25,13 @@ public class PersonnelMedicalController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<PersonnelMedicalDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<PersonnelMedicalDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(personnelService.findById(id));
     }
     
     @GetMapping("/type/{typePersonnel}")
     public ResponseEntity<List<PersonnelMedicalDTO>> findByTypePersonnel(
-            @PathVariable TypePersonnel typePersonnel) {
+            @PathVariable("typePersonnel") TypePersonnel typePersonnel) {
         return ResponseEntity.ok(personnelService.findByTypePersonnel(typePersonnel));
     }
     
@@ -52,13 +52,13 @@ public class PersonnelMedicalController {
     
     @PutMapping("/{id}")
     public ResponseEntity<PersonnelMedicalDTO> update(
-            @PathVariable Long id, 
+            @PathVariable("id") Long id, 
             @Valid @RequestBody PersonnelMedicalDTO dto) {
         return ResponseEntity.ok(personnelService.update(id, dto));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         personnelService.delete(id);
         return ResponseEntity.noContent().build();
     }

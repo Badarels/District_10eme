@@ -24,12 +24,12 @@ public class HospitalisationController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<HospitalisationDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<HospitalisationDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(hospitalisationService.findById(id));
     }
     
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<HospitalisationDTO>> findByPatientId(@PathVariable Long patientId) {
+    public ResponseEntity<List<HospitalisationDTO>> findByPatientId(@PathVariable("patientId") Long patientId) {
         return ResponseEntity.ok(hospitalisationService.findByPatientId(patientId));
     }
     
@@ -39,12 +39,12 @@ public class HospitalisationController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<HospitalisationDTO> update(@PathVariable Long id, @Valid @RequestBody HospitalisationDTO dto) {
+    public ResponseEntity<HospitalisationDTO> update(@PathVariable("id") Long id, @Valid @RequestBody HospitalisationDTO dto) {
         return ResponseEntity.ok(hospitalisationService.update(id, dto));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         hospitalisationService.delete(id);
         return ResponseEntity.noContent().build();
     }

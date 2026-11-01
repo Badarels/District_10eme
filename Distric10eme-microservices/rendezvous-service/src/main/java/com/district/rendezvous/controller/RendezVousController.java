@@ -24,17 +24,17 @@ public class RendezVousController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<RendezVousDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<RendezVousDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(rendezVousService.findById(id));
     }
     
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<RendezVousDTO>> findByPatientId(@PathVariable Long patientId) {
+    public ResponseEntity<List<RendezVousDTO>> findByPatientId(@PathVariable("patientId") Long patientId) {
         return ResponseEntity.ok(rendezVousService.findByPatientId(patientId));
     }
     
     @GetMapping("/medecin/{medecinId}")
-    public ResponseEntity<List<RendezVousDTO>> findByMedecinId(@PathVariable Long medecinId) {
+    public ResponseEntity<List<RendezVousDTO>> findByMedecinId(@PathVariable("medecinId") Long medecinId) {
         return ResponseEntity.ok(rendezVousService.findByMedecinId(medecinId));
     }
     
@@ -44,12 +44,12 @@ public class RendezVousController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<RendezVousDTO> update(@PathVariable Long id, @Valid @RequestBody RendezVousDTO dto) {
+    public ResponseEntity<RendezVousDTO> update(@PathVariable("id") Long id, @Valid @RequestBody RendezVousDTO dto) {
         return ResponseEntity.ok(rendezVousService.update(id, dto));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         rendezVousService.delete(id);
         return ResponseEntity.noContent().build();
     }

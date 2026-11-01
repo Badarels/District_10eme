@@ -24,12 +24,12 @@ public class ConsultationController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<ConsultationDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<ConsultationDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(consultationService.findById(id));
     }
     
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<ConsultationDTO>> findByPatientId(@PathVariable Long patientId) {
+    public ResponseEntity<List<ConsultationDTO>> findByPatientId(@PathVariable("patientId") Long patientId) {
         return ResponseEntity.ok(consultationService.findByPatientId(patientId));
     }
     
@@ -39,12 +39,12 @@ public class ConsultationController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<ConsultationDTO> update(@PathVariable Long id, @Valid @RequestBody ConsultationDTO dto) {
+    public ResponseEntity<ConsultationDTO> update(@PathVariable("id") Long id, @Valid @RequestBody ConsultationDTO dto) {
         return ResponseEntity.ok(consultationService.update(id, dto));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         consultationService.delete(id);
         return ResponseEntity.noContent().build();
     }

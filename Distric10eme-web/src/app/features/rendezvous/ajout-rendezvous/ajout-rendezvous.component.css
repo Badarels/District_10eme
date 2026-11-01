@@ -1,4 +1,299 @@
-.card {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* ===================================================
+   AJOUT RENDEZ-VOUS — Styles scopés (préfixe: rdv-)
+   =================================================== */
+
+/* ---- En-tête de page ---- */
+.rdv-page-header {
+  padding: 1.25rem 0 0.5rem;
+  border-bottom: 1px solid #e9ecef;
 }
 
+.rdv-page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.btn-icon-back {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: #475569;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-icon-back:hover { background: #e2e8f0; color: #1e293b; }
+
+/* ---- Bannière patient pré-sélectionné ---- */
+.rdv-preselect-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-left: 4px solid #4f46e5;
+}
+.rdv-preselect-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.rdv-preselect-name { font-weight: 700; font-size: 1rem; color: #1e293b; }
+.rdv-preselect-meta { font-size: 0.82rem; color: #64748b; margin-top: 2px; }
+.rdv-preselect-badge {
+  background: #4f46e5;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* ---- Section card ---- */
+.rdv-section {
+  border-radius: 14px;
+  /* overflow: hidden retiré — il coupait le dropdown derrière la card suivante */
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  border: 1px solid #e9ecef;
+  background: #fff;
+  position: relative; /* contexte de z-index local */
+}
+
+.rdv-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  border-radius: 13px 13px 0 0; /* arrondi uniquement en haut */
+}
+.rdv-section-header i { font-size: 1.1rem; }
+
+.rdv-header-blue  { background: linear-gradient(135deg, #4f46e5, #6366f1); }
+.rdv-header-green { background: linear-gradient(135deg, #16a34a, #22c55e); }
+.rdv-header-amber { background: linear-gradient(135deg, #b45309, #f59e0b); }
+
+.rdv-required-chip {
+  margin-left: auto;
+  background: rgba(255,255,255,0.25);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+
+.rdv-section-body { padding: 1.5rem; }
+
+/* ---- Champ de recherche ---- */
+.rdv-search-patient,
+.rdv-search-medecin {
+  position: relative;
+}
+
+.rdv-search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.rdv-search-icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.rdv-search-input {
+  width: 100%;
+  padding: 0.7rem 2.75rem 0.7rem 2.6rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.93rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #f8fafc;
+}
+.rdv-search-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+  background: #fff;
+}
+
+.rdv-search-spinner {
+  position: absolute;
+  right: 12px;
+  color: #94a3b8;
+}
+
+/* ---- Dropdown ---- */
+.rdv-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 1060;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.14);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.rdv-dropdown-empty {
+  padding: 1rem 1.25rem;
+  color: #94a3b8;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.rdv-dropdown-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  transition: background 0.12s;
+  border-bottom: 1px solid #f1f5f9;
+}
+.rdv-dropdown-row:last-child { border-bottom: none; }
+.rdv-dropdown-row:hover { background: #f8fafc; }
+
+/* ---- Avatars mini ---- */
+.rdv-mini-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+.rdv-blue  { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
+.rdv-green { background: linear-gradient(135deg, #16a34a, #22c55e); }
+
+/* ---- Textes dans les rows ---- */
+.rdv-row-name { font-weight: 600; font-size: 0.9rem; color: #1e293b; }
+.rdv-row-sub  { font-size: 0.78rem; color: #64748b; }
+
+/* ---- Ligne sélectionnée ---- */
+.rdv-selected-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 2px solid #e2e8f0;
+}
+
+.rdv-btn-change {
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.rdv-btn-change:hover { background: #f1f5f9; color: #ef4444; border-color: #ef4444; }
+
+/* ---- Erreur ---- */
+.rdv-error-msg {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 6px;
+}
+
+/* ---- Inputs standard ---- */
+.rdv-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #374151;
+  margin-bottom: 6px;
+}
+.rdv-input {
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.93rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.rdv-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+}
+
+/* ---- Chips de motif ---- */
+.rdv-chip {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 0.78rem;
+  padding: 0.28rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rdv-chip:hover { background: #ede9fe; border-color: #a5b4fc; color: #4f46e5; }
+
+/* ---- Boutons d'action ---- */
+.rdv-btn-cancel {
+  background: transparent;
+  border: 2px solid #cbd5e1;
+  color: #64748b;
+  border-radius: 10px;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.93rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rdv-btn-cancel:hover { background: #f1f5f9; border-color: #94a3b8; }
+
+.rdv-btn-submit {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  border: none;
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.65rem 2rem;
+  font-size: 0.93rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+.rdv-btn-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99,102,241,0.4);
+}
+.rdv-btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }

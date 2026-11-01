@@ -23,7 +23,7 @@ public class NotificationController {
     }
     
     @GetMapping("/destinataire/{destinataireId}")
-    public ResponseEntity<List<NotificationDTO>> findByDestinataireId(@PathVariable Long destinataireId) {
+    public ResponseEntity<List<NotificationDTO>> findByDestinataireId(@PathVariable("destinataireId") Long destinataireId) {
         return ResponseEntity.ok(notificationService.findByDestinataireId(destinataireId));
     }
 }

@@ -9,104 +9,159 @@
 </div>
 
 <section class="section">
-  <div class="content-body">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="d-flex align-items-center mb-3 gap-2">
-            <button class="btn btn-outline-primary btn-sm ms-auto d-inline-flex align-items-center gap-1" (click)="addConsultation()">
-              <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline">Nouvelle consultation</span>
+  <div class="container-fluid p-0">
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="card-title m-0 text-primary">Toutes les consultations</h5>
+            <button class="btn btn-primary btn-sm" (click)="addConsultation()">
+              <i class="bi bi-plus-circle me-1"></i> Nouvelle consultation
             </button>
           </div>
-        </div>
-
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body">
-              <h2 class="card-title">Consultations</h2>
-              <div class="row g-2 align-items-end mb-3">
-                <div class="col-md-4 col-lg-4">
-                  <label class="form-label">Recherche rapide</label>
-                  <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control with-blue-border"
-                      placeholder="Patient, médecin, motif, diagnostic..."
-                      [(ngModel)]="searchTerm"
-                      (ngModelChange)="applyFilter()"
-                    />
-                    <span class="input-group-text">
-                      <i class="fas fa-search fa-recherche"></i>
-                    </span>
-                  </div>
+          <div class="card-body p-4">
+            <!-- Barre de recherche -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Rechercher par patient, médecin, motif, médicament..."
+                    [(ngModel)]="searchTerm"
+                    (input)="applyFilter()"
+                  />
+                  <button *ngIf="searchTerm" class="btn btn-outline-secondary" type="button" (click)="searchTerm = ''; applyFilter()">
+                    <i class="bi bi-x"></i>
+                  </button>
                 </div>
               </div>
-
-              <div *ngIf="loading" class="text-center py-5">
-                <div class="spinner-border" role="status"></div>
+              <div class="col-md-6 text-end text-muted small d-flex align-items-center justify-content-end">
+                <span>Total : <strong>{{ filteredConsultations.length }}</strong> consultation(s)</span>
               </div>
+            </div>
 
-              <div *ngIf="!loading && filteredConsultations.length === 0" class="text-center py-5 text-muted">
-                Aucune consultation trouvée.
+            <!-- État de chargement -->
+            <div *ngIf="loading" class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
               </div>
+              <p class="mt-2 text-muted">Chargement des consultations...</p>
+            </div>
 
-              <div *ngIf="!loading && filteredConsultations.length > 0" class="table-responsive">
-                <table class="table table-hover">
-                  <thead>
+            <!-- Liste vide -->
+            <div *ngIf="!loading && filteredConsultations.length === 0" class="text-center py-5">
+              <i class="bi bi-calendar-x fs-1 text-muted d-block mb-3"></i>
+              <h5 class="text-muted">Aucune consultation trouvée</h5>
+              <p class="text-muted small">Commencez par ajouter une nouvelle consultation ou modifiez votre filtre.</p>
+              <button class="btn btn-outline-primary btn-sm mt-2" (click)="addConsultation()">
+                <i class="bi bi-plus-circle me-1"></i> Créer une consultation
+              </button>
+            </div>
+
+            <!-- Tableau des consultations -->
+            <div *ngIf="!loading && filteredConsultations.length > 0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead class="table-light">
                     <tr>
-                      <th>Date</th>
+                      <th style="width: 60px;">N°</th>
+                      <th>Date & Heure</th>
                       <th>Patient</th>
                       <th>Médecin</th>
-                      <th>Type</th>
-                      <th>Diagnostic</th>
-                      <th class="text-end">Actions</th>
+                      <th>Motif</th>
+                      <th>Observations</th>
+                      <th>Ordonnance</th>
+                      <th class="text-end" style="width: 140px;">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let consultation of filteredConsultations">
-                      <td>{{ consultation.dateConsultation | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <tr *ngFor="let consultation of filteredConsultations; let i = index">
+                      <td><span class="badge bg-light text-dark border">#{{ consultation.id }}</span></td>
                       <td>
-                        <a [routerLink]="['/patients/detail', consultation.patientId]" class="text-primary">
-                          {{ patients[consultation.patientId].prenom }} {{ patients[consultation.patientId].nom }}
-                          <small class="d-block text-muted" *ngIf="patients[consultation.patientId]?.numeroDossier">
-                            Dossier #{{ patients[consultation.patientId].numeroDossier }}
+                        <div class="fw-bold text-dark">
+                          {{ consultation.dateConsultation | date:'dd/MM/yyyy' }}
+                        </div>
+                        <small class="text-muted">
+                          <i class="bi bi-clock me-1"></i>{{ consultation.dateConsultation | date:'HH:mm' }}
+                        </small>
+                      </td>
+                      <td>
+                        <div *ngIf="consultation.patient; else patientIdOnly">
+                          <div class="fw-bold text-primary">
+                            {{ consultation.patient.prenom }} {{ consultation.patient.nom }}
+                          </div>
+                          <small class="text-muted">
+                            <span class="badge bg-secondary-subtle text-secondary me-1">#{{ consultation.patient.numeroDossier }}</span>
+                            <span *ngIf="consultation.patient.telephone"><i class="bi bi-telephone"></i> {{ consultation.patient.telephone }}</span>
                           </small>
-                        </a>
+                        </div>
+                        <ng-template #patientIdOnly>
+                          <span class="badge bg-light text-muted border">Patient #{{ consultation.patientId }}</span>
+                        </ng-template>
                       </td>
                       <td>
-                        <span *ngIf="medecins[consultation.medecinId]">
-                          Dr {{ medecins[consultation.medecinId].prenom }} {{ medecins[consultation.medecinId].nom }}
-                          <small class="d-block text-muted" *ngIf="medecins[consultation.medecinId]?.specialiteNom">
-                            {{ medecins[consultation.medecinId].specialiteNom }}
+                        <div *ngIf="consultation.medecin; else medecinIdOnly">
+                          <div class="fw-bold text-dark">
+                            Dr. {{ consultation.medecin.prenom }} {{ consultation.medecin.nom }}
+                          </div>
+                          <small class="text-muted">
+                            <span class="badge bg-success-subtle text-success">{{ consultation.medecin.specialiteNom || 'Généraliste' }}</span>
                           </small>
-                        </span>
-                        <span *ngIf="!medecins[consultation.medecinId]" class="text-muted">
-                          Non spécifié
+                        </div>
+                        <ng-template #medecinIdOnly>
+                          <span class="badge bg-light text-muted border">Médecin #{{ consultation.medecinId }}</span>
+                        </ng-template>
+                      </td>
+                      <td>
+                        <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">
+                          {{ consultation.motif || 'Non spécifié' }}
                         </span>
                       </td>
                       <td>
-                        <span class="badge" [ngClass]="{
-                          'bg-primary': consultation.typeConsultation === 'CONSULTATION_EXTERNE',
-                          'bg-danger': consultation.typeConsultation === 'URGENCE',
-                          'bg-success': consultation.typeConsultation === 'SUIVI',
-                          'bg-info': consultation.typeConsultation === 'VACCINATION',
-                          'bg-warning': consultation.typeConsultation === 'CONSULTATION_PRENATALE',
-                          'bg-secondary': !consultation.typeConsultation
-                        }">
-                          {{ getTypeConsultationLibelle(consultation.typeConsultation) }}
-                        </span>
-                      </td>
-                      <td>
-                        <div class="text-truncate" style="max-width: 200px;" [title]="consultation.diagnostic">
-                          {{ consultation.diagnostic || '-' }}
+                        <div class="text-truncate text-muted small" style="max-width: 180px;" [title]="consultation.description || ''">
+                          {{ consultation.description || '-' }}
                         </div>
                       </td>
+                      <td>
+                        <!-- Badge / Bouton Ordonnance -->
+                        <button
+                          *ngIf="consultation.prescriptions && consultation.prescriptions.length > 0"
+                          type="button"
+                          class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1"
+                          (click)="openOrdonnanceModal(consultation)"
+                          title="Voir et imprimer l'ordonnance"
+                        >
+                          <i class="bi bi-capsule"></i>
+                          <span>{{ consultation.prescriptions.length }} méd.</span>
+                        </button>
+                        <span *ngIf="!consultation.prescriptions || consultation.prescriptions.length === 0" class="badge bg-light text-muted border">
+                          Aucune
+                        </span>
+                      </td>
                       <td class="text-end">
-                        <div class="btn-group" role="group">
-                          <button class="btn btn-sm btn-outline-primary" [routerLink]="['/consultations/consultation/editer', consultation.id]">
+                        <div class="btn-group btn-group-sm">
+                          <button
+                            *ngIf="consultation.prescriptions && consultation.prescriptions.length > 0"
+                            class="btn btn-sm btn-outline-success"
+                            (click)="openOrdonnanceModal(consultation)"
+                            title="Imprimer l'ordonnance"
+                          >
+                            <i class="bi bi-printer"></i>
+                          </button>
+                          <button
+                            class="btn btn-sm btn-outline-primary"
+                            [routerLink]="['/consultations/consultation/editer', consultation.id]"
+                            title="Modifier"
+                          >
                             <i class="bi bi-pencil"></i>
                           </button>
-                          <button class="btn btn-sm btn-outline-danger" (click)="deleteConsultation(consultation.id)">
+                          <button
+                            class="btn btn-sm btn-outline-danger"
+                            (click)="deleteConsultation(consultation.id)"
+                            title="Supprimer"
+                          >
                             <i class="bi bi-trash"></i>
                           </button>
                         </div>
@@ -123,3 +178,124 @@
   </div>
 </section>
 
+<!-- MODAL VISUALISATION & IMPRESSION DE L'ORDONNANCE -->
+<div *ngIf="selectedConsultationForOrdonnance" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content shadow border-0">
+      
+      <!-- En-tête Modal (non imprimé) -->
+      <div class="modal-header bg-light border-bottom d-print-none">
+        <h5 class="modal-title text-success d-flex align-items-center gap-2">
+          <i class="bi bi-file-earmark-medical fs-4"></i> Ordonnance Médicale - Consultation #{{ selectedConsultationForOrdonnance.id }}
+        </h5>
+        <button type="button" class="btn-close" aria-label="Fermer" (click)="closeOrdonnanceModal()"></button>
+      </div>
+
+      <!-- Corps de l'Ordonnance (Format Officiel Imprimable) -->
+      <div class="modal-body p-4 print-area bg-white" id="ordonnancePrintArea">
+        
+        <!-- En-tête Médical Officiel -->
+        <div class="row pb-3 mb-3 border-bottom border-2 border-primary">
+          <div class="col-7">
+            <h5 class="fw-bold text-primary mb-1">DISTRICT SANITAIRE DU 10ÈME</h5>
+            <div class="text-muted small">Ministère de la Santé et de l'Action Sociale</div>
+            <div class="text-muted small">Service de Consultation Générale & Spécialisée</div>
+            <div class="text-muted small"><i class="bi bi-geo-alt"></i> Dakar, Sénégal</div>
+          </div>
+          <div class="col-5 text-end">
+            <div class="fw-bold fs-6 text-dark">
+              Dr. {{ selectedConsultationForOrdonnance.medecin?.prenom }} {{ selectedConsultationForOrdonnance.medecin?.nom }}
+            </div>
+            <div class="badge bg-success-subtle text-success mb-1">
+              {{ selectedConsultationForOrdonnance.medecin?.specialiteNom || 'Médecine Générale' }}
+            </div>
+            <div *ngIf="selectedConsultationForOrdonnance.medecin?.numeroOrdre" class="text-muted small">
+              N° Ordre : {{ selectedConsultationForOrdonnance.medecin?.numeroOrdre }}
+            </div>
+            <div *ngIf="selectedConsultationForOrdonnance.medecin?.telephone" class="text-muted small">
+              Tél : {{ selectedConsultationForOrdonnance.medecin?.telephone }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations Patient et Date -->
+        <div class="row p-3 mb-4 rounded bg-light border">
+          <div class="col-7">
+            <div class="text-muted small">PATIENT(E) :</div>
+            <div class="fw-bold fs-5 text-dark">
+              {{ selectedConsultationForOrdonnance.patient?.prenom }} {{ selectedConsultationForOrdonnance.patient?.nom }}
+            </div>
+            <div class="text-muted small">
+              <span class="me-3">Dossier N° : <strong>#{{ selectedConsultationForOrdonnance.patient?.numeroDossier }}</strong></span>
+              <span *ngIf="selectedConsultationForOrdonnance.patient?.telephone">Tél : {{ selectedConsultationForOrdonnance.patient?.telephone }}</span>
+            </div>
+          </div>
+          <div class="col-5 text-end">
+            <div class="text-muted small">DATE DE PRESCRIPTION :</div>
+            <div class="fw-bold text-dark fs-6">
+              {{ selectedConsultationForOrdonnance.dateConsultation | date:'dd MMMM yyyy' }}
+            </div>
+            <div class="text-muted small">Motif : {{ selectedConsultationForOrdonnance.motif }}</div>
+          </div>
+        </div>
+
+        <!-- Symbole Rx Ordonnance -->
+        <div class="d-flex align-items-center mb-3">
+          <span class="fs-3 fw-bold text-primary font-monospace me-2">℞</span>
+          <span class="text-uppercase fw-bold text-secondary tracking-wide">Prescriptions Médicales</span>
+        </div>
+
+        <!-- Tableau des médicaments prescrits -->
+        <div class="table-responsive mb-4">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 40px;" class="text-center">#</th>
+                <th>Médicament</th>
+                <th>Posologie & Mode d'administration</th>
+                <th style="width: 140px;">Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of selectedConsultationForOrdonnance.prescriptions; let idx = index">
+                <td class="text-center fw-bold text-muted">{{ idx + 1 }}</td>
+                <td class="fw-bold text-dark">{{ p.medicament }}</td>
+                <td>{{ p.posologie || 'Selon prescription médicale' }}</td>
+                <td><span class="badge bg-light text-dark border">{{ p.duree || '-' }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Note et Signature -->
+        <div class="row mt-5 pt-3">
+          <div class="col-7">
+            <small class="text-muted font-italic">
+              * Veuillez respecter scrupuleusement la posologie indiquée.<br>
+              * Ne pas arrêter le traitement sans avis médical.
+            </small>
+          </div>
+          <div class="col-5 text-end">
+            <div class="text-muted small mb-4">Signature & Cachet du Médecin :</div>
+            <div class="border-bottom border-dark d-inline-block" style="width: 180px; height: 50px;"></div>
+            <div class="small fw-bold mt-1">
+              Dr. {{ selectedConsultationForOrdonnance.medecin?.prenom }} {{ selectedConsultationForOrdonnance.medecin?.nom }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pied de modal (Actions non imprimées) -->
+      <div class="modal-footer bg-light border-top d-print-none">
+        <button type="button" class="btn btn-secondary" (click)="closeOrdonnanceModal()">
+          Fermer
+        </button>
+        <button type="button" class="btn btn-success" (click)="printOrdonnance()">
+          <i class="bi bi-printer me-1"></i> Imprimer l'ordonnance
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
